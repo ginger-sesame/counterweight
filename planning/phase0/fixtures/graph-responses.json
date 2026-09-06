@@ -1,0 +1,115 @@
+{
+  "synthetic": true,
+  "responses": [
+    {
+      "sourceKey": "uniswap-v3-ethereum",
+      "synthetic": true,
+      "variables": {
+        "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+        "hour": 496857
+      },
+      "response": {
+        "data": {
+          "_meta": {
+            "deployment": "SYNTHETIC-CID-0",
+            "hasIndexingErrors": false,
+            "block": {
+              "number": 25917718,
+              "hash": "SYNTHETIC-BLOCK-HASH",
+              "timestamp": 1788689000
+            }
+          },
+          "dexAmmProtocols": [
+            {
+              "id": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+              "schemaVersion": "4.0.0",
+              "subgraphVersion": "fixture",
+              "methodologyVersion": "1.0.0",
+              "network": "MAINNET"
+            }
+          ],
+          "liquidityPoolHourlySnapshots": [
+            {
+              "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f564000000001",
+              "timestamp": "1788688700",
+              "blockNumber": "25917700",
+              "hourlyVolumeUSD": "10000",
+              "totalValueLockedUSD": "100000",
+              "pool": {
+                "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+                "inputTokens": [
+                  {
+                    "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                    "decimals": 18
+                  },
+                  {
+                    "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                    "decimals": 6
+                  }
+                ]
+              },
+              "hour": 496857
+            }
+          ]
+        }
+      },
+      "expectedTurnoverBps": 1000
+    },
+    {
+      "sourceKey": "sushiswap-v3-ethereum",
+      "synthetic": true,
+      "variables": {
+        "pool": "0x35644fb61afbc458bf92b15add6abc1996be5014",
+        "hour": 496857
+      },
+      "response": {
+        "data": {
+          "_meta": {
+            "deployment": "SYNTHETIC-CID-1",
+            "hasIndexingErrors": false,
+            "block": {
+              "number": 25917718,
+              "hash": "SYNTHETIC-BLOCK-HASH",
+              "timestamp": 1788689000
+            }
+          },
+          "dexAmmProtocols": [
+            {
+              "id": "0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f",
+              "schemaVersion": "4.0.1",
+              "subgraphVersion": "fixture",
+              "methodologyVersion": "1.0.0",
+              "network": "MAINNET"
+            }
+          ],
+          "liquidityPoolHourlySnapshots": [
+            {
+              "id": "0x35644fb61afbc458bf92b15add6abc1996be501400000001",
+              "timestamp": "1788688700",
+              "blockNumber": "25917700",
+              "hourlyVolumeUSD": "20000",
+              "totalValueLockedUSD": "100000",
+              "pool": {
+                "id": "0x35644fb61afbc458bf92b15add6abc1996be5014",
+                "inputTokens": [
+                  {
+                    "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+                    "decimals": 6
+                  },
+                  {
+                    "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+                    "decimals": 18
+                  }
+                ]
+              },
+              "hour": 496857
+            }
+          ]
+        }
+      },
+      "expectedTurnoverBps": 2000
+    }
+  ],
+  "expectedSpreadBps": 28,
+  "expectedIntensityBps": 900
+}

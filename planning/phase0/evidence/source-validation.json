@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "scope": "P-03 source compatibility; not live F2/F3",
+  "checks": [
+    "two registry identities and schema pins",
+    "GraphQL query fields against pinned source SDL",
+    "reference filter scalar from Graph Node source",
+    "wrong-type and unknown-field mutation rejection",
+    "Privy policy typecheck against SDK 0.34.0",
+    "setTuning ABI encode/decode"
+  ],
+  "sourceHashes": {
+    "https://raw.githubusercontent.com/messari/subgraphs/2711ac91ef119f321f65b339e10a57f9aa74f9d8/subgraphs/uniswap-v3-forks/schema.graphql": "2a7c0b614975c5e2ebae95df0e6e1d28bee772400a1a24c7ae58af70798eb187",
+    "https://raw.githubusercontent.com/graphprotocol/graph-node/6838f4e3cf3607c5bc32ef705dd05aec1eb057ab/graph/src/schema/api.rs": "4956a5c14a1ab9413a825901e0ecd2e35a2ac16182c7381f0804bbe772ab8485",
+    "https://raw.githubusercontent.com/messari/subgraphs/2711ac91ef119f321f65b339e10a57f9aa74f9d8/deployment/deployment.json": "c0f316dae9bb5d82b16e4af6c5e638bebf57282bd09b19e1391c6c985209d4c7"
+  }
+}

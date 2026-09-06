@@ -1,0 +1,193 @@
+{
+  "version": "1.0",
+  "name": "counterweight-updater-v1",
+  "chain_type": "ethereum",
+  "owner_id": "${OWNER_QUORUM_ID}",
+  "rules": [
+    {
+      "name": "bounded-tuning-local-fork",
+      "method": "eth_signTransaction",
+      "action": "ALLOW",
+      "conditions": [
+        {
+          "field_source": "ethereum_transaction",
+          "field": "chain_id",
+          "operator": "eq",
+          "value": "31337"
+        },
+        {
+          "field_source": "ethereum_transaction",
+          "field": "to",
+          "operator": "eq",
+          "value": "${CONTROLLER_ADDRESS}"
+        },
+        {
+          "field_source": "ethereum_transaction",
+          "field": "value",
+          "operator": "eq",
+          "value": "0"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "function_name",
+          "abi": [
+            {
+              "type": "function",
+              "name": "setTuning",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                {
+                  "name": "intensityBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "spreadBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "expectedVersion",
+                  "type": "uint64"
+                },
+                {
+                  "name": "validUntil",
+                  "type": "uint40"
+                }
+              ],
+              "outputs": []
+            }
+          ],
+          "operator": "eq",
+          "value": "setTuning"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "setTuning.intensityBps",
+          "abi": [
+            {
+              "type": "function",
+              "name": "setTuning",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                {
+                  "name": "intensityBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "spreadBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "expectedVersion",
+                  "type": "uint64"
+                },
+                {
+                  "name": "validUntil",
+                  "type": "uint40"
+                }
+              ],
+              "outputs": []
+            }
+          ],
+          "operator": "gte",
+          "value": "0"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "setTuning.intensityBps",
+          "abi": [
+            {
+              "type": "function",
+              "name": "setTuning",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                {
+                  "name": "intensityBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "spreadBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "expectedVersion",
+                  "type": "uint64"
+                },
+                {
+                  "name": "validUntil",
+                  "type": "uint40"
+                }
+              ],
+              "outputs": []
+            }
+          ],
+          "operator": "lte",
+          "value": "1000"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "setTuning.spreadBps",
+          "abi": [
+            {
+              "type": "function",
+              "name": "setTuning",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                {
+                  "name": "intensityBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "spreadBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "expectedVersion",
+                  "type": "uint64"
+                },
+                {
+                  "name": "validUntil",
+                  "type": "uint40"
+                }
+              ],
+              "outputs": []
+            }
+          ],
+          "operator": "gte",
+          "value": "10"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "setTuning.spreadBps",
+          "abi": [
+            {
+              "type": "function",
+              "name": "setTuning",
+              "stateMutability": "nonpayable",
+              "inputs": [
+                {
+                  "name": "intensityBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "spreadBps",
+                  "type": "uint16"
+                },
+                {
+                  "name": "expectedVersion",
+                  "type": "uint64"
+                },
+                {
+                  "name": "validUntil",
+                  "type": "uint40"
+                }
+              ],
+              "outputs": []
+            }
+          ],
+          "operator": "lte",
+          "value": "100"
+        }
+      ]
+    }
+  ]
+}
