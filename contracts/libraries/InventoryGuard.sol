@@ -41,7 +41,9 @@ library InventoryGuard {
         checkAmount(amount);
         if (amount == 0) revert S.ZeroInput();
         if (wethIn ? amount * c.priceMicroUsdc > c.maxInputValueMicroUsdc * S.SCALE : amount > c.maxInputValueMicroUsdc)
-        revert S.TradeTooLarge();
+        {
+            revert S.TradeTooLarge();
+        }
     }
 
     function checkPost(S.Config memory c, uint256 weth, uint256 usdc) internal pure {

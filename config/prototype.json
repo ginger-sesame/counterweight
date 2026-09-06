@@ -1,0 +1,13 @@
+{
+  "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+  "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+  "epochId": "1",
+  "start": "1788690000",
+  "end": "1788691800",
+  "targetWethBps": "5000",
+  "minWethBps": "3000",
+  "maxWethBps": "7000",
+  "priceMicroUsdc": "2000000000",
+  "maxInputValueMicroUsdc": "1000000000"
+}

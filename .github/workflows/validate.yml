@@ -1,0 +1,40 @@
+name: Deterministic strategy validation
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  phase1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.1
+          cache: npm
+      - name: Install locked dependencies and verified Foundry
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/setup/install-foundry.sh
+          echo "$PWD/.tools/foundry" >> "$GITHUB_PATH"
+      - name: Validate independent specification fixtures
+        run: python3 scripts/planning/validate_phase0.py
+      - name: Check Solidity format and run seeded strategy tests
+        run: |
+          forge fmt --check
+          mkdir -p artifacts/ci
+          set -o pipefail
+          npm run test:strategy | tee artifacts/ci/strategy.txt
+      - name: Test the public prototype CLI end to end
+        run: |
+          set -o pipefail
+          npm run test:e2e | tee artifacts/ci/e2e.txt
+          node scripts/proofs/prototype.mjs --out artifacts/ci/prototype.json > /dev/null
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase1-simulation-evidence
+          path: artifacts/ci/
+          if-no-files-found: error

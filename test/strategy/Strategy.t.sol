@@ -92,6 +92,19 @@ contract StrategyTest is Test {
         strategy.quote(inv(10e18, 20000e6), request(false, 1e9 + 1), normal());
     }
 
+    function test_ImmediatelyInsideSizeCapsAndPhysicalEnvelope() public {
+        S.Inventory memory i = inv(10e18, 20000e6);
+        strategy.quote(i, request(true, 5e17 - 1), normal());
+        strategy.quote(i, request(false, 1e9 - 1), normal());
+        i.physicalWeth = 1e30 + 1;
+        vm.expectRevert(S.AmountOutOfRange.selector);
+        strategy.quote(i, request(true, 1e17), normal());
+        i = inv(10e18, 20000e6);
+        i.physicalUsdc = 1e30 + 1;
+        vm.expectRevert(S.AmountOutOfRange.selector);
+        strategy.quote(i, request(false, 200e6), normal());
+    }
+
     function test_InvalidConfiguration() public {
         S.Config memory bad = c;
         bad.minWethBps = 0;
@@ -228,7 +241,7 @@ contract StrategyTest is Test {
         big.priceMicroUsdc = 1e12;
         big.maxInputValueMicroUsdc = 1e30;
         StrategyPrototype large = new StrategyPrototype(big);
-        // Exactly matched value at the maximal supported USDC balance.
+        // Exactly matched value at the maximal supported WETH balance.
         large.checkPost(1e30, 1e24);
         vm.expectRevert(S.AmountOutOfRange.selector);
         large.checkPost(1e30 + 1, 1e24);
