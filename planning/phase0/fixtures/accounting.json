@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "referencePriceMicroUsdc": "2000000000",
+  "spreadBps": 30,
+  "intensityBps": 1000,
+  "quotes": [
+    {
+      "id": "target-sell",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "WETH",
+      "amountIn": "100000000000000000",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "199400000",
+      "expectedPostWethWei": "10100000000000000000",
+      "expectedPostUsdcUnits": "19800600000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "target-buy",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "USDC",
+      "amountIn": "200000000",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "99700897308075772",
+      "expectedPostWethWei": "9900299102691924228",
+      "expectedPostUsdcUnits": "20200000000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "excess-sell",
+      "wethWei": "12000000000000000000",
+      "usdcUnits": "16000000000",
+      "tokenIn": "WETH",
+      "amountIn": "100000000000000000",
+      "expectedWeightBps": 6000,
+      "expectedSkewBps": 100,
+      "expectedOut": "197406000",
+      "expectedPostWethWei": "12100000000000000000",
+      "expectedPostUsdcUnits": "15802594000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "excess-buy",
+      "wethWei": "12000000000000000000",
+      "usdcUnits": "16000000000",
+      "tokenIn": "USDC",
+      "amountIn": "200000000",
+      "expectedWeightBps": 6000,
+      "expectedSkewBps": 100,
+      "expectedOut": "100707977078864416",
+      "expectedPostWethWei": "11899292022921135584",
+      "expectedPostUsdcUnits": "16200000000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "deficit-sell",
+      "wethWei": "8000000000000000000",
+      "usdcUnits": "24000000000",
+      "tokenIn": "WETH",
+      "amountIn": "100000000000000000",
+      "expectedWeightBps": 4000,
+      "expectedSkewBps": -100,
+      "expectedOut": "201394000",
+      "expectedPostWethWei": "8100000000000000000",
+      "expectedPostUsdcUnits": "23798606000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "deficit-buy",
+      "wethWei": "8000000000000000000",
+      "usdcUnits": "24000000000",
+      "tokenIn": "USDC",
+      "amountIn": "200000000",
+      "expectedWeightBps": 4000,
+      "expectedSkewBps": -100,
+      "expectedOut": "98713759710966111",
+      "expectedPostWethWei": "7901286240289033889",
+      "expectedPostUsdcUnits": "24200000000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "cross-target",
+      "wethWei": "9900000000000000000",
+      "usdcUnits": "20200000000",
+      "tokenIn": "WETH",
+      "amountIn": "200000000000000000",
+      "expectedWeightBps": 4950,
+      "expectedSkewBps": -5,
+      "expectedOut": "398999400",
+      "expectedPostWethWei": "10100000000000000000",
+      "expectedPostUsdcUnits": "19801000600",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "at-size-cap",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "WETH",
+      "amountIn": "500000000000000000",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "997000000",
+      "expectedPostWethWei": "10500000000000000000",
+      "expectedPostUsdcUnits": "19003000000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "over-size-cap",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "WETH",
+      "amountIn": "500000000000000001",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "997000000",
+      "expectedPostWethWei": "10500000000000000001",
+      "expectedPostUsdcUnits": "19003000000",
+      "expectedResult": "TradeTooLarge"
+    },
+    {
+      "id": "upper-unsafe",
+      "wethWei": "14000000000000000000",
+      "usdcUnits": "12000000000",
+      "tokenIn": "WETH",
+      "amountIn": "100000000000000000",
+      "expectedWeightBps": 7000,
+      "expectedSkewBps": 200,
+      "expectedOut": "195412000",
+      "expectedPostWethWei": "14100000000000000000",
+      "expectedPostUsdcUnits": "11804588000",
+      "expectedResult": "ExposureOutOfBounds"
+    },
+    {
+      "id": "lower-unsafe",
+      "wethWei": "6000000000000000000",
+      "usdcUnits": "28000000000",
+      "tokenIn": "USDC",
+      "amountIn": "200000000",
+      "expectedWeightBps": 3000,
+      "expectedSkewBps": -200,
+      "expectedOut": "97745977753015463",
+      "expectedPostWethWei": "5902254022246984537",
+      "expectedPostUsdcUnits": "28200000000",
+      "expectedResult": "ExposureOutOfBounds"
+    },
+    {
+      "id": "recover-inside",
+      "wethWei": "14100000000000000000",
+      "usdcUnits": "11800000000",
+      "tokenIn": "USDC",
+      "amountIn": "500000000",
+      "expectedWeightBps": 7050,
+      "expectedSkewBps": 200,
+      "expectedOut": "254339023745091256",
+      "expectedPostWethWei": "13845660976254908744",
+      "expectedPostUsdcUnits": "12300000000",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "recover-insufficient",
+      "wethWei": "15000000000000000000",
+      "usdcUnits": "10000000000",
+      "tokenIn": "USDC",
+      "amountIn": "200000000",
+      "expectedWeightBps": 7500,
+      "expectedSkewBps": 200,
+      "expectedOut": "101735609498036502",
+      "expectedPostWethWei": "14898264390501963498",
+      "expectedPostUsdcUnits": "10200000000",
+      "expectedResult": "ExposureOutOfBounds"
+    },
+    {
+      "id": "dust-zero",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "WETH",
+      "amountIn": "1",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "0",
+      "expectedPostWethWei": "10000000000000000001",
+      "expectedPostUsdcUnits": "20000000000",
+      "expectedResult": "ZeroOutput"
+    },
+    {
+      "id": "micro-usdc",
+      "wethWei": "10000000000000000000",
+      "usdcUnits": "20000000000",
+      "tokenIn": "USDC",
+      "amountIn": "1",
+      "expectedWeightBps": 5000,
+      "expectedSkewBps": 0,
+      "expectedOut": "498504486",
+      "expectedPostWethWei": "9999999999501495514",
+      "expectedPostUsdcUnits": "20000000001",
+      "expectedResult": "PASS"
+    },
+    {
+      "id": "negative-truncation",
+      "wethWei": "9999000000000000000",
+      "usdcUnits": "20002000000",
+      "tokenIn": "WETH",
+      "amountIn": "100000000000000000",
+      "expectedWeightBps": 4999,
+      "expectedSkewBps": 0,
+      "expectedOut": "199400000",
+      "expectedPostWethWei": "10099000000000000000",
+      "expectedPostUsdcUnits": "19802600000",
+      "expectedResult": "PASS"
+    }
+  ],
+  "guardBoundaries": [
+    {
+      "id": "lower-exact",
+      "postWethWei": "3000000000000000000",
+      "postUsdcUnits": "14000000000",
+      "expectedPass": true
+    },
+    {
+      "id": "lower-inside",
+      "postWethWei": "3000000000000000001",
+      "postUsdcUnits": "14000000000",
+      "expectedPass": true
+    },
+    {
+      "id": "lower-outside",
+      "postWethWei": "2999999999999999999",
+      "postUsdcUnits": "14000000000",
+      "expectedPass": false
+    },
+    {
+      "id": "upper-exact",
+      "postWethWei": "7000000000000000000",
+      "postUsdcUnits": "6000000000",
+      "expectedPass": true
+    },
+    {
+      "id": "upper-inside",
+      "postWethWei": "6999999999999999999",
+      "postUsdcUnits": "6000000000",
+      "expectedPass": true
+    },
+    {
+      "id": "upper-outside",
+      "postWethWei": "7000000000000000001",
+      "postUsdcUnits": "6000000000",
+      "expectedPass": false
+    },
+    {
+      "id": "empty",
+      "postWethWei": "0",
+      "postUsdcUnits": "0",
+      "expectedPass": false
+    },
+    {
+      "id": "all-usdc",
+      "postWethWei": "0",
+      "postUsdcUnits": "1000000",
+      "expectedPass": false
+    },
+    {
+      "id": "all-weth",
+      "postWethWei": "1000000000000000000",
+      "postUsdcUnits": "0",
+      "expectedPass": false
+    }
+  ]
+}
