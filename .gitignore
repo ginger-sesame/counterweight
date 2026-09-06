@@ -4,3 +4,7 @@ docs/
 
 # Planning validation dependencies
 node_modules/
+out/
+cache/
+artifacts/
+.env
