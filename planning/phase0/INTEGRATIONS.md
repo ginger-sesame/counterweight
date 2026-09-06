@@ -30,15 +30,15 @@ Source inspection:
 - `src/libs/OpcodeList.sol`: 0xd0..0xef unallocated; select 0xd0 for Guard wrapper, 0xd1 for Skew quote. Do not consume reserved 0xf0..0xff or renumber upstream instructions.
 - Aqua `safeBalances` returns allocated balances, not ERC-20 balanceOf; `ship` registers without moving tokens; `push` and `pull` move tokens; `dock` invalidates allocations. Token array must contain both assets when docking.
 
-Selected implementation: a clearly attributed modified SwapVM base with minimal added validation hooks in BOTH `quote` and `swap`, plus a Counterweight dispatcher/immutable epoch registry. Preserve upstream transfer logic. Hooks validate supported order/trait shape at entry and final balances after swap. Upstream external quote/swap are non-virtual; the controlled source modification is intentional and must be a separately reviewed diff, not an imagined inheritance hook.
+Selected implementation: a clearly attributed modified SwapVM base with minimal added validation hooks in BOTH `quote` and `swap`, plus a Counterweight dispatcher/immutable epoch controller. Preserve upstream transfer logic. Hooks validate supported order/trait shape at entry and final balances after swap. Upstream external quote/swap are non-virtual; the controlled source modification is intentional and must be a separately reviewed diff, not an imagined inheritance hook.
 
-Canonical program is exactly `0xd000d100`: guard wrapper (no args) invokes remainder once, Skew computes output, wrapper validates projected balances after the quote opcode. Registration binds the entire canonical order hash, maker, tokens, epoch, safety config and program. Reject unregistered hashes, changed bytecode, extra instructions, missing/reordered guard, fee instructions, direct-signature mode and noncanonical arguments. Enforce entry validation even for an empty program, which otherwise never invokes dispatch.
+Canonical program is exactly `0xd008 || uint64(epochId) || 0xd100` (12 bytes, epochId encoded big-endian in the 8 guard argument bytes): guard wrapper invokes remainder once, Skew computes output, wrapper validates projected balances after the quote opcode. The embedded monotonically increasing epochId changes order bytes/hash on rollover; the wrapper requires it to match the immutable controller epoch. The controller constructor binds the entire canonical order hash, maker, tokens, epoch, safety config and program. Reject unregistered hashes, changed bytecode, extra instructions, missing/reordered guard, fee instructions, direct-signature mode and noncanonical arguments. Enforce entry validation even for an empty program, which otherwise never invokes dispatch.
 
 Only exact-in, full amount, no native value/unwrap, maker default receiver, zero maker hooks, no taker callbacks, first-transfer-from-taker, transferFrom-and-Aqua-push, and default taker recipient are supported. Token direction is selected with the upstream builder, not hard-coded address ordering. TakerArgs carry the ACCOUNTING envelope. Require a nonempty minOutput and matching deadline. No arbitrary external callbacks or delegatecall in this program.
 
 Before runLoop require physical balances >= allocations. After settlement assert allocation equals projected post-state and maker token deltas equal full input and quoted output. This verifies actual settlement, not just a projected guard. Failures revert atomically. Additional token semantics are unsupported; canonical WETH and USDC transfer/approval behavior is the selected scope. Upstream order-hash lock plus one registered active order per maker and disabled callbacks bounds reentrancy; test attempted reentry and altered program paths in V-05.
 
-Phase 0 experiment: the pinned upstream `SwapVmAccounting.t.sol` compiled and all 16 tests passed under Foundry 1.8.1 / solc 0.8.30. This establishes baseline toolchain compatibility, not the custom guard or F1. See evidence/upstream-review.md.
+Phase 0 experiment: the pinned upstream `SwapVmAccounting.t.sol` compiled and all 16 tests passed under Foundry 1.8.1 / solc 0.8.30. A further 6 ControlsAqua tests passed through shipping/Aqua settlement and rejection paths. This establishes baseline toolchain/integration compatibility (22 upstream tests), not the custom guard or F1. See evidence/upstream-review.md.
 
 ## D06: accepted real-token environment
 
@@ -73,3 +73,28 @@ Current credential state: GRAPH_API_KEY absent. F2 live reads NOT RUN. Concrete 
 [Organization wallets](https://docs.privy.io/wallets/overview/solutions/organization-wallets), [owner/signer configuration](https://docs.privy.io/controls/authorization-keys/owners/configuration/programmable), [policies](https://docs.privy.io/controls/policies/overview), [Ethereum policy examples](https://docs.privy.io/controls/policies/example-policies/ethereum), and [sign transaction API](https://docs.privy.io/api-reference/wallets/ethereum/eth-sign-transaction) support the selected policy/signer request shape. Installed `@privy-io/node@0.34.0` declarations include chain_id, calldata ABI conditions, owner_id, and signer override_policy_ids. See OPERATIONS for the actual policy design.
 
 Privy app credentials are absent. Live F3 is NOT RUN. Set up an app and organization-controlled authorization quorum, then inject credentials and role authorization keys; generating policies and expected request fixtures is possible without them. No claim of account-level policy acceptance is made until F3.
+
+## Component call graph and trust boundaries
+
+```mermaid
+flowchart TD
+  Graph[Two live Graph deployments] --> Normalizer[Off-chain schema and freshness validation]
+  Normalizer --> Mapper[Off-chain bounded regime mapper]
+  Mapper --> Request[Unsigned setTuning request]
+  Request --> Privy[Privy signer authorization and policy]
+  Quorum[Organization owner quorum] --> Privy
+  Privy --> Broadcast[Signed transaction checked and broadcast locally]
+  Broadcast --> Controller[On-chain immutable epoch and bounded tuning controller]
+  Taker[Funded taker] --> Entry[Modified SwapVM quote or swap entry validation]
+  Controller --> Entry
+  Entry --> Guard[Guard wrapper opcode]
+  Guard --> Skew[Skew quote opcode]
+  Skew --> PostGuard[Exact projected exposure check]
+  PostGuard --> Settlement[Official SwapVM settlement logic]
+  Settlement --> Aqua[Aqua allocation updates and ERC20 transfers]
+  Aqua --> Physical[Maker and taker physical token balances]
+  Physical --> PostCheck[Actual settlement assertions]
+  PostCheck --> Evidence[Run manifest and state assertions]
+```
+
+The quote path ends after projected validation and never settles. The swap path continues through settlement and post-check within one atomic transaction. Owner commissioning separately deploys the immutable controller/router, approves Aqua, and ships the canonical order. Reads of controller configuration cannot grant authority; every mutating controller call separately checks maker identity and ranges. Graph, request construction and broadcaster are off-chain; guard, settlement and hard configuration are on-chain. Privy enforces the distinction between authorized signers sharing one maker wallet.

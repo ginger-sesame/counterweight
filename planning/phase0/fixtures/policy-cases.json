@@ -1,0 +1,226 @@
+{
+  "scope": "tabletop rule evaluation only; no provider enforcement claimed",
+  "cases": [
+    {
+      "id": "valid",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": true
+    },
+    {
+      "id": "min-boundaries",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "0",
+        "setTuning.spreadBps": "10"
+      },
+      "expectedAllow": true
+    },
+    {
+      "id": "max-boundaries",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "1000",
+        "setTuning.spreadBps": "100"
+      },
+      "expectedAllow": true
+    },
+    {
+      "id": "wrong-destination",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${SECOND_CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "wrong-chain",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "1",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "native-value",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "1",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "wrong-function",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "resume",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "approve",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "approve",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "intensity-over",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "1001",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "spread-under",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "9"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "spread-over",
+      "request": {
+        "method": "eth_signTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "101"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "send-api",
+      "request": {
+        "method": "eth_sendTransaction",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "typed-signing",
+      "request": {
+        "method": "eth_signTypedData_v4",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "raw-signing",
+      "request": {
+        "method": "personal_sign",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "batch",
+      "request": {
+        "method": "wallet_sendCalls",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "7702",
+      "request": {
+        "method": "eth_sign7702Authorization",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    },
+    {
+      "id": "export",
+      "request": {
+        "method": "exportPrivateKey",
+        "chain_id": "31337",
+        "to": "${CONTROLLER_ADDRESS}",
+        "value": "0",
+        "function_name": "setTuning",
+        "setTuning.intensityBps": "900",
+        "setTuning.spreadBps": "28"
+      },
+      "expectedAllow": false
+    }
+  ]
+}

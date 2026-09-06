@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import assert from 'node:assert/strict';
 import {parse, buildASTSchema, visit, validate} from 'graphql';
-import {encodeFunctionData, decodeFunctionData} from 'viem';
+import {encodeFunctionData, decodeFunctionData, encodePacked, keccak256} from 'viem';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const root=resolve(here,'../..');
@@ -62,6 +62,9 @@ assert(validate(schema,parse(query.replace('$pool: String!','$pool: Bytes!'))).l
 assert(validate(schema,parse(query.replace('hourlyVolumeUSD','nonexistentVolume'))).length>0, 'Must reject unknown entity fields');
 const policy=JSON.parse(readFileSync(resolve(base,'fixtures/updater-policy.json'),'utf8'));
 const abi=policy.rules[0].conditions.find(c=>c.field_source==='ethereum_calldata').abi;
+const program = id => encodePacked(['uint8','uint8','uint64','uint8','uint8'], [208,8,id,209,0]);
+assert.equal((program(1n).length-2)/2,12);
+assert.notEqual(keccak256(program(1n)),keccak256(program(2n)));
 const data=encodeFunctionData({abi,functionName:'setTuning',args:[900,28,1n,1788690900]});
 const decoded=decodeFunctionData({abi,data});
 assert.equal(decoded.functionName,'setTuning');
@@ -70,7 +73,10 @@ const temp=mkdtempSync(resolve(tmpdir(),'cw-policy-typecheck-'));
 try {
   const file=resolve(temp,'check.mts');
   const typePath=resolve(here,'node_modules/@privy-io/node/resources/policies.js');
-  writeFileSync(file,`import type { PolicyCreateParams } from ${JSON.stringify(typePath)};\nconst policy: PolicyCreateParams = ${JSON.stringify(policy)};\nvoid policy;\n`);
+  const declarations = ['updater-policy.json','emergency-policy.json','owner-policy.json'].map((name,i)=>`const p${i}: PolicyCreateParams = ${readFileSync(resolve(base,'fixtures',name),'utf8')};`).join('\n');
+  const wallet = readFileSync(resolve(base,'fixtures/wallet-create.json'),'utf8');
+  const quorum = readFileSync(resolve(base,'fixtures/owner-quorum-create.json'),'utf8');
+  writeFileSync(file,`import type { PolicyCreateParams } from ${JSON.stringify(typePath)};\nimport type { WalletCreateParams } from ${JSON.stringify(resolve(here,'node_modules/@privy-io/node/resources/wallets/wallets.js'))};\nimport type { KeyQuorumCreateParams } from ${JSON.stringify(resolve(here,'node_modules/@privy-io/node/resources/key-quorums.js'))};\n${declarations}\nconst wallet: WalletCreateParams = ${wallet};\nconst quorum: KeyQuorumCreateParams = ${quorum};\n`);
   execFileSync(resolve(here,'node_modules/.bin/tsc'),['--noEmit','--skipLibCheck','--target','ES2022','--module','NodeNext','--moduleResolution','NodeNext',file],{stdio:'pipe'});
 } finally {rmSync(temp,{recursive:true,force:true});}
-console.log(JSON.stringify({result:'PASS',scope:'P-03 source compatibility; not live F2/F3',checks:['two registry identities and schema pins','GraphQL query fields against pinned source SDL','reference filter scalar from Graph Node source','wrong-type and unknown-field mutation rejection','Privy policy typecheck against SDK 0.34.0','setTuning ABI encode/decode'],sourceHashes:hashes},null,2));
+console.log(JSON.stringify({result:'PASS',checkedAt:new Date().toISOString(),scope:'P-03 source compatibility; not live F2/F3',checks:['two registry identities and schema pins','GraphQL query fields against pinned source SDL','reference filter scalar from Graph Node source','wrong-type and unknown-field mutation rejection','Three Privy policies, wallet and quorum typecheck against SDK 0.34.0','setTuning ABI encode/decode','12-byte epoch-salted program length and epoch distinction'],sourceHashes:hashes},null,2));

@@ -8,7 +8,7 @@ BLOCK = 25917718
 HASH = '0x5dcb9480fc701b19c587e6834118725afa28ef2ba1fca9fc9d14aa9a289c059e'
 WETH = '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 USDC = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
-URL = os.environ.get('ETHEREUM_RPC_URL', 'https://ethereum-rpc.publicnode.com')
+URL = os.environ.get('ETHEREUM_RPC_URL', 'https://eth-mainnet.public.blastapi.io')
 
 
 def rpc(method, params):

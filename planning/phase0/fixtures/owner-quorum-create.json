@@ -1,0 +1,8 @@
+{
+  "authorization_threshold": 2,
+  "public_keys": [
+    "${ADMIN_A_PUBLIC_KEY}",
+    "${ADMIN_B_PUBLIC_KEY}",
+    "${ADMIN_C_PUBLIC_KEY}"
+  ]
+}

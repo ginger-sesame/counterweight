@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "chain_type": "ethereum",
+  "owner_id": "${OWNER_QUORUM_ID}",
+  "name": "counterweight-emergency-v1",
+  "rules": [
+    {
+      "name": "pause-local-epoch",
+      "method": "eth_signTransaction",
+      "action": "ALLOW",
+      "conditions": [
+        {
+          "field_source": "ethereum_transaction",
+          "field": "chain_id",
+          "operator": "eq",
+          "value": "31337"
+        },
+        {
+          "field_source": "ethereum_transaction",
+          "field": "to",
+          "operator": "eq",
+          "value": "${CONTROLLER_ADDRESS}"
+        },
+        {
+          "field_source": "ethereum_transaction",
+          "field": "value",
+          "operator": "eq",
+          "value": "0"
+        },
+        {
+          "field_source": "ethereum_calldata",
+          "field": "function_name",
+          "abi": [
+            {
+              "type": "function",
+              "name": "pause",
+              "stateMutability": "nonpayable",
+              "inputs": [],
+              "outputs": []
+            }
+          ],
+          "operator": "eq",
+          "value": "pause"
+        }
+      ]
+    }
+  ]
+}
