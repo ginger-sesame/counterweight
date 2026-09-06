@@ -27,7 +27,7 @@ Alternative rejected: live Graph price for exposure, because it would let the tu
 | supported numerical envelope | Each balance/input/post-balance <= 10^30 base units |
 | owner changes | New immutable epoch; no in-place safety/price/target setter |
 
-Require `0 < min < target < max < 10_000`, positive price and size (size <=10^30 micro-USDC), valid epoch times, exact token pair, nonzero authority addresses, and a distinct token pair. Runtime tuning can never change these fields. Enforce envelope bounds before arithmetic; maximum product used for guard comparisons is below 10^47, safely below uint256 capacity. WETH-output quote numerator is bounded below 10^56. No unchecked arithmetic.
+Require `0 < min < target < max < 10_000`, positive price and size (size <=10^30 micro-USDC), valid epoch times, exact token pair, nonzero authority addresses, and a distinct token pair. Runtime tuning can never change these fields. Enforce envelope bounds before arithmetic; maximum product used for guard comparisons is below 2 * 10^52, safely below uint256 capacity. WETH-output quote numerator is bounded below 10^56. No unchecked arithmetic.
 
 The input-size test is exact: WETH input `input * P <= maxInputValueMicroUsdc * 10^18`; USDC input `input <= maxInputValueMicroUsdc`. The cap is per execution, not a daily risk budget.
 

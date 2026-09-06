@@ -1,0 +1,92 @@
+
+> counterweight@0.1.0 test
+> npm run test:strategy && npm run test:e2e
+
+
+> counterweight@0.1.0 test:strategy
+> forge test --match-path 'test/strategy/*.t.sol'
+
+Compiling 24 files with Solc 0.8.30
+Solc 0.8.30 finished in 2.71s
+Compiler run successful with warnings:
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:230:5:
+    |
+230 |     function test_SkewCapsAndRetainedSpread() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:255:5:
+    |
+255 |     function testFuzz_PostGuardMatchesIndependentInterval(uint128 rawW, uint128 rawU) public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:267:5:
+    |
+267 |     function testFuzz_AcceptedQuotePreservesInvariant(
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Ran 14 tests for test/strategy/Strategy.t.sol:StrategyTest
+[PASS] testFuzz_AcceptedQuotePreservesInvariant(uint64,uint64,uint64,bool,uint16,uint16) (runs: 1000, μ: 43526, ~: 43534)
+[PASS] testFuzz_PostGuardMatchesIndependentInterval(uint128,uint128) (runs: 1000, μ: 26751, ~: 26570)
+[PASS] testFuzz_RegimeIsolation(uint16,uint16,bool) (runs: 1000, μ: 76326, ~: 76247)
+[PASS] test_EpochBoundariesAndValuation() (gas: 165315)
+[PASS] test_ExactExposureBoundaries() (gas: 180037)
+[PASS] test_GoldenQuotes() (gas: 1210587)
+[PASS] test_ImmediatelyInsideSizeCapsAndPhysicalEnvelope() (gas: 97340)
+[PASS] test_InvalidConfiguration() (gas: 17586)
+[PASS] test_MaximumArithmeticEnvelope() (gas: 99179)
+[PASS] test_NoSafetyMutationSurface() (gas: 87641)
+[PASS] test_PhysicalBackingAndExternalChanges() (gas: 120162)
+[PASS] test_SkewCapsAndRetainedSpread() (gas: 66601)
+[PASS] test_UnsupportedAndInvalidInputs() (gas: 225257)
+[PASS] test_UsdcSizeBoundary() (gas: 50506)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 118.73ms (202.88ms CPU time)
+
+Ran 1 test suite in 121.94ms (118.73ms CPU time): 14 tests passed, 0 failed, 0 skipped (14 total tests)
+
+> counterweight@0.1.0 test:e2e
+> node --test test/prototype/*.test.mjs
+
+TAP version 13
+# Subtest: public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+ok 1 - public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+  ---
+  duration_ms: 4946.691732
+  type: 'test'
+  ...
+# Subtest: invalid economic configuration is rejected by contract constructor
+ok 2 - invalid economic configuration is rejected by contract constructor
+  ---
+  duration_ms: 4619.015299
+  type: 'test'
+  ...
+# Subtest: configuration schema rejects forbidden fields and lossy or overflowing numbers
+ok 3 - configuration schema rejects forbidden fields and lossy or overflowing numbers
+  ---
+  duration_ms: 1434.350235
+  type: 'test'
+  ...
+# Subtest: wrong independent expectation cannot produce a passing artifact
+ok 4 - wrong independent expectation cannot produce a passing artifact
+  ---
+  duration_ms: 4611.643069
+  type: 'test'
+  ...
+# Subtest: missing assertions, unsupported flags and missing tools fail explicitly
+ok 5 - missing assertions, unsupported flags and missing tools fail explicitly
+  ---
+  duration_ms: 1222.883222
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 16897.01493

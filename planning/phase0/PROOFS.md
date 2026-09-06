@@ -1,6 +1,6 @@
 # D12: toolchain, executable proof procedures, and handoff
 
-Selected by root, 2026-09-06. **Only the Phase 0 commands currently exist.** All commands labeled planned are interface/deliverable contracts for later agents; do not mark them run or gates passed until implemented and executed.
+Selected by root, 2026-09-06. **Phase 0 and Phase 1 commands now exist; see [Phase 1 handoff](../phase1/README.md).** All commands labeled planned are interface/deliverable contracts for later agents; do not mark them run or gates passed until implemented and executed.
 
 ## Toolchain and file ownership
 
@@ -109,7 +109,7 @@ Planned `node scripts/proofs/mvp.mjs --rpc http://127.0.0.1:8545 --out artifacts
 
 It then covers stale-data recovery, inventory changes, failed settlement, pause/resume, revocation and restart reconciliation. Failure subcases can use explicit local snapshots; record branch IDs and never present mutually inconsistent snapshots as one uninterrupted chain history. Another agent reproduces the run from tracked files, approved credentials and documented prerequisites.
 
-Planned deterministic commands: `forge test --match-path 'test/strategy/*.t.sol'`, `forge test --match-path 'test/integration/*.t.sol'`, `forge test --match-path 'test/invariant/*.t.sol'`, `node --test 'test/data/*.test.mjs'`, `node --test 'test/operations/*.test.mjs'`. Stage simulated E2E: `node scripts/proofs/prototype.mjs --fixtures planning/phase0/fixtures/accounting.json`.
+Implemented Phase 1 commands: `npm run test:strategy`, `npm run test:e2e`, and the simulated prototype runner below. Remaining integration/invariant/data/operations commands are planned. Original command contracts: `forge test --match-path 'test/strategy/*.t.sol'`, `forge test --match-path 'test/integration/*.t.sol'`, `forge test --match-path 'test/invariant/*.t.sol'`, `node --test 'test/data/*.test.mjs'`, `node --test 'test/operations/*.test.mjs'`. Stage simulated E2E: `node scripts/proofs/prototype.mjs --fixtures planning/phase0/fixtures/accounting.json`.
 
 CI (Phase 1 deliverable): pinned tool install, npm ci, offline specification check, deterministic S/G/O tests, and relevant local V integration. Property tests use seed 0xc0ffee and at least 1,000 generated examples per property; stateful invariant test has at least 128 sequences of depth 32, with failure seed/action sequence retained. Credentialed F2/F3 and archive fork jobs are explicit separate runs. Set unit job timeout 10 minutes, fork job 20 minutes, live proof job 30 minutes; individual network timeout/retry as DATA. A missing required job result cannot be counted as PASS.
 

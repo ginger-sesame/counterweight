@@ -1,0 +1,792 @@
+{
+  "schemaVersion": 1,
+  "runAt": "2026-09-06T22:54:55.414Z",
+  "gitRevision": null,
+  "sourceHashes": {
+    "contracts/StrategyPrototype.sol": "6039c95d13425ca02ab5cd0da386048e06a24d57c29c4a95ac657041602b99e1",
+    "contracts/libraries/StrategyTypes.sol": "531efb03f3799f60c39e9b4b5800ea68bbe309d2b757d7726b55eb82827edef4",
+    "contracts/libraries/QuoteMath.sol": "95a12ba6bd1fa28f38631d50597584a8a7ef894dc25e7a64cbfa9beb4d8a19bd",
+    "contracts/libraries/InventoryGuard.sol": "19607e39f69d9c2011510b9523a38e5516d84ddb25fb4684f9fb7636d770d865",
+    "foundry.toml": "5baa9b00652cd862124015f0f36f6db9e2cc1429b274729842e8ef1336cb7eee",
+    "package-lock.json": "417f1de96391c66f04a9e08aaf7fee0db183823ebad20b9ab35bf671e67c0806"
+  },
+  "nodeVersion": "v22.22.1",
+  "phase": "P1",
+  "testIds": [
+    "S-08"
+  ],
+  "environment": "isolated-anvil",
+  "simulated": true,
+  "tokenSettlement": false,
+  "chainId": 31337,
+  "config": {
+    "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "epochId": "1",
+    "start": 1788690000,
+    "end": 1788691800,
+    "targetWethBps": 5000,
+    "minWethBps": 3000,
+    "maxWethBps": 7000,
+    "priceMicroUsdc": "2000000000",
+    "maxInputValueMicroUsdc": "1000000000"
+  },
+  "contract": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "deploymentTransaction": "0x401d4ae2a8719fe0364375a41ed6887679db7fb5c3efd36711e9b6dd80a89adc",
+  "safetyDigestBefore": "0xf63f35bf281a95cf79ccc38ff6f508f07550856be62ac7f531d742655d19f7d8",
+  "safetyDigestAfter": "0xf63f35bf281a95cf79ccc38ff6f508f07550856be62ac7f531d742655d19f7d8",
+  "assertions": "PASS",
+  "outcomes": [
+    {
+      "id": "target-sell",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "199400000",
+        "postWeth": "10100000000000000000",
+        "postUsdc": "19800600000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "target-buy",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "99700897308075772",
+        "postWeth": "9900299102691924228",
+        "postUsdc": "20200000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "excess-sell",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "12000000000000000000",
+        "usdc": "16000000000",
+        "physicalWeth": "12000000000000000000",
+        "physicalUsdc": "16000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "197406000",
+        "postWeth": "12100000000000000000",
+        "postUsdc": "15802594000",
+        "weightBps": "6000",
+        "skewBps": "100",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "excess-buy",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "12000000000000000000",
+        "usdc": "16000000000",
+        "physicalWeth": "12000000000000000000",
+        "physicalUsdc": "16000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "100707977078864416",
+        "postWeth": "11899292022921135584",
+        "postUsdc": "16200000000",
+        "weightBps": "6000",
+        "skewBps": "100",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "deficit-sell",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "8000000000000000000",
+        "usdc": "24000000000",
+        "physicalWeth": "8000000000000000000",
+        "physicalUsdc": "24000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "201394000",
+        "postWeth": "8100000000000000000",
+        "postUsdc": "23798606000",
+        "weightBps": "4000",
+        "skewBps": "-100",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "deficit-buy",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "8000000000000000000",
+        "usdc": "24000000000",
+        "physicalWeth": "8000000000000000000",
+        "physicalUsdc": "24000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "98713759710966111",
+        "postWeth": "7901286240289033889",
+        "postUsdc": "24200000000",
+        "weightBps": "4000",
+        "skewBps": "-100",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "cross-target",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "9900000000000000000",
+        "usdc": "20200000000",
+        "physicalWeth": "9900000000000000000",
+        "physicalUsdc": "20200000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "200000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "398999400",
+        "postWeth": "10100000000000000000",
+        "postUsdc": "19801000600",
+        "weightBps": "4950",
+        "skewBps": "-5",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "at-size-cap",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "500000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "997000000",
+        "postWeth": "10500000000000000000",
+        "postUsdc": "19003000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "over-size-cap",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "500000000000000001",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "TradeTooLarge",
+      "projectedWeth": "10000000000000000000",
+      "projectedUsdc": "20000000000"
+    },
+    {
+      "id": "upper-unsafe",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "14000000000000000000",
+        "usdc": "12000000000",
+        "physicalWeth": "14000000000000000000",
+        "physicalUsdc": "12000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "14000000000000000000",
+      "projectedUsdc": "12000000000"
+    },
+    {
+      "id": "lower-unsafe",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "6000000000000000000",
+        "usdc": "28000000000",
+        "physicalWeth": "6000000000000000000",
+        "physicalUsdc": "28000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "6000000000000000000",
+      "projectedUsdc": "28000000000"
+    },
+    {
+      "id": "recover-inside",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "14100000000000000000",
+        "usdc": "11800000000",
+        "physicalWeth": "14100000000000000000",
+        "physicalUsdc": "11800000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "500000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "254339023745091256",
+        "postWeth": "13845660976254908744",
+        "postUsdc": "12300000000",
+        "weightBps": "7050",
+        "skewBps": "200",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "recover-insufficient",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "15000000000000000000",
+        "usdc": "10000000000",
+        "physicalWeth": "15000000000000000000",
+        "physicalUsdc": "10000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "15000000000000000000",
+      "projectedUsdc": "10000000000"
+    },
+    {
+      "id": "dust-zero",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "1",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ZeroOutput",
+      "projectedWeth": "10000000000000000000",
+      "projectedUsdc": "20000000000"
+    },
+    {
+      "id": "micro-usdc",
+      "regime": "normal",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "1",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "498504486",
+        "postWeth": "9999999999501495514",
+        "postUsdc": "20000000001",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "negative-truncation",
+      "regime": "normal",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "9999000000000000000",
+        "usdc": "20002000000",
+        "physicalWeth": "9999000000000000000",
+        "physicalUsdc": "20002000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "199400000",
+        "postWeth": "10099000000000000000",
+        "postUsdc": "19802600000",
+        "weightBps": "4999",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": true,
+          "intensityBps": 1000,
+          "spreadBps": 30
+        }
+      }
+    },
+    {
+      "id": "target-sell",
+      "regime": "missing",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": false,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "198000000",
+        "postWeth": "10100000000000000000",
+        "postUsdc": "19802000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": false,
+          "intensityBps": 0,
+          "spreadBps": 100
+        }
+      }
+    },
+    {
+      "id": "upper-unsafe",
+      "regime": "missing",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "14000000000000000000",
+        "usdc": "12000000000",
+        "physicalWeth": "14000000000000000000",
+        "physicalUsdc": "12000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": false,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "14000000000000000000",
+      "projectedUsdc": "12000000000"
+    },
+    {
+      "id": "target-sell",
+      "regime": "adversarial",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 65535,
+        "spreadBps": 0
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "198000000",
+        "postWeth": "10100000000000000000",
+        "postUsdc": "19802000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": false,
+          "intensityBps": 0,
+          "spreadBps": 100
+        }
+      }
+    },
+    {
+      "id": "upper-unsafe",
+      "regime": "adversarial",
+      "tokenIn": "WETH",
+      "inventory": {
+        "weth": "14000000000000000000",
+        "usdc": "12000000000",
+        "physicalWeth": "14000000000000000000",
+        "physicalUsdc": "12000000000"
+      },
+      "request": {
+        "tokenIn": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "amountIn": "100000000000000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 65535,
+        "spreadBps": 0
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "14000000000000000000",
+      "projectedUsdc": "12000000000"
+    },
+    {
+      "id": "target-buy",
+      "regime": "missing",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": false,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "99009900990099009",
+        "postWeth": "9900990099009900991",
+        "postUsdc": "20200000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": false,
+          "intensityBps": 0,
+          "spreadBps": 100
+        }
+      }
+    },
+    {
+      "id": "lower-unsafe",
+      "regime": "missing",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "6000000000000000000",
+        "usdc": "28000000000",
+        "physicalWeth": "6000000000000000000",
+        "physicalUsdc": "28000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": false,
+        "intensityBps": 1000,
+        "spreadBps": 30
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "6000000000000000000",
+      "projectedUsdc": "28000000000"
+    },
+    {
+      "id": "target-buy",
+      "regime": "adversarial",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "10000000000000000000",
+        "usdc": "20000000000",
+        "physicalWeth": "10000000000000000000",
+        "physicalUsdc": "20000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 65535,
+        "spreadBps": 0
+      },
+      "result": "PASS",
+      "quote": {
+        "amountOut": "99009900990099009",
+        "postWeth": "9900990099009900991",
+        "postUsdc": "20200000000",
+        "weightBps": "5000",
+        "skewBps": "0",
+        "effectiveTuning": {
+          "available": false,
+          "intensityBps": 0,
+          "spreadBps": 100
+        }
+      }
+    },
+    {
+      "id": "lower-unsafe",
+      "regime": "adversarial",
+      "tokenIn": "USDC",
+      "inventory": {
+        "weth": "6000000000000000000",
+        "usdc": "28000000000",
+        "physicalWeth": "6000000000000000000",
+        "physicalUsdc": "28000000000"
+      },
+      "request": {
+        "tokenIn": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "amountIn": "200000000",
+        "exactIn": true,
+        "partialFill": false
+      },
+      "tuning": {
+        "available": true,
+        "intensityBps": 65535,
+        "spreadBps": 0
+      },
+      "result": "ExposureOutOfBounds",
+      "projectedWeth": "6000000000000000000",
+      "projectedUsdc": "28000000000"
+    }
+  ]
+}
