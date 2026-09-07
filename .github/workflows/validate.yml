@@ -1,13 +1,19 @@
-name: Deterministic strategy validation
+name: Counterweight validation
 on:
   push:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      run_fork:
+        description: Run the canonical-token mainnet fork proof
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
-  phase1:
+  deterministic:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,22 +25,51 @@ jobs:
           npm ci --ignore-scripts --no-audit --no-fund
           bash scripts/setup/install-foundry.sh
           echo "$PWD/.tools/foundry" >> "$GITHUB_PATH"
-      - name: Validate independent specification fixtures
-        run: python3 scripts/planning/validate_phase0.py
-      - name: Check Solidity format and run seeded strategy tests
+      - name: Validate specification and upstream integration provenance
+        run: |
+          python3 scripts/planning/validate_phase0.py
+          python3 scripts/planning/validate_upstream.py
+      - name: Run deterministic strategy, settlement, stateful and prototype E2E checks
         run: |
           forge fmt --check
           mkdir -p artifacts/ci
           set -o pipefail
-          npm run test:strategy | tee artifacts/ci/strategy.txt
-      - name: Test the public prototype CLI end to end
-        run: |
-          set -o pipefail
-          npm run test:e2e | tee artifacts/ci/e2e.txt
-          node scripts/proofs/prototype.mjs --out artifacts/ci/prototype.json > /dev/null
+          npm test | tee artifacts/ci/tests.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: phase1-simulation-evidence
+          name: deterministic-evidence
+          path: |
+            artifacts/ci/
+            cache/fuzz/
+            cache/invariant/
+          if-no-files-found: error
+  fork:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_fork
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.1
+          cache: npm
+      - name: Install locked dependencies and verified Foundry
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/setup/install-foundry.sh
+          echo "$PWD/.tools/foundry" >> "$GITHUB_PATH"
+      - name: Run fork E2E and retain standalone proof
+        env:
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+        run: |
+          mkdir -p artifacts/ci
+          set -o pipefail
+          npm run test:fork | tee artifacts/ci/fork-tests.txt
+          node scripts/proofs/f1.mjs --out artifacts/ci/f1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fork-settlement-evidence
           path: artifacts/ci/
           if-no-files-found: error
