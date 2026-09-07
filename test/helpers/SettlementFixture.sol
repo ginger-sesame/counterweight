@@ -135,9 +135,8 @@ abstract contract SettlementFixture is Test {
         snapshot[11] = usdc.allowance(maker, address(aqua));
         snapshot[12] = weth.allowance(taker, address(router));
         snapshot[13] = usdc.allowance(taker, address(router));
-        return keccak256(
-            abi.encode(snapshot, controller.tuningVersion(), controller.paused(), controller.safetyDigest())
-        );
+        bytes32 configDigest = controller.safetyDigest();
+        return keccak256(abi.encode(snapshot, controller.tuningVersion(), controller.paused(), configDigest));
     }
 
     function assertInvariant() internal view {
