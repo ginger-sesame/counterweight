@@ -1,0 +1,170 @@
+{
+  "toolVersions": {
+    "node": "v22.22.1",
+    "forge": "forge Version: 1.8.1\nCommit SHA: 982849d3140c01fd3b72905759581a132df7aa98\nBuild Timestamp: 2026-08-28T17:46:00.964391484Z (1787939160)\nBuild Profile: dist",
+    "anvil": "anvil/v1.8.1",
+    "solidity": "0.8.30+commit.73712a01"
+  },
+  "dependencyVersions": {
+    "@1inch/swap-vm": {
+      "version": "0.0.6",
+      "resolved": "git+ssh://git@github.com/1inch/swap-vm.git#f09a41e689240adc645934f965c8061749397cd2"
+    },
+    "@1inch/aqua": {
+      "version": "0.1.0",
+      "resolved": "git+ssh://git@github.com/1inch/aqua.git#098b4c5d8eec67677f7ca861ca991af56024d9c5"
+    },
+    "@1inch/solidity-utils": {
+      "version": "6.9.10",
+      "resolved": "https://registry.npmjs.org/@1inch/solidity-utils/-/solidity-utils-6.9.10.tgz"
+    },
+    "@openzeppelin/contracts": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-5.4.0.tgz"
+    },
+    "viem": {
+      "version": "2.56.3",
+      "resolved": "https://registry.npmjs.org/viem/-/viem-2.56.3.tgz"
+    }
+  },
+  "schemaVersion": 1,
+  "gate": "F1",
+  "result": "PASS",
+  "testIds": [
+    "V-01",
+    "V-02",
+    "V-05",
+    "V-07"
+  ],
+  "runAt": "2026-09-07T16:14:40.423Z",
+  "gitRevision": null,
+  "sourceHashes": {
+    "contracts/CounterweightSwapVM.sol": "65145ec63686eef21012358e5d323fd35ca44566b1a609510a9fd152dd6fc6af",
+    "contracts/EpochController.sol": "df8801cf562400712bdf5849d72b8dcdf88a12b6df7f05f3ab41676a52200188",
+    "contracts/libraries/OrderCodec.sol": "18e5d10ffaa8381755168c2fb74542205cbf4627f3683ee0ef54ca2c95810182",
+    "contracts/upstream/SwapVM.sol": "7a7092902a16af7517d4b5ad2b540be4d1a35814a8fb8007d7c061ac8c38e8c6",
+    "contracts/upstream/SwapVM.patch": "d4943e40ad6128d3a6945f7efb8c3f4d723e8bf92891f9a25523a382ec796ce1",
+    "contracts/libraries/InventoryGuard.sol": "19607e39f69d9c2011510b9523a38e5516d84ddb25fb4684f9fb7636d770d865",
+    "contracts/libraries/QuoteMath.sol": "95a12ba6bd1fa28f38631d50597584a8a7ef894dc25e7a64cbfa9beb4d8a19bd",
+    "contracts/libraries/StrategyTypes.sol": "531efb03f3799f60c39e9b4b5800ea68bbe309d2b757d7726b55eb82827edef4",
+    "foundry.toml": "bb6150eb52a3ce913e597e8eeca991f0fa1fa93b3f74031d8b660486fa8b4502",
+    "package-lock.json": "f05c0edd0887386f2aade2d955fac4431e63e6269c0420d567a5e86d2168f1aa",
+    "scripts/proofs/f1.mjs": "ca37b68b5aa4b500b72c89c66282b84bc03c2344425790cbe22f01ef8bf2af54",
+    "planning/phase0/ACCOUNTING.md": "9f318f3fc5b42c79df49abffa4b2187785357cc42063238bb9bf55893ac28ae6",
+    "planning/phase0/INTEGRATIONS.md": "e9b55ede00146a70c79152c37ee5385d219eaabf9a3257eb1dc1317e2f1947ae",
+    "planning/phase0/DATA.md": "4706d5c8519390cee8b53c5d88aaa82ea3a165a652d8763d904be309f11b1dc5",
+    "planning/phase0/OPERATIONS.md": "113f4a554d56a105af949c2bca93850e8604d3569f6ce0732171c8589c789077"
+  },
+  "environment": "local-mainnet-fork",
+  "chainId": 31337,
+  "forkBlock": "25917718",
+  "forkBlockHash": "0x5dcb9480fc701b19c587e6834118725afa28ef2ba1fca9fc9d14aa9a289c059e",
+  "maker": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+  "taker": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+  "deployer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+  "fundingSource": "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640",
+  "epochs": [
+    {
+      "config": {
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "owner": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        "epochId": "1",
+        "start": 1788797673,
+        "end": 1788799473,
+        "targetWethBps": 5000,
+        "minWethBps": 3000,
+        "maxWethBps": 7000,
+        "priceMicroUsdc": "2000000000",
+        "maxInputValueMicroUsdc": "1000000000"
+      },
+      "controller": "0x95a88cd1f3807f31e5df20b2bbad16362b2ad127",
+      "router": "0x8480948e78add409f83617cde06421cacf2c065e",
+      "order": {
+        "maker": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "traits": "28948022309345504152553859025372987423956659195481894094225317213215909740544",
+        "data": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2d0080000000000000001d100"
+      },
+      "orderHash": "0x6c10adaa22d8567257bb30e76d7689f06b0e44d226b80bbe7e07ba7a6afe9e89",
+      "codeHashes": {
+        "aqua": "0x021c5965ce01e0b82c491e52d9e5260029f04dc8f38b80dc482aa9cb9d32cef5",
+        "controller": "0x74999432ab5db3d1e2557363c6cfdec130f03452f953e680a8976a0df2a35dfb",
+        "router": "0x94a50bcb9b96bf3cf080792fdc590f83d67c965b064cb7f21cdc268d5d17c525",
+        "WETH": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23",
+        "USDC": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505"
+      }
+    },
+    {
+      "config": {
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "owner": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        "epochId": "2",
+        "start": 1788797673,
+        "end": 1788799473,
+        "targetWethBps": 5000,
+        "minWethBps": 3000,
+        "maxWethBps": 7000,
+        "priceMicroUsdc": "2000000000",
+        "maxInputValueMicroUsdc": "1000000000"
+      },
+      "controller": "0x95a88cd1f3807f31e5df20b2bbad16362b2ad127",
+      "router": "0x8480948e78add409f83617cde06421cacf2c065e",
+      "order": {
+        "maker": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "traits": "28948022309345504152553859025372987423956659195481894094225317213215909740544",
+        "data": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2d0080000000000000002d100"
+      },
+      "orderHash": "0xba01f81e3494b6e01c05447a811f97a3614bfb0b69c24fcaced8e6323decaf47",
+      "codeHashes": {
+        "aqua": "0x021c5965ce01e0b82c491e52d9e5260029f04dc8f38b80dc482aa9cb9d32cef5",
+        "controller": "0x54f7888975777b7dd49cb349cb93178e56a4673943ddec651cba3d9bb11738f4",
+        "router": "0x94a50bcb9b96bf3cf080792fdc590f83d67c965b064cb7f21cdc268d5d17c525",
+        "WETH": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23",
+        "USDC": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505"
+      }
+    },
+    {
+      "config": {
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "owner": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        "epochId": "3",
+        "start": 1788797673,
+        "end": 1788799473,
+        "targetWethBps": 5000,
+        "minWethBps": 3000,
+        "maxWethBps": 7000,
+        "priceMicroUsdc": "2000000000",
+        "maxInputValueMicroUsdc": "1000000000"
+      },
+      "controller": "0x95a88cd1f3807f31e5df20b2bbad16362b2ad127",
+      "router": "0x8480948e78add409f83617cde06421cacf2c065e",
+      "order": {
+        "maker": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "traits": "28948022309345504152553859025372987423956659195481894094225317213215909740544",
+        "data": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2d0080000000000000003d100"
+      },
+      "orderHash": "0x97aff0561330fd84caed37ae63b55fac174735b955bdac85fdedf16b29834d37",
+      "codeHashes": {
+        "aqua": "0x021c5965ce01e0b82c491e52d9e5260029f04dc8f38b80dc482aa9cb9d32cef5",
+        "controller": "0x92f95851ccf4adc9263a5af82662945f955e546e5656cf357048f445138dfc0e",
+        "router": "0x94a50bcb9b96bf3cf080792fdc590f83d67c965b064cb7f21cdc268d5d17c525",
+        "WETH": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23",
+        "USDC": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505"
+      }
+    }
+  ],
+  "assertions": 80,
+  "scenarios": 5,
+  "artifacts": [
+    "assertions.json",
+    "transactions.json",
+    "scenarios.json"
+  ],
+  "limitations": [
+    "Snapshot branches are isolated scenarios, not one uninterrupted chain history.",
+    "Local mainnet fork with canonical tokens; no public-network deployment or Graph/Privy proof.",
+    "V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites."
+  ]
+}

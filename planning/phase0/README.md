@@ -9,6 +9,6 @@ This package defines the controlled MVP and gives implementation agents exact in
 - [Proof procedures](PROOFS.md): D12, environments, commands to implement and F1–F4 assertions.
 - [Traceability](TRACEABILITY.md): requirements, tests, commands, evidence and handoff.
 
-Existing Phase 0 validation command: `python3 scripts/planning/validate_phase0.py`. Phase 1 strategy and simulated E2E commands are now implemented; see [Phase 1 handoff](../phase1/README.md). Later phase commands remain planned and must not be reported as executed.
+Existing Phase 0 validation command: `python3 scripts/planning/validate_phase0.py`. Phase 1 strategy/simulated E2E and Phase 2 guarded settlement/fork E2E are now implemented; see [Phase 2 handoff](../phase2/README.md). Later phase commands remain planned and must not be reported as executed.
 
 D14 decision: this tracked `planning/` package is the canonical shared technical specification. Existing ignored `docs/` and AGENTS.md remain local orchestration notes. Shareable requirements and proof commands must not depend on those ignored files. This avoids changing the local-doc publication policy while giving fresh clones the implementation contract and verification fixtures.

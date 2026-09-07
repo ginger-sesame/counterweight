@@ -1,6 +1,6 @@
 # D12: toolchain, executable proof procedures, and handoff
 
-Selected by root, 2026-09-06. **Phase 0 and Phase 1 commands now exist; see [Phase 1 handoff](../phase1/README.md).** All commands labeled planned are interface/deliverable contracts for later agents; do not mark them run or gates passed until implemented and executed.
+Selected by root, 2026-09-06. **Phase 0–2 commands now exist; see [Phase 2 handoff and evidence](../phase2/README.md).** All commands labeled planned are interface/deliverable contracts for later agents; do not mark them run or gates passed until implemented and executed.
 
 ## Toolchain and file ownership
 
@@ -62,7 +62,7 @@ A new run creates a fresh Anvil state and unique output directory; fixture cases
 
 ## F1 procedure — Phase 2
 
-Planned command: `node scripts/proofs/f1.mjs --rpc http://127.0.0.1:8545 --out artifacts/<run-id>/f1`.
+Implemented and validated: `node scripts/proofs/f1.mjs --rpc http://127.0.0.1:8545 --out artifacts/<run-id>/f1`. The RPC must be a fresh pinned fork. Omitting `--rpc` boots and cleans up a fresh fork automatically. See Phase 2 evidence for completed F1.
 
 1. Preflight chain ID, fork block/hash, token code/decimals, adequate funding source, and pinned dependency/build hashes. Reject mainnet RPC.
 2. Encode the canonical epoch-salted order first and calculate its Aqua hash. Deploy pinned Aqua, controller/epoch with immutable maker/epochId/expected orderHash, and modified SwapVM pointing to that controller. Capture addresses, creation receipts, runtime code hashes, owner/maker/taker IDs, immutable safety digest, P and epoch times.
@@ -109,7 +109,7 @@ Planned `node scripts/proofs/mvp.mjs --rpc http://127.0.0.1:8545 --out artifacts
 
 It then covers stale-data recovery, inventory changes, failed settlement, pause/resume, revocation and restart reconciliation. Failure subcases can use explicit local snapshots; record branch IDs and never present mutually inconsistent snapshots as one uninterrupted chain history. Another agent reproduces the run from tracked files, approved credentials and documented prerequisites.
 
-Implemented Phase 1 commands: `npm run test:strategy`, `npm run test:e2e`, and the simulated prototype runner below. Remaining integration/invariant/data/operations commands are planned. Original command contracts: `forge test --match-path 'test/strategy/*.t.sol'`, `forge test --match-path 'test/integration/*.t.sol'`, `forge test --match-path 'test/invariant/*.t.sol'`, `node --test 'test/data/*.test.mjs'`, `node --test 'test/operations/*.test.mjs'`. Stage simulated E2E: `node scripts/proofs/prototype.mjs --fixtures planning/phase0/fixtures/accounting.json`.
+Implemented Phase 1 commands: `npm run test:strategy`, `npm run test:e2e`, and the simulated prototype runner below. Phase 2 integration/invariant and fork E2E commands are implemented in the root npm scripts; data/operations commands remain planned. Original command contracts: `forge test --match-path 'test/strategy/*.t.sol'`, `forge test --match-path 'test/integration/*.t.sol'`, `forge test --match-path 'test/invariant/*.t.sol'`, `node --test 'test/data/*.test.mjs'`, `node --test 'test/operations/*.test.mjs'`. Stage simulated E2E: `node scripts/proofs/prototype.mjs --fixtures planning/phase0/fixtures/accounting.json`.
 
 CI (Phase 1 deliverable): pinned tool install, npm ci, offline specification check, deterministic S/G/O tests, and relevant local V integration. Property tests use seed 0xc0ffee and at least 1,000 generated examples per property; stateful invariant test has at least 128 sequences of depth 32, with failure seed/action sequence retained. Credentialed F2/F3 and archive fork jobs are explicit separate runs. Set unit job timeout 10 minutes, fork job 20 minutes, live proof job 30 minutes; individual network timeout/retry as DATA. A missing required job result cannot be counted as PASS.
 
