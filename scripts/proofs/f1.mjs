@@ -47,6 +47,9 @@ try {
  const client=createPublicClient({chain:foundry,transport,pollingInterval:100});
  check('local chain ID',await client.getChainId()===31337);
  const info=await client.request({method:'anvil_nodeInfo'});
+ const clientVersion=await client.request({method:'web3_clientVersion'});
+ const forgeVersion=spawnSync(process.env.FORGE_BIN||'forge',['--version'],{encoding:'utf8',timeout:10000});
+ assert.equal(forgeVersion.status,0,'cannot identify Foundry version');
  check('fork block provenance',Number(info.forkConfig?.forkBlockNumber)===Number(blockNumber));
  check('fresh fork state',await client.getBlockNumber()===blockNumber);
  const block=await client.getBlock({blockNumber});check('pinned Ethereum block hash',block.hash===blockHash);
@@ -154,9 +157,12 @@ try {
  await send(maker,U,erc20,'approve',[aqua,0n],0n,'remove output approval');
  await attempt(lower,'output transfer failure rollback',true,10n**17n,null,'SafeTransferFromFailed');
  const sourceHashes={};
- for(const path of ['contracts/CounterweightSwapVM.sol','contracts/EpochController.sol','contracts/libraries/OrderCodec.sol','contracts/upstream/SwapVM.sol','contracts/upstream/SwapVM.patch','contracts/libraries/InventoryGuard.sol','contracts/libraries/QuoteMath.sol','contracts/libraries/StrategyTypes.sol','foundry.toml','package-lock.json','scripts/proofs/f1.mjs'])sourceHashes[path]=createHash('sha256').update(await readFile(root+path)).digest('hex');
+ for(const path of ['contracts/CounterweightSwapVM.sol','contracts/EpochController.sol','contracts/libraries/OrderCodec.sol','contracts/upstream/SwapVM.sol','contracts/upstream/SwapVM.patch','contracts/libraries/InventoryGuard.sol','contracts/libraries/QuoteMath.sol','contracts/libraries/StrategyTypes.sol','foundry.toml','package-lock.json','scripts/proofs/f1.mjs','planning/phase0/ACCOUNTING.md','planning/phase0/INTEGRATIONS.md','planning/phase0/DATA.md','planning/phase0/OPERATIONS.md'])sourceHashes[path]=createHash('sha256').update(await readFile(root+path)).digest('hex');
  const revision=spawnSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'});
- const manifest={schemaVersion:1,gate:'F1',result:'PASS',testIds:['V-01','V-02','V-05','V-07'],runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
+ const lock=JSON.parse(await readFile(root+'package-lock.json','utf8')).packages;
+ const dependencyVersions={};for(const name of ['@1inch/swap-vm','@1inch/aqua','@1inch/solidity-utils','@openzeppelin/contracts','viem']){const entry=lock['node_modules/'+name];dependencyVersions[name]={version:entry.version,resolved:entry.resolved};}
+ const toolVersions={node:process.version,forge:forgeVersion.stdout.trim(),anvil:clientVersion,solidity:(await artifact('CounterweightSwapVM')).metadata.compiler.version};
+ const manifest={toolVersions,dependencyVersions,schemaVersion:1,gate:'F1',result:'PASS',testIds:['V-01','V-02','V-05','V-07'],runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
   environment:'local-mainnet-fork',chainId:31337,forkBlock:blockNumber,forkBlockHash:blockHash,maker,taker,deployer,fundingSource:funding,epochs,
   assertions:assertions.length,scenarios:scenarios.length,artifacts:['assertions.json','transactions.json','scenarios.json'],
   limitations:['Snapshot branches are isolated scenarios, not one uninterrupted chain history.','Local mainnet fork with canonical tokens; no public-network deployment or Graph/Privy proof.','V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites.']};

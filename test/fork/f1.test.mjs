@@ -14,6 +14,8 @@ test('F1 CLI settles canonical tokens and proves atomic rejections on a fresh ma
   const load=async name=>JSON.parse(await readFile(join(out,name),'utf8'));
   const manifest=await load('manifest.json'),scenarios=await load('scenarios.json'),txs=await load('transactions.json');
   assert.equal(manifest.gate,'F1');assert.equal(manifest.chainId,31337);assert.equal(manifest.forkBlock,'25917718');
+  assert.match(manifest.toolVersions.forge,/1\.8\.1/);assert.match(manifest.toolVersions.solidity,/^0\.8\.30/);assert.equal(manifest.dependencyVersions['@openzeppelin/contracts'].version,'5.4.0');
+  assert(manifest.sourceHashes['planning/phase0/ACCOUNTING.md']);
   assert.equal(scenarios.length,5);assert.equal(scenarios.filter(s=>!s.error).length,2);
   for(const s of scenarios){
    const tx=txs.find(t=>t.hash===s.transaction&&t.label===s.label);assert(tx);
