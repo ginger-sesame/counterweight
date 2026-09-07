@@ -120,26 +120,23 @@ abstract contract SettlementFixture is Test {
 
     function stateDigest() internal view returns (bytes32) {
         (uint256 w, uint256 u) = balances();
+        uint256[] memory snapshot = new uint256[](14);
+        snapshot[0] = w;
+        snapshot[1] = u;
+        snapshot[2] = weth.balanceOf(maker);
+        snapshot[3] = usdc.balanceOf(maker);
+        snapshot[4] = weth.balanceOf(taker);
+        snapshot[5] = usdc.balanceOf(taker);
+        snapshot[6] = weth.balanceOf(address(router));
+        snapshot[7] = usdc.balanceOf(address(router));
+        snapshot[8] = weth.balanceOf(address(aqua));
+        snapshot[9] = usdc.balanceOf(address(aqua));
+        snapshot[10] = weth.allowance(maker, address(aqua));
+        snapshot[11] = usdc.allowance(maker, address(aqua));
+        snapshot[12] = weth.allowance(taker, address(router));
+        snapshot[13] = usdc.allowance(taker, address(router));
         return keccak256(
-            abi.encode(
-                w,
-                u,
-                weth.balanceOf(maker),
-                usdc.balanceOf(maker),
-                weth.balanceOf(taker),
-                usdc.balanceOf(taker),
-                weth.balanceOf(address(router)),
-                usdc.balanceOf(address(router)),
-                weth.balanceOf(address(aqua)),
-                usdc.balanceOf(address(aqua)),
-                weth.allowance(maker, address(aqua)),
-                usdc.allowance(maker, address(aqua)),
-                weth.allowance(taker, address(router)),
-                usdc.allowance(taker, address(router)),
-                controller.tuningVersion(),
-                controller.paused(),
-                controller.safetyDigest()
-            )
+            abi.encode(snapshot, controller.tuningVersion(), controller.paused(), controller.safetyDigest())
         );
     }
 

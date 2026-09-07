@@ -39,6 +39,45 @@ contract ValidationTest is SettlementFixture {
         }
     }
 
+    function test_CustomRecipientAndHookPayloadsAreRejected() public {
+        TakerTraitsLib.Args memory a;
+        a.isExactIn = true;
+        a.isFirstTransferFromTaker = true;
+        a.useTransferFromAndAquaPush = true;
+        a.threshold = abi.encode(uint256(1));
+        a.deadline = 1060;
+        a.instructionsArgs = abi.encode(c.epochId, controller.tuningVersion(), uint40(1060));
+        bytes32 beforeState = stateDigest();
+        for (uint256 n; n < 3; n++) {
+            a.to = n == 0 ? address(77) : address(0);
+            a.signature = n == 1 ? bytes(hex"01") : bytes("");
+            a.preTransferInHookData = n == 2 ? bytes(hex"12") : bytes("");
+            bytes memory d = TakerTraitsLib.build(a);
+            vm.expectRevert(CounterweightSwapVM.UnsupportedTakerData.selector);
+            router.quote(order, 1e17, d);
+            vm.expectRevert(CounterweightSwapVM.UnsupportedTakerData.selector);
+            router.swap(order, 1e17, d);
+            assertEq(stateDigest(), beforeState);
+        }
+    }
+
+    function test_NewControllerStartsPausedWithFallbackAndCannotActivateUnshippedAllocation() public {
+        EpochController fresh = new EpochController(c, address(aqua), address(123));
+        assertTrue(fresh.paused());
+        S.Tuning memory t = fresh.effectiveTuning();
+        assertFalse(t.available);
+        assertEq(t.intensityBps, 0);
+        assertEq(t.spreadBps, 100);
+        vm.startPrank(maker);
+        vm.expectRevert(EpochController.Paused.selector);
+        fresh.setTuning(1000, 30, 1, 1100);
+        vm.expectPartialRevert(
+            bytes4(keccak256("SafeBalancesForTokenNotInActiveStrategy(address,address,bytes32,address)"))
+        );
+        fresh.resume();
+        vm.stopPrank();
+    }
+
     function test_DeadlineBoundariesVersionAndMalformedEnvelope() public {
         bytes memory d = OrderCodec.taker(true, 1, c.epochId, controller.tuningVersion(), 1000);
         router.quote(order, 1e17, d); // Exactly now is valid.
