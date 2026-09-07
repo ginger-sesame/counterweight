@@ -224,6 +224,20 @@ contract ValidationTest is SettlementFixture {
         assertInvariant();
     }
 
+    function test_PhysicalPostBalanceEnvelopeIsAtomic() public {
+        for (uint256 n; n < 2; n++) {
+            bool w = n == 0;
+            if (w) weth.mint(maker, 1e30 - weth.balanceOf(maker));
+            else usdc.mint(maker, 1e30 - usdc.balanceOf(maker));
+            bytes32 beforeState = stateDigest();
+            bytes memory d = data(w);
+            vm.prank(taker);
+            vm.expectRevert(S.AmountOutOfRange.selector);
+            router.swap(order, w ? 1e17 : 200e6, d);
+            assertEq(stateDigest(), beforeState);
+        }
+    }
+
     function test_ActualPostBalanceMismatchRollsBackEverything() public {
         usdc.configureFault(maker, address(0), hex"");
         bytes32 beforeState = stateDigest();

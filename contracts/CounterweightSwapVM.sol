@@ -101,13 +101,14 @@ contract CounterweightSwapVM is SwapVM {
         (uint256 expectedW, uint256 expectedU) = Guard.project(c, pre, w, ctx.swap.amountIn, ctx.swap.amountOut);
         (uint256 actualW, uint256 actualU) =
             AQUA.safeBalances(c.owner, address(this), ctx.query.orderHash, S.WETH, S.USDC);
+        uint256 physicalW = IERC20(S.WETH).balanceOf(c.owner);
+        uint256 physicalU = IERC20(S.USDC).balanceOf(c.owner);
         if (
             actualW != expectedW || actualU != expectedU
-                || IERC20(S.WETH).balanceOf(c.owner)
-                    != (w ? pre.physicalWeth + ctx.swap.amountIn : pre.physicalWeth - ctx.swap.amountOut)
-                || IERC20(S.USDC).balanceOf(c.owner)
-                    != (w ? pre.physicalUsdc - ctx.swap.amountOut : pre.physicalUsdc + ctx.swap.amountIn)
+                || physicalW != (w ? pre.physicalWeth + ctx.swap.amountIn : pre.physicalWeth - ctx.swap.amountOut)
+                || physicalU != (w ? pre.physicalUsdc - ctx.swap.amountOut : pre.physicalUsdc + ctx.swap.amountIn)
         ) revert SettlementMismatch();
+        Guard.checkBacking(S.Inventory(actualW, actualU, physicalW, physicalU));
         Guard.checkPost(c, actualW, actualU);
     }
 }
