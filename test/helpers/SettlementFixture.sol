@@ -10,6 +10,33 @@ import {StrategyTypes as S} from "../../contracts/libraries/StrategyTypes.sol";
 import {OrderCodec} from "../../contracts/libraries/OrderCodec.sol";
 
 contract FixtureToken is ERC20 {
+    address public feeRecipient;
+    address public callbackTarget;
+    bytes public callbackData;
+    bytes4 public callbackFailure;
+    bool private entered;
+
+    function configureFault(address recipient, address target, bytes calldata data_) external {
+        feeRecipient = recipient;
+        callbackTarget = target;
+        callbackData = data_;
+    }
+
+    function _update(address from, address to, uint256 value) internal override {
+        if (callbackTarget != address(0) && !entered && from != address(0)) {
+            entered = true;
+            (bool ok, bytes memory reason) = callbackTarget.call(callbackData);
+            require(!ok, "reentry unexpectedly succeeded");
+            callbackFailure = bytes4(reason);
+            entered = false;
+        }
+        if (to == feeRecipient && value > 0) {
+            super._update(from, to, value - 1);
+            super._update(from, address(0), 1);
+        } else {
+            super._update(from, to, value);
+        }
+    }
     constructor() ERC20("Fixture", "FIX") {}
 
     function mint(address to, uint256 amount) external {
