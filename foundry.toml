@@ -19,3 +19,6 @@ seed = "0xc0ffee"
 runs = 128
 depth = 32
 fail_on_revert = true
+
+[fmt]
+ignore = ["contracts/upstream/SwapVM.sol"]

@@ -1,0 +1,67 @@
+--- a/src/SwapVM.sol
++++ b/src/SwapVM.sol
+@@ -15,13 +15,13 @@
+ import { OnlyWethReceiver } from "@1inch/solidity-utils/contracts/mixins/OnlyWethReceiver.sol";
+ import { Rescuable } from "@1inch/solidity-utils/contracts/mixins/Rescuable.sol";
+ 
+-import { ISwapVM } from "./interfaces/ISwapVM.sol";
+-import { IMakerHooks } from "./interfaces/IMakerHooks.sol";
+-import { ITakerCallbacks } from "./interfaces/ITakerCallbacks.sol";
+-import { Context, ContextLib, VM, SwapRegisters, SwapQuery, ProtocolFee } from "./libs/VM.sol";
+-import { MakerTraits, MakerTraitsLib } from "./libs/MakerTraits.sol";
+-import { TakerTraits, TakerTraitsLib } from "./libs/TakerTraits.sol";
+-import { FeeMetaLib, FeeReceiverLib } from "./libs/ProtocolFee.sol";
++import { ISwapVM } from "@1inch/swap-vm/src/interfaces/ISwapVM.sol";
++import { IMakerHooks } from "@1inch/swap-vm/src/interfaces/IMakerHooks.sol";
++import { ITakerCallbacks } from "@1inch/swap-vm/src/interfaces/ITakerCallbacks.sol";
++import { Context, ContextLib, VM, SwapRegisters, SwapQuery, ProtocolFee } from "@1inch/swap-vm/src/libs/VM.sol";
++import { MakerTraits, MakerTraitsLib } from "@1inch/swap-vm/src/libs/MakerTraits.sol";
++import { TakerTraits, TakerTraitsLib } from "@1inch/swap-vm/src/libs/TakerTraits.sol";
++import { FeeMetaLib, FeeReceiverLib } from "@1inch/swap-vm/src/libs/ProtocolFee.sol";
+ 
+ /// @title SwapVM
+ /// @notice Virtual machine for executing programmable token swap strategies from bytecode
+@@ -125,6 +125,7 @@
+         uint256 amount,
+         bytes calldata takerTraitsAndData
+     ) external returns (uint256 amountIn, uint256 amountOut, bytes32 orderHash) {
++        _validateEntry(order, amount, takerTraitsAndData);
+         orderHash = hash(order);
+ 
+         (TakerTraits takerTraits, bytes calldata takerData) = TakerTraitsLib.parse(takerTraitsAndData);
+@@ -178,6 +179,7 @@
+         uint256 amount,
+         bytes calldata takerTraitsAndData
+     ) external payable returns (uint256 amountIn, uint256 amountOut, bytes32 orderHash) {
++        _validateEntry(order, amount, takerTraitsAndData);
+         orderHash = hash(order);
+         _reentrancyGuards[orderHash].lock();
+ 
+@@ -225,6 +227,7 @@
+             require(order.maker.recoverOrIsValidSignature(orderHash, signature), BadSignature(order.maker, orderHash, signature));
+         }
+ 
++        bytes memory settlementSnapshot = _beforeSettlement(ctx);
+         uint256 originalAquaBalanceIn = ctx.swap.balanceIn;
+         (amountIn, amountOut) = ctx.runLoop();
+         order.traits.validate(amountIn);
+@@ -238,6 +241,7 @@
+             _transferIn(ctx, order, takerTraits, takerData, originalAquaBalanceIn);
+         }
+ 
++        _afterSettlement(ctx, settlementSnapshot);
+         _reentrancyGuards[orderHash].unlock();
+         emit Swapped(orderHash, order.maker, msg.sender, tokenIn, tokenOut, amountIn, amountOut);
+     }
+@@ -364,6 +368,11 @@
+         }
+     }
+ 
++    // Counterweight extension hooks; transfer implementation above is unchanged.
++    function _validateEntry(ISwapVM.Order calldata order, uint256 amount, bytes calldata data) internal view virtual;
++    function _beforeSettlement(Context memory ctx) internal view virtual returns (bytes memory);
++    function _afterSettlement(Context memory ctx, bytes memory snapshot) internal view virtual;
++
+     /// @dev Override in the opcode set to directly dispatch an opcode at specified index
+     function _dispatch(Context memory ctx, uint256 opcode, bytes calldata args) internal virtual;
+ }

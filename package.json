@@ -3,13 +3,24 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "engines": {"node": "22.22.1", "npm": "10.9.4"},
+  "engines": {
+    "node": "22.22.1",
+    "npm": "10.9.4"
+  },
   "scripts": {
     "test:strategy": "forge test --match-path 'test/strategy/*.t.sol'",
     "test:e2e": "node --test test/prototype/*.test.mjs",
     "test": "npm run test:strategy && npm run test:e2e",
     "prototype": "node scripts/proofs/prototype.mjs"
   },
-  "dependencies": {"viem": "2.56.3"},
-  "devDependencies": {"forge-std": "github:foundry-rs/forge-std#v1.11.0"}
+  "dependencies": {
+    "@1inch/aqua": "github:1inch/aqua#098b4c5d8eec67677f7ca861ca991af56024d9c5",
+    "@1inch/solidity-utils": "6.9.10",
+    "@1inch/swap-vm": "github:1inch/swap-vm#f09a41e689240adc645934f965c8061749397cd2",
+    "@openzeppelin/contracts": "5.4.0",
+    "viem": "2.56.3"
+  },
+  "devDependencies": {
+    "forge-std": "github:foundry-rs/forge-std#v1.11.0"
+  }
 }
