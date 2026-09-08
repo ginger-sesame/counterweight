@@ -9,6 +9,19 @@ import {TakerTraitsLib} from "@1inch/swap-vm/src/libs/TakerTraits.sol";
 import {MakerTraits} from "@1inch/swap-vm/src/libs/MakerTraits.sol";
 
 contract ValidationTest is SettlementFixture {
+    function testFuzz_WideTuningInputsCannotTruncateIntoAllowedValues(uint128 raw) public {
+        uint256 invalid = uint256(raw) + 65536;
+        bytes32 beforeState = stateDigest();
+        uint64 version = controller.tuningVersion();
+        vm.startPrank(maker);
+        vm.expectRevert(EpochController.InvalidTuning.selector);
+        controller.setTuning(invalid, 30, version, uint40(block.timestamp + 300));
+        vm.expectRevert(EpochController.InvalidTuning.selector);
+        controller.setTuning(1000, invalid, version, uint40(block.timestamp + 300));
+        vm.stopPrank();
+        assertEq(stateDigest(), beforeState);
+    }
+
     function test_AllUnsupportedFlagMutationsRejectedBeforeSettlement() public {
         bytes32 beforeState = stateDigest();
         for (uint256 bit; bit < 16; bit++) {

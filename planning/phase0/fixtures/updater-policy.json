@@ -38,11 +38,11 @@
               "inputs": [
                 {
                   "name": "intensityBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "spreadBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "expectedVersion",
@@ -70,11 +70,11 @@
               "inputs": [
                 {
                   "name": "intensityBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "spreadBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "expectedVersion",
@@ -102,11 +102,11 @@
               "inputs": [
                 {
                   "name": "intensityBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "spreadBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "expectedVersion",
@@ -134,11 +134,11 @@
               "inputs": [
                 {
                   "name": "intensityBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "spreadBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "expectedVersion",
@@ -166,11 +166,11 @@
               "inputs": [
                 {
                   "name": "intensityBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "spreadBps",
-                  "type": "uint16"
+                  "type": "uint256"
                 },
                 {
                   "name": "expectedVersion",

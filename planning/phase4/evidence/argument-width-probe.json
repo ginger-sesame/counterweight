@@ -1,0 +1,15 @@
+[
+  {
+    "type": "uint256",
+    "result": "SIGNED"
+  },
+  {
+    "type": "uint32",
+    "status": 400,
+    "result": "policy_violation"
+  },
+  {
+    "type": "uint64",
+    "result": "SIGNED"
+  }
+]

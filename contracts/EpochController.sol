@@ -53,7 +53,7 @@ contract EpochController {
         return _tuning;
     }
 
-    function setTuning(uint16 intensityBps, uint16 spreadBps, uint64 expectedVersion, uint40 validUntil)
+    function setTuning(uint256 intensityBps, uint256 spreadBps, uint64 expectedVersion, uint40 validUntil)
         external
         onlyOwner
     {
@@ -63,10 +63,10 @@ contract EpochController {
         if (validUntil <= block.timestamp || validUntil > block.timestamp + 300 || validUntil > _config.end) {
             revert InvalidDeadline();
         }
-        _tuning = S.Tuning(true, intensityBps, spreadBps);
+        _tuning = S.Tuning(true, uint16(intensityBps), uint16(spreadBps));
         tuningValidUntil = validUntil;
         tuningVersion++;
-        emit TuningChanged(tuningVersion, intensityBps, spreadBps, validUntil);
+        emit TuningChanged(tuningVersion, uint16(intensityBps), uint16(spreadBps), validUntil);
     }
 
     function pause() external onlyOwner {

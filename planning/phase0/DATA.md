@@ -55,7 +55,7 @@ Pause and epoch expiry override both fresh and fallback: no quoting/execution. A
 
 ## Integration boundaries
 
-Off-chain normalizer -> pure mapper -> `setTuning(uint16 intensityBps,uint16 spreadBps,uint64 expectedVersion,uint40 validUntil)` on the epoch/controller. Contract accepts only the authorized maker wallet, valid ranges, expected current version, and validity in `(now,now+300]`. It increments tuningVersion. No price, limits, custody, or executable target in this ABI.
+Off-chain normalizer -> pure mapper -> `setTuning(uint256 intensityBps,uint256 spreadBps,uint64 expectedVersion,uint40 validUntil)` on the epoch/controller. Contract accepts only the authorized maker wallet, valid ranges, expected current version, and validity in `(now,now+300]`. It increments tuningVersion. No price, limits, custody, or executable target in this ABI.
 
 The Graph worker constructs data and unsigned requests; the restricted Privy updater authorizes them. The same transaction uses both values atomically. Safety configuration is immutable per epoch and its digest must match before/after each update. On-chain range checks are independent of the off-chain mapper and policy. EpochId/orderHash are fixed by destination/controller identity.
 
