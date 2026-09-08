@@ -32,7 +32,7 @@ for (const item of sources) {
   const entry=registry[protocol];
   assert.equal(entry.base,'uniswap-v3-forks');
   const deployment=entry.deployments[item.key];
-  assert.equal(deployment.versions.schema,item.schemaVersion);
+  assert.equal(deployment.versions.schema,item.registrySchemaVersion ?? item.schemaVersion);
   assert.equal(deployment.services['decentralized-network']['query-id'],item.subgraphId);
 }
 assert(nodeApi.includes('IdType::String | IdType::Bytes => s::ScalarType::new(String::from("String"))'), 'Re-review reference filter scalar rule');

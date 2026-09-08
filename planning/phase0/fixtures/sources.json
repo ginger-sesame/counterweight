@@ -7,16 +7,22 @@
     "chainId": 1,
     "schemaVersion": "4.0.0",
     "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
-    "liveVerified": false
+    "liveVerified": false,
+    "registrySchemaVersion": "4.0.0",
+    "methodologyVersion": "1.0.0",
+    "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY"
   },
   {
     "key": "sushiswap-v3-ethereum",
     "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
-    "pool": "0x35644fb61afbc458bf92b15add6abc1996be5014",
+    "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
     "registryStatus": "dev",
     "chainId": 1,
-    "schemaVersion": "4.0.1",
+    "schemaVersion": "4.0.0",
     "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
-    "liveVerified": false
+    "liveVerified": false,
+    "registrySchemaVersion": "4.0.1",
+    "methodologyVersion": "1.0.0",
+    "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG"
   }
 ]

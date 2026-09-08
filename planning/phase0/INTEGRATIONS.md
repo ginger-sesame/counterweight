@@ -66,7 +66,7 @@ Both map to `subgraphs/uniswap-v3-forks/schema.graphql`; Sushi deployment is lab
 
 Endpoint pattern: `https://gateway.thegraph.com/api/<GRAPH_API_KEY>/subgraphs/id/<query-id>`. Never log the key-bearing URL. Query IDs identify subgraph entities, not immutable deployment CIDs: require `_meta.deployment` from live responses, record both CIDs and schema versions, and ensure they differ. Pin approved CIDs in each run manifest and reject mid-run changes. Same chain, different protocols, same query text; only pool variable and endpoint differ.
 
-Current credential state: GRAPH_API_KEY absent. F2 live reads NOT RUN. Concrete acquisition: create a query API key in Graph Studio, authorize billing/quota as appropriate, inject through environment/secret storage, then run the preflight command in PROOFS. Do not use someone else's leaked demo key. If either selected source is stale/unavailable, F2 fails/blocks; selecting a replacement requires a recorded D07 amendment and repeating schema/identity checks. Static fixtures are explicitly synthetic examples, not claimed live responses.
+Current credential state (2026-09-08): GRAPH_API_KEY is available through the ignored local .env. Initial live reads succeeded; full F2 remains IN PROGRESS. For a new environment, create a query API key in Graph Studio, authorize billing/quota as appropriate, inject through environment/secret storage, then run the preflight command in PROOFS. Do not use someone else's leaked demo key. If either selected source is stale/unavailable, F2 fails/blocks; selecting a replacement requires a recorded D07 amendment and repeating schema/identity checks. Static fixtures are explicitly synthetic examples, not claimed live responses.
 
 ## Privy capability sources
 
@@ -98,3 +98,7 @@ flowchart TD
 ```
 
 The quote path ends after projected validation and never settles. The swap path continues through settlement and post-check within one atomic transaction. Owner commissioning separately deploys the immutable controller/router, approves Aqua, and ships the canonical order. Reads of controller configuration cannot grant authority; every mutating controller call separately checks maker identity and ranges. Graph, request construction and broadcaster are off-chain; guard, settlement and hard configuration are on-chain. Privy enforces the distinction between authorized signers sharing one maker wallet.
+
+### D07 live amendment, 2026-09-08
+
+The table above preserves the original source-registry selection. The current executable registry pins both deployed schema versions to 4.0.0 and Sushi pool to `0x763d3b7296e7c9718ad5b058ac2692a19e5b3638` (3000 fee). See [source review and read-only evidence](../phase3/SOURCE_REVIEW.md) for the missing-hour investigation, factory identity, distinct CIDs, and D08 decimal correction. Live gate status remains IN PROGRESS.

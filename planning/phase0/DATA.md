@@ -18,7 +18,7 @@ Object `RegimeObservationV1` (additional fields forbidden):
 | --- | --- |
 | schemaVersion | literal `counterweight.regime.v1` |
 | sourceKey / subgraphId / deploymentCid | registry key, expected query ID, live `_meta.deployment` |
-| sourceSchemaVersion / methodologyVersion | registry-specific `4.0.0` or `4.0.1` / recorded nonempty version; methodology changes require revalidation |
+| sourceSchemaVersion / methodologyVersion | live-pinned `4.0.0` for both selected deployments / recorded nonempty version; methodology changes require revalidation |
 | chainId / pool | 1 / registry pool address, lowercase canonical |
 | weth / usdc | exact selected addresses and decimals 18/6; match IDs, never symbols |
 | indexedBlock / indexedAt / fetchedAt | nonnegative integers, seconds for times |
@@ -26,7 +26,7 @@ Object `RegimeObservationV1` (additional fields forbidden):
 | volumeUsdMicro / tvlUsdMicro | decimal integer strings derived by flooring source decimal USD values *10^6 |
 | turnoverBps | min(10,000, floor(10,000*volumeUsdMicro/tvlUsdMicro)) |
 
-Parse BigDecimal as decimal text without binary floats. Reject negative values, NaN/Infinity, scientific notation (not part of accepted wire format), >18 fractional digits, >10^18 USD, TVL <1 USD, and missing/duplicate/wrong token IDs. Flooring USD stats at micro precision is acceptable for tuning only. Source responses remain distinct from normalized output and carry source metadata in evidence.
+Parse BigDecimal as decimal text without binary floats. Reject negative values, NaN/Infinity, scientific notation (not part of accepted wire format), >34 fractional digits or >64 total characters, >10^18 USD, TVL <1 USD, and missing/duplicate/wrong token IDs. Flooring USD stats at micro precision is acceptable for tuning only. Source responses remain distinct from normalized output and carry source metadata in evidence.
 
 `fixtures/graph-responses.json` illustrates responses using both selected pools and reversed token order. It is synthetic, labeled as such, and not F2 evidence. Field shapes are checked against pinned schema source; Phase 3 must also validate the actual live endpoint schema and versions.
 
@@ -69,3 +69,5 @@ The Graph worker constructs data and unsigned requests; the restricted Privy upd
 - Valid source proposing `maxWethBps` -> schema/ABI rejection; protected configuration unchanged.
 
 G-01–G-07 implement these as application tests in Phase 3; P0 only validates fixture arithmetic, common source fields, and procedure completeness.
+
+2026-09-08 D08 amendment: accept up to 34 fractional digits in bounded decimal text, then floor exactly to micro-USD. Actual Graph decimal128 responses exceed the initial 18-place assumption. See [Phase 3 source review](../phase3/SOURCE_REVIEW.md). USD magnitude, minimum TVL, freshness, mapping and all safety limits are unchanged. RPC corroborates the indexed block hash and timestamp, including the timestamp-absent fallback.

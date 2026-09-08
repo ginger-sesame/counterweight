@@ -1,0 +1,42 @@
+{
+  "source": {
+    "key": "sushiswap-v3-ethereum",
+    "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+    "pool": "0x35644fb61afbc458bf92b15add6abc1996be5014",
+    "registryStatus": "dev",
+    "chainId": 1,
+    "schemaVersion": "4.0.1",
+    "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+    "liveVerified": false
+  },
+  "query": "query CounterweightRegime($pool: String!, $hour: Int!) {\n  _meta { deployment hasIndexingErrors block { number hash timestamp } }\n  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }\n  liquidityPoolHourlySnapshots(\n    first: 2\n    orderBy: timestamp\n    orderDirection: desc\n    where: { pool: $pool, hour: $hour }\n  ) {\n    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD\n    pool { id inputTokens { id decimals } }\n  }\n}\n",
+  "variables": {
+    "pool": "0x35644fb61afbc458bf92b15add6abc1996be5014",
+    "hour": 496897
+  },
+  "fetchedAt": 1788834936,
+  "httpStatus": 200,
+  "response": {
+    "data": {
+      "dexAmmProtocols": [
+        {
+          "id": "0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f",
+          "schemaVersion": "4.0.0",
+          "subgraphVersion": "1.1.3",
+          "methodologyVersion": "1.0.0",
+          "network": "MAINNET"
+        }
+      ],
+      "liquidityPoolHourlySnapshots": [],
+      "_meta": {
+        "deployment": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+        "hasIndexingErrors": false,
+        "block": {
+          "number": 25929694,
+          "hash": "0x6db5a1b900908b6cb67130566daa0cdee558da39368f12adfc6c8aa7a8d73e81",
+          "timestamp": 1788834923
+        }
+      }
+    }
+  }
+}
