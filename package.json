@@ -10,11 +10,12 @@
   "scripts": {
     "test:strategy": "forge test --match-path 'test/strategy/*.t.sol'",
     "test:e2e": "node --test test/prototype/*.test.mjs",
-    "test": "npm run test:strategy && npm run test:integration && npm run test:invariant && npm run test:e2e",
+    "test": "npm run test:strategy && npm run test:integration && npm run test:invariant && npm run test:e2e && npm run test:data",
     "prototype": "node scripts/proofs/prototype.mjs",
     "test:integration": "forge test --match-path 'test/integration/*.t.sol'",
     "test:invariant": "forge test --match-path 'test/invariant/*.t.sol'",
-    "test:fork": "node --test test/fork/*.test.mjs"
+    "test:fork": "node --test test/fork/*.test.mjs",
+    "test:data": "node --test test/data/*.test.mjs"
   },
   "dependencies": {
     "@1inch/aqua": "github:1inch/aqua#098b4c5d8eec67677f7ca861ca991af56024d9c5",
