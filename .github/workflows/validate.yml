@@ -12,6 +12,10 @@ on:
         description: Run the credentialed live Graph and canonical-token F2 proof
         type: boolean
         default: false
+      run_privy:
+        description: Run the credentialed Privy permission and live Graph settlement proof
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -108,5 +112,54 @@ jobs:
         if: always()
         with:
           name: graph-settlement-evidence
+          path: artifacts/ci/
+          if-no-files-found: error
+
+  privy:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_privy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    concurrency:
+      group: counterweight-privy-development-wallet
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.1
+          cache: npm
+      - name: Install locked dependencies and verified Foundry
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/setup/install-foundry.sh
+          echo "$PWD/.tools/foundry" >> "$GITHUB_PATH"
+      - name: Materialize approved development key and resource bundles
+        env:
+          PRIVY_KEYS_JSON: ${{ secrets.PRIVY_KEYS_JSON }}
+          PRIVY_RESOURCES_JSON: ${{ secrets.PRIVY_RESOURCES_JSON }}
+        run: |
+          node --input-type=module <<'JS'
+          import {mkdir,writeFile} from 'node:fs/promises';
+          if(!process.env.PRIVY_KEYS_JSON||!process.env.PRIVY_RESOURCES_JSON)throw Error('Approved Privy bundles required');
+          await mkdir('.secrets',{mode:0o700});
+          await writeFile('.secrets/privy-development.json',process.env.PRIVY_KEYS_JSON,{mode:0o600});
+          await writeFile('.secrets/privy-resources.json',process.env.PRIVY_RESOURCES_JSON,{mode:0o600});
+          JS
+      - name: Run credentialed Privy preflight, CLI E2E and retained proof
+        env:
+          GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+          PRIVY_APP_ID: ${{ secrets.PRIVY_APP_ID }}
+          PRIVY_APP_SECRET: ${{ secrets.PRIVY_APP_SECRET }}
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+        run: |
+          mkdir -p artifacts/ci
+          set -o pipefail
+          node scripts/proofs/privy-preflight.mjs --out artifacts/ci/privy-preflight
+          npm run test:privy | tee artifacts/ci/privy-tests.txt
+          node scripts/proofs/f3.mjs --out artifacts/ci/f3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: privy-permission-evidence
           path: artifacts/ci/
           if-no-files-found: error

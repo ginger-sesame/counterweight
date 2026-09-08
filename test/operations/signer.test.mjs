@@ -21,3 +21,12 @@ test('O-02 explicit legacy type is preserved and a returned type change is rejec
  const raw=await signer.signTransaction(legacy);await inspectSigned(raw,request,signer.address);
  await assert.rejects(inspectSigned(raw,{...request,type:2},signer.address),/transaction type/);
 });
+test('reconciliation reuses confirmed receipts, rejects nonce drift and never hides network errors',async()=>{
+ const {broadcastOnce}=await import('../../src/operations/signer.mjs');const raw=await signer.signTransaction(tx);
+ let broadcasts=0;const chain={getChainId:async()=>31337,getTransactionReceipt:async()=>({status:'success'}),sendRawTransaction:async()=>{broadcasts++;}};
+ assert.equal((await broadcastOnce(chain,raw,signer.address)).reused,true);assert.equal(broadcasts,0);
+ const missing=Object.assign(new Error('missing'),{name:'TransactionReceiptNotFoundError'});
+ chain.getTransactionReceipt=async()=>{throw missing;};chain.getTransaction=async()=>{throw Object.assign(new Error('missing'),{name:'TransactionNotFoundError'});};chain.getTransactionCount=async()=>2;
+ await assert.rejects(broadcastOnce(chain,raw,signer.address),/nonce changed/);assert.equal(broadcasts,0);
+ chain.getTransactionReceipt=async()=>{throw Error('network unavailable');};await assert.rejects(broadcastOnce(chain,raw,signer.address),/network unavailable/);
+});

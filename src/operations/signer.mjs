@@ -43,3 +43,14 @@ export function privyAccount(client, wallet, bundle, records) {
     async signTypedData(){throw Error('Typed-data signing forbidden');},
   });
 }
+// Reconcile a signed operation before broadcasting. Never obtain a replacement signature here.
+export async function broadcastOnce(chain, raw, address) {
+  const hash=keccak256(raw),tx=parseTransaction(raw);
+  assert.equal(tx.chainId,31337,'broadcast chain');assert.equal(await chain.getChainId(),31337,'broadcast RPC chain');
+  const missing=e=>['TransactionReceiptNotFoundError','TransactionNotFoundError'].includes(e.name);
+  try{return {hash,receipt:await chain.getTransactionReceipt({hash}),reused:true};}catch(e){if(!missing(e))throw e;}
+  try{await chain.getTransaction({hash});return {hash,receipt:await chain.waitForTransactionReceipt({hash,timeout:30000}),reused:true};}catch(e){if(!missing(e))throw e;}
+  assert.equal(await chain.getTransactionCount({address,blockTag:'pending'}),tx.nonce,'nonce changed; reconcile before a new operation');
+  assert.equal(await chain.sendRawTransaction({serializedTransaction:raw}),hash,'broadcast hash');
+  return {hash,receipt:await chain.waitForTransactionReceipt({hash,timeout:30000}),reused:false};
+}

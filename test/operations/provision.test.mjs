@@ -25,3 +25,10 @@ test('O-01 interrupted provisioning journals uncertainty and will not create dup
   await assert.rejects(provision(client,bundle,path),/reconcile/);assert.equal(calls,1);
  }finally{await rm(dir,{recursive:true,force:true});}
 });
+test('O-01 readback rejects widened policy or different policy ownership',async()=>{
+ const {verifyPolicy}=await import('../../src/operations/policies.mjs');
+ const policy=await materializePolicy('updater','owner-id','0x'+'11'.repeat(20));const actual=structuredClone(policy);actual.rules[0].id='provider-rule-id';
+ assert.doesNotThrow(()=>verifyPolicy(actual,policy));
+ actual.rules[0].conditions.pop();assert.throws(()=>verifyPolicy(actual,policy),/rules/);
+ const changed=structuredClone(policy);changed.owner_id='updater-id';assert.throws(()=>verifyPolicy(changed,policy),/owner_id/);
+});

@@ -31,6 +31,7 @@ export async function provision(client, bundle, path) {
   template.owner_id=ownerId;template.name=`counterweight-owner-${journal.runId.slice(0,8)}`;
   const policy=await resource('ownerPolicy',idempotency_key=>client.policies().create({...template,idempotency_key}),id=>client.policies().get(id));
   assert.equal(policy.owner_id,ownerId);
+  assert.deepEqual(policy.rules.map(({id,...rule})=>rule),template.rules,'owner commissioning policy');
   const wallet=await resource('wallet',idempotency_key=>client.wallets().create({chain_type:'ethereum',display_name:`Counterweight development ${journal.runId.slice(0,8)}`,owner_id:ownerId,policy_ids:[policy.id],idempotency_key}),id=>client.wallets().get(id));
   assert.equal(wallet.owner_id,ownerId);assert.deepEqual(wallet.policy_ids,[policy.id]);assert.equal(wallet.chain_type,'ethereum');
   return {journal,wallet};
