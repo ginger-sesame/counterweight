@@ -115,10 +115,10 @@ try{
   for(const role of ['updater','emergency']){
    await deny(`${role} raw secp256k1 signing`,()=>privy.wallets().ethereum().signSecp256k1(wallet.id,{params:{hash:'0x'+'12'.repeat(32)},authorization_context:auth(role)}));
    await deny(`${role} code delegation signing`,()=>privy.wallets().ethereum().sign7702Authorization(wallet.id,{params:{chain_id:31337,contract:s.controller,nonce:0},authorization_context:auth(role)}));
+   await deny(`${role} provider broadcast method`,()=>privy.wallets().ethereum().sendTransaction(wallet.id,{caip2:'eip155:31337',params:{transaction:valid},authorization_context:auth(role)}));
    // Alternate provider methods need a supported-provider-network proof; see Phase 4 handoff.
    if(process.env.CW_PRIVY_EXTENDED_METHODS==='1'){
    await deny(`${role} user operation signing`,()=>privy.wallets().ethereum().signUserOperation(wallet.id,{params:{chain_id:31337,contract:'0x69007702764179f14F51cdce752f4f775d74E139',user_operation:{sender:maker,nonce:'0x0',call_data:valid.data,call_gas_limit:'0x10000',verification_gas_limit:'0x10000',pre_verification_gas:'0x10000',max_fee_per_gas:'0x3b9aca00',max_priority_fee_per_gas:'0x3e8',paymaster:'0x0000000000000000000000000000000000000000',paymaster_data:'0x',paymaster_verification_gas_limit:'0x0',paymaster_post_op_gas_limit:'0x0'}},authorization_context:auth(role)}));
-   await deny(`${role} provider broadcast method`,()=>privy.wallets().ethereum().sendTransaction(wallet.id,{caip2:'eip155:31337',params:{transaction:valid},authorization_context:auth(role)}));
    await deny(`${role} batched calls`,()=>privy.wallets().ethereum().sendCalls(wallet.id,{caip2:'eip155:31337',params:{calls:[{to:s.controller,data:valid.data,value:'0x0'}]},authorization_context:auth(role)}));
    }
   }
@@ -179,7 +179,7 @@ try{
   await save();
   const operationSourceHashes={};for(const path of ['src/data/normalize.mjs','src/data/fetch.mjs','src/data/regime.mjs','planning/phase0/fixtures/sources.json','planning/phase0/fixtures/regime.graphql','src/operations/keys.mjs','src/operations/provision.mjs','src/operations/policies.mjs','src/operations/signer.mjs','scripts/proofs/f3.mjs','planning/phase0/fixtures/updater-policy.json','planning/phase0/fixtures/owner-policy.json','planning/phase0/fixtures/emergency-policy.json'])operationSourceHashes[path]=createHash('sha256').update(await readFile(new URL(path,root))).digest('hex');
   if(process.env.CW_PRIVY_DIAGNOSTIC==='1')throw Error('Diagnostic completed; synthetic Graph input cannot pass F3');
-  return {phase4Status:process.env.CW_PRIVY_EXTENDED_METHODS==='1'?'COMPLETE_MATRIX':'IN_PROGRESS',unprovenMethods:process.env.CW_PRIVY_EXTENDED_METHODS==='1'?[]:['eth_signUserOperation','eth_sendTransaction','wallet_sendCalls'],operationSourceHashes,operationsIdentity:'actual Privy wallet; distinct 2-of-3 owner keys controlled in one development environment',walletId:wallet.id,operationArtifacts:['privy-recovery-traces.json','privy-final-configuration.json','privy-configuration.json','privy-signatures.json','privy-operations.json','graph.json']};
+  return {phase4Status:process.env.CW_PRIVY_EXTENDED_METHODS==='1'?'COMPLETE_MATRIX':'IN_PROGRESS',unprovenMethods:process.env.CW_PRIVY_EXTENDED_METHODS==='1'?[]:['eth_signUserOperation','wallet_sendCalls'],operationSourceHashes,operationsIdentity:'actual Privy wallet; distinct 2-of-3 owner keys controlled in one development environment',walletId:wallet.id,operationArtifacts:['privy-recovery-traces.json','privy-final-configuration.json','privy-configuration.json','privy-signatures.json','privy-operations.json','graph.json']};
  },{account});
  if(output)await writeFile(`${output}/privy-signatures.json`,stringify(signatures)+'\n');
 }catch(e){console.error(JSON.stringify({result:'FAIL',status:e.status??null,errorClass:e.constructor.name,code:e.error?.code??null}));process.exitCode=1;}

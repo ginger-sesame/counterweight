@@ -1,6 +1,6 @@
 # Phase 4 agent handoff
 
-Status: IN PROGRESS. The main F3 path has passed with actual Privy signing and live Graph data, but this is not full Phase 4 completion. Three alternate RPC methods still lack policy-specific denial evidence. Do not check O-01/O-04 or the phase exit until that gap is resolved. F4 remains NOT RUN.
+Status: IN PROGRESS. The main F3 path has passed with actual Privy signing and live Graph data, but this is not full Phase 4 completion. Two alternate RPC methods still lack policy-specific denial evidence. Do not check O-01/O-04 or the phase exit until that gap is resolved. F4 remains NOT RUN.
 
 ## Implemented boundary
 
@@ -32,7 +32,7 @@ node --env-file=.env scripts/proofs/f3.mjs --out artifacts/new-f3
 
 Each output directory must be fresh. F3 can use absolute `PRIVY_KEYS_FILE` and `PRIVY_RESOURCES_FILE` paths for a clean checkout, plus Node's external `--env-file` option. Serialize every process using this wallet: F3 retargets remote policies and temporarily rotates/revokes signers. The final controller is an isolated upper-bound branch; the next run deploys a fresh initial branch and retargets both policies again.
 
-`CW_PRIVY_DIAGNOSTIC=1` substitutes synthetic tuning to isolate permission/recovery checks during a Graph outage. It always fails at the final checkpoint and cannot pass F3. `CW_PRIVY_EXTENDED_METHODS=1` additionally requires policy-specific denial of all three currently unresolved alternate methods; the default manifest explicitly lists these as unproven and Phase 4 as IN_PROGRESS. A passing F3 minimum proof does not waive them.
+`CW_PRIVY_DIAGNOSTIC=1` substitutes synthetic tuning to isolate permission/recovery checks during a Graph outage. It always fails at the final checkpoint and cannot pass F3. `CW_PRIVY_EXTENDED_METHODS=1` additionally requires policy-specific denial of both currently unresolved alternate methods; the default manifest explicitly lists these as unproven and Phase 4 as IN_PROGRESS. A passing F3 minimum proof does not waive them.
 
 GitHub Actions has an explicit credentialed Privy job with serialized wallet access. It requires GRAPH_API_KEY, PRIVY_APP_ID, PRIVY_APP_SECRET, optional ETHEREUM_RPC_URL, and approved PRIVY_KEYS_JSON/PRIVY_RESOURCES_JSON secrets. Hosted CI has not been executed. Its artifacts exclude credential files; provisioning updates still need reconciliation with the authoritative local journal after interrupted runs.
 
@@ -42,7 +42,7 @@ GitHub Actions has an explicit credentialed Privy job with serialized wallet acc
 2. Explicit transaction type and hex quantity strings are required for faithful wire encoding. Every returned signature is independently decoded and recovered.
 3. Live policy argument checks rejected valid uint16/uint32 tuning inputs and accepted uint64/uint256. The actual ABI uses uint256 for intensity/spread and checks the original bounds before narrowing storage. Oversized inputs cannot truncate into allowed values. This changes the selector, requiring fresh epoch deployments. See [width probe](evidence/argument-width-probe.json).
 4. The Graph nested token relation timed out. [DATA_COMPATIBILITY.md](DATA_COMPATIBILITY.md) records the exact snapshot-ID query and RPC token-identity replacement, preserving both sources, completed-hour requirements and freshness bounds. Missing completed-hour snapshots are unavailable data, never zero volume.
-5. Alternate RPC probes remain unresolved: `eth_signUserOperation` returned `invalid_data` even with documented required fields and supported contract identifiers; `eth_sendTransaction` and `wallet_sendCalls` on private chain 31337 returned provider network/broadcast failures. None counts as policy denial. Default-deny policy semantics are documented by [Privy](https://docs.privy.io/controls/policies/overview), but static configuration is not the missing live proof. A temporary explicit-DENY probe with empty conditions was rejected as invalid policy format and restored the original policy; do not repeat that malformed probe as acceptance evidence.
+5. Alternate RPC probes remain unresolved: `eth_signUserOperation` returned `invalid_data` even with documented required fields and supported contract identifiers; `wallet_sendCalls` on private chain 31337 returned provider network/broadcast failures. `eth_sendTransaction` initially required network preparation when fields were omitted; supplying explicit nonce/gas/fees/type produced the intended policy denial for both restricted roles and is now included in normal F3 coverage. None counts as policy denial. Default-deny policy semantics are documented by [Privy](https://docs.privy.io/controls/policies/overview), but static configuration is not the missing live proof. A temporary explicit-DENY probe with empty conditions was rejected as invalid policy format and restored the original policy; do not repeat that malformed probe as acceptance evidence.
 
 ## Next agent deliverables
 
