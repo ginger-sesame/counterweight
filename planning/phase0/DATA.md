@@ -4,11 +4,11 @@ Decision: root agent, 2026-09-06. Consume the shared fields of Messari DEX-AMM E
 
 ## Query and source identity
 
-Use `fixtures/regime.graphql` and the source registry in `fixtures/sources.json`. Metadata + protocol + hourly snapshots are required; GraphQL errors, null required fields, indexing errors, mismatched network/schema/pool/tokens, or changed deployment CID reject the source. `_meta.block.timestamp` is preferred; if absent, resolve `_meta.block.number` to timestamp using Ethereum RPC and record this provenance. No substitution with HTTP retrieval time.
+Use `fixtures/regime.graphql` and the source registry in `fixtures/sources.json`. Metadata + protocol + the hourly snapshot are required; GraphQL errors, null required fields, indexing errors, mismatched network/schema/pool/tokens, or changed deployment CID reject the source. `_meta.block.timestamp` is preferred; if absent, resolve `_meta.block.number` to timestamp using Ethereum RPC and record this provenance. No substitution with HTTP retrieval time.
 
-Let `hourEnd = floor(now/3600)*3600`, `hourStart=hourEnd-3600`. Fetch snapshots for the last completed UTC hour only: `hour=hourStart/3600`, pool fixed by registry, order by timestamp descending, first=2. Require exactly one matching hourly snapshot. Empty response is missing data, not zero volume. Multiple matches are a source/schema failure. This avoids truncating a wide pool query or comparing partial hours.
+Let `hourEnd = floor(now/3600)*3600`, `hourStart=hourEnd-3600`. Fetch the last completed UTC hour by its exact Messari primary key: selected pool address concatenated with the nonnegative hour number encoded as little-endian i32. The shared query takes `$snapshot: ID!`; transport evidence also records pool/hour variables. Require a non-null single snapshot whose ID, pool and hour match. Null is missing data, never zero volume.
 
-The pool relationship filter is `String`, even though pool entity IDs are `Bytes`; Graph Node maps object reference filters to String. Source validation verifies this distinction.
+D08 amendment (2026-09-08): the live Uniswap `inputTokens` relation timed out. Read each pool's token0/token1 and their decimals through Ethereum RPC at the recorded head block; require canonical WETH/18 and USDC/6. Preserve source metadata and block corroboration separately. See [source investigation and compatibility contract](../phase4/DATA_COMPATIBILITY.md). Raw Graph and RPC token metadata remain distinct in evidence; the normalized schema is unchanged.
 
 ## Normalized output
 
@@ -22,7 +22,7 @@ Object `RegimeObservationV1` (additional fields forbidden):
 | chainId / pool | 1 / registry pool address, lowercase canonical |
 | weth / usdc | exact selected addresses and decimals 18/6; match IDs, never symbols |
 | indexedBlock / indexedAt / fetchedAt | nonnegative integers, seconds for times |
-| hourStart / hourEnd / observedAt | integer UTC seconds; snapshot hour matches selected completed hour; observation timestamp follows rules below |
+| hourStart / hourEnd / observedAt | integer UTC seconds; snapshot ID and hour match selected completed hour; observation timestamp follows rules below |
 | volumeUsdMicro / tvlUsdMicro | decimal integer strings derived by flooring source decimal USD values *10^6 |
 | turnoverBps | min(10,000, floor(10,000*volumeUsdMicro/tvlUsdMicro)) |
 

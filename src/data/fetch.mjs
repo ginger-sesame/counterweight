@@ -1,5 +1,6 @@
+import { encodeFunctionData, decodeFunctionResult, parseAbi } from 'viem';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { requireThat } from './normalize.mjs';
+import { requireThat, snapshotId } from './normalize.mjs';
 // Never propagate transport exception messages: they can contain URLs/headers with credentials.
 export class DataUnavailable extends Error {}
 export async function requestJson(url, payload, { fetchImpl = fetch, sleepImpl = sleep, timeoutMs = 10000, attempts = 3, signal } = {}) {
@@ -42,7 +43,7 @@ export async function collectPair({ sources, query, apiKey, rpcUrl = 'https://et
     return { number: Number(BigInt(value.number)), timestamp: Number(BigInt(value.timestamp)), hash: value.hash };
   };
   const outcomes = await Promise.allSettled(sources.map(async source => {
-    const variables = { pool: source.pool, hour };
+    const variables = { pool: source.pool, hour, snapshot: snapshotId(source.pool, hour) };
     const response = await request(`https://gateway.thegraph.com/api/${apiKey}/subgraphs/id/${source.subgraphId}`, { query, variables }, { signal });
     return { sourceKey: source.key, variables, fetchedAt: now(), response };
   }));
@@ -56,5 +57,12 @@ export async function collectPair({ sources, query, apiKey, rpcUrl = 'https://et
     requireThat(Number.isSafeInteger(number) && number >= 0, 'Graph block number');
     blocks[number] = block(await rpc('eth_getBlockByNumber', ['0x' + number.toString(16), false]));
   }));
-  return { result: 'COLLECTED', envelopes, context: { now: now(), head: { ...block(rawHead), chainId: 1 }, blocks }, startedAt: start, finishedAt: now() };
+  const identityAbi = parseAbi(['function token0() view returns(address)', 'function token1() view returns(address)', 'function decimals() view returns(uint8)']);
+  const readIdentity = async (to, functionName) => decodeFunctionResult({ abi: identityAbi, functionName, data: await rpc('eth_call', [{ to, data: encodeFunctionData({ abi: identityAbi, functionName }) }, rawHead.number]) });
+  const poolTokens = {};
+  await Promise.all(sources.map(async source => {
+    const ids = await Promise.all(['token0','token1'].map(name => readIdentity(source.pool, name)));
+    poolTokens[source.pool] = await Promise.all(ids.map(async id => ({ id: id.toLowerCase(), decimals: await readIdentity(id, 'decimals') })));
+  }));
+  return { result: 'COLLECTED', envelopes, context: { now: now(), head: { ...block(rawHead), chainId: 1 }, blocks, poolTokens, tokenIdentityBlock: block(rawHead).number }, startedAt: start, finishedAt: now() };
 }

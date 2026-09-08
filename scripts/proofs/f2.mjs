@@ -44,7 +44,7 @@ await runSettlement(async ({client,read,send,setup,state,attempt,check,maker,W,e
  for(const kind of ['stale','malformed']){
   const bad=structuredClone(live.collection);
   if(kind==='stale')bad.envelopes[0].fetchedAt-=1000;
-  else bad.envelopes[1].response.data.liquidityPoolHourlySnapshots[0].hourlyVolumeUSD='NaN';
+  else bad.envelopes[1].response.data.liquidityPoolHourlySnapshot.hourlyVolumeUSD='NaN';
   const before=await state(s);assert.throws(()=>evaluatePair(bad.envelopes,sources,bad.context));
   assert.deepEqual(await state(s),before);check(`${kind}: no update or protected state change`,true);
   records.push({label:`injected ${kind}`,injected:true,envelopes:bad.envelopes,result:'REJECTED'});

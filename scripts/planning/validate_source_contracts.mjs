@@ -45,6 +45,7 @@ visit(ast,{NamedType(n){if(!definitions.has(n.name.value)&&!['String','ID','Int'
 const api=`
 ${[...unknown].map(x=>`scalar ${x}`).join('\n')}
 type Query {
+  liquidityPoolHourlySnapshot(id: ID!): LiquidityPoolHourlySnapshot
   _meta: _Meta_
   dexAmmProtocols(first: Int): [DexAmmProtocol!]!
   liquidityPoolHourlySnapshots(first: Int, orderBy: CWOrderBy, orderDirection: CWDirection, where: CWFilter): [LiquidityPoolHourlySnapshot!]!
@@ -58,7 +59,7 @@ input CWFilter { pool: String, hour: Int }
 const schema=buildASTSchema(parse(schemaText+'\n'+api),{assumeValidSDL:true,assumeValid:true});
 const query=readFileSync(resolve(base,'fixtures/regime.graphql'),'utf8');
 assert.deepEqual(validate(schema,parse(query)).map(e=>e.message),[]);
-assert(validate(schema,parse(query.replace('$pool: String!','$pool: Bytes!'))).length>0, 'Must reject wrong relationship variable type');
+assert(validate(schema,parse(query.replace('$snapshot: ID!','$snapshot: Bytes!'))).length>0, 'Must reject wrong primary-key variable type');
 assert(validate(schema,parse(query.replace('hourlyVolumeUSD','nonexistentVolume'))).length>0, 'Must reject unknown entity fields');
 const policy=JSON.parse(readFileSync(resolve(base,'fixtures/updater-policy.json'),'utf8'));
 const abi=policy.rules[0].conditions.find(c=>c.field_source==='ethereum_calldata').abi;

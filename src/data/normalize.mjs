@@ -22,6 +22,10 @@ function text(value, name) {
   requireThat(typeof value === 'string' && value.length > 0 && value.length <= 256, name);
   return value;
 }
+export function snapshotId(pool, hour) {
+  requireThat(/^0x[0-9a-f]{40}$/.test(pool) && Number.isInteger(hour) && hour >= 0 && hour <= 2147483647, 'snapshot identity inputs');
+  const bytes = Buffer.alloc(4); bytes.writeInt32LE(hour); return pool + bytes.toString('hex');
+}
 export function normalize(envelope, source, context) {
   const { now, head, indexedBlock } = context;
   integer(now, 'now'); integer(head.number, 'head number'); integer(head.timestamp, 'head timestamp');
@@ -30,7 +34,7 @@ export function normalize(envelope, source, context) {
   integer(fetchedAt, 'fetch time');
   requireThat(fetchedAt <= now && now - fetchedAt <= 120, 'fetch freshness');
   requireThat(response && !response.errors && response.data, 'GraphQL response');
-  const { _meta: meta, dexAmmProtocols: protocols, liquidityPoolHourlySnapshots: snapshots } = response.data;
+  const { _meta: meta, dexAmmProtocols: protocols, liquidityPoolHourlySnapshot: snapshot } = response.data;
   requireThat(meta && meta.hasIndexingErrors === false && meta.deployment === source.deploymentCid, 'deployment/indexing identity');
   requireThat(Array.isArray(protocols) && protocols.length === 1, 'protocol count');
   const protocol = protocols[0];
@@ -44,14 +48,15 @@ export function normalize(envelope, source, context) {
   requireThat(indexedAt === indexedBlock.timestamp && indexedAt <= head.timestamp && number <= head.number && head.number - number <= 25, 'indexing lag/consistency');
   requireThat(indexedAt <= now + 30 && now - indexedAt <= 300, 'indexing freshness');
   const hourEnd = Math.floor(now / 3600) * 3600, hourStart = hourEnd - 3600;
-  requireThat(variables?.pool === source.pool && variables.hour === hourStart / 3600, 'query variables');
-  requireThat(Array.isArray(snapshots) && snapshots.length === 1, 'completed-hour snapshot count');
-  const snapshot = snapshots[0];
+  requireThat(variables?.pool === source.pool && variables.hour === hourStart / 3600 && variables.snapshot === snapshotId(source.pool, variables.hour), 'query variables');
+  requireThat(snapshot && typeof snapshot === 'object' && !Array.isArray(snapshot), 'completed-hour snapshot');
+  requireThat(snapshot.id === variables.snapshot, 'snapshot primary key');
   requireThat(snapshot.hour === variables.hour, 'snapshot hour'); text(snapshot.id, 'snapshot id');
   const observedAt = wireInteger(snapshot.timestamp, 'snapshot time'), observedBlock = wireInteger(snapshot.blockNumber, 'snapshot block');
   requireThat(observedAt >= hourStart && observedAt <= indexedAt + 30 && observedAt <= now + 30 && now - observedAt <= 7200 && observedBlock <= number, 'snapshot freshness/consistency');
   requireThat(source.chainId === 1 && snapshot.pool?.id === source.pool, 'pool/chain');
-  const tokens = snapshot.pool.inputTokens;
+  requireThat(context.tokenIdentityBlock === head.number, 'token identity block');
+  const tokens = context.poolTokens?.[source.pool];
   requireThat(Array.isArray(tokens) && tokens.length === 2 && tokens.filter(t => t.id === WETH && t.decimals === 18).length === 1 && tokens.filter(t => t.id === USDC && t.decimals === 6).length === 1, 'token identity/decimals');
   const volume = usdMicro(snapshot.hourlyVolumeUSD), tvl = usdMicro(snapshot.totalValueLockedUSD);
   requireThat(tvl >= 1000000n, 'TVL minimum');

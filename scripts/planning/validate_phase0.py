@@ -62,10 +62,11 @@ def check_data():
         assert sample['sourceKey'] == source['key'] and sample['synthetic']
         data = sample['response']['data']
         assert data['dexAmmProtocols'][0]['schemaVersion'] == source['schemaVersion']
-        snapshot, = data['liquidityPoolHourlySnapshots']
+        snapshot = data['liquidityPoolHourlySnapshot']
+        assert snapshot['id'] == sample['variables']['snapshot'] == source['pool'] + sample['variables']['hour'].to_bytes(4, 'little', signed=True).hex()
         assert snapshot['pool']['id'] == sample['variables']['pool'] == source['pool']
         assert snapshot['hour'] == sample['variables']['hour']
-        tokens = {t['id']: t['decimals'] for t in snapshot['pool']['inputTokens']}
+        tokens = {t['id']: t['decimals'] for t in sample['tokenMetadata']}
         assert tokens == {'0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2':18, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48':6}
         volume = int(Decimal(snapshot['hourlyVolumeUSD'])*10**6)
         tvl = int(Decimal(snapshot['totalValueLockedUSD'])*10**6)
