@@ -20,7 +20,11 @@ export async function requestJson(url, payload, { fetchImpl = fetch, sleepImpl =
       if (/^(provider HTTP|provider JSON|response size)/.test(error.message)) throw error;
       retry = true;
     }
-    if (retry && attempt + 1 < attempts) await sleepImpl(1000 * (attempt + 1));
+    if (retry && attempt + 1 < attempts) {
+      if (signal?.aborted) throw new DataUnavailable('cycle deadline');
+      try { await sleepImpl(1000 * (attempt + 1), undefined, { signal }); }
+      catch { throw new DataUnavailable('cycle deadline'); }
+    }
   }
   throw new DataUnavailable('provider unavailable after bounded retries');
 }

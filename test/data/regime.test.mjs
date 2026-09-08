@@ -39,3 +39,8 @@ test('G-04 actual stalled HTTP request times out, cancellation and 5xx recovery'
  await assert.rejects(requestJson('http://unused',{},{signal:AbortSignal.abort()}),/cycle deadline/);
  let calls=0;assert.deepEqual(await requestJson('http://local',{},{sleepImpl:async()=>{},fetchImpl:async()=>++calls===1?new Response('',{status:503}):new Response('{}')}),{});assert.equal(calls,2);
 });
+test('G-04 shared cycle deadline interrupts retry backoff',async()=>{
+ const started=Date.now();
+ await assert.rejects(requestJson('http://local',{},{signal:AbortSignal.timeout(30),fetchImpl:async()=>new Response('',{status:503})}),/cycle deadline/);
+ assert(Date.now()-started<500,'backoff exceeded the cycle deadline');
+});
