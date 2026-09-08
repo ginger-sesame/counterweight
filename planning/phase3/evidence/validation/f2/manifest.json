@@ -1,0 +1,150 @@
+{
+  "graphSourceHashes": {
+    "src/data/normalize.mjs": "3b111df87d973c49ef1c032a0eee31670b0be8319fc413d998ad20454005ef05",
+    "src/data/regime.mjs": "e37cc3efcfb45109b99ab1d8069ba30119af237b8e650fb340b4bc858150b3b8",
+    "src/data/fetch.mjs": "41dd5b19e6917bd965f76b8a70595ba38fa208a05fb608ad56598bdbb1703f2a",
+    "scripts/proofs/f2.mjs": "93fc99e22c7595b0cc571c5776d406a76fe14c496e2e98b92fe6934024363222",
+    "planning/phase0/fixtures/sources.json": "05e96189f6bdcaf5cfe9608e664a655b07a12460e5a05f9679e82d3db7081086",
+    "planning/phase0/fixtures/regime.graphql": "be1f1cc72ca9bb540855831990009003a71c3ee794123a3b2a080fcdb26ab4f6"
+  },
+  "graphArtifact": "graph.json",
+  "operationsIdentity": "controlled local Anvil maker; Privy deferred to F3",
+  "toolVersions": {
+    "node": "v22.22.1",
+    "forge": "forge Version: 1.8.1\nCommit SHA: 982849d3140c01fd3b72905759581a132df7aa98\nBuild Timestamp: 2026-08-28T17:46:00.964391484Z (1787939160)\nBuild Profile: dist",
+    "anvil": "anvil/v1.8.1",
+    "solidity": "0.8.30+commit.73712a01"
+  },
+  "dependencyVersions": {
+    "@1inch/swap-vm": {
+      "version": "0.0.6",
+      "resolved": "git+ssh://git@github.com/1inch/swap-vm.git#f09a41e689240adc645934f965c8061749397cd2"
+    },
+    "@1inch/aqua": {
+      "version": "0.1.0",
+      "resolved": "git+ssh://git@github.com/1inch/aqua.git#098b4c5d8eec67677f7ca861ca991af56024d9c5"
+    },
+    "@1inch/solidity-utils": {
+      "version": "6.9.10",
+      "resolved": "https://registry.npmjs.org/@1inch/solidity-utils/-/solidity-utils-6.9.10.tgz"
+    },
+    "@openzeppelin/contracts": {
+      "version": "5.4.0",
+      "resolved": "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-5.4.0.tgz"
+    },
+    "viem": {
+      "version": "2.56.3",
+      "resolved": "https://registry.npmjs.org/viem/-/viem-2.56.3.tgz"
+    }
+  },
+  "schemaVersion": 1,
+  "gate": "F2",
+  "result": "PASS",
+  "testIds": [
+    "G-05",
+    "G-06",
+    "G-07"
+  ],
+  "runAt": "2026-09-08T02:50:19.461Z",
+  "gitRevision": "86091fd67a9cd7818cf5ddfdd6e3cf472194f851",
+  "sourceHashes": {
+    "contracts/CounterweightSwapVM.sol": "65145ec63686eef21012358e5d323fd35ca44566b1a609510a9fd152dd6fc6af",
+    "contracts/EpochController.sol": "df8801cf562400712bdf5849d72b8dcdf88a12b6df7f05f3ab41676a52200188",
+    "contracts/libraries/OrderCodec.sol": "18e5d10ffaa8381755168c2fb74542205cbf4627f3683ee0ef54ca2c95810182",
+    "contracts/upstream/SwapVM.sol": "7a7092902a16af7517d4b5ad2b540be4d1a35814a8fb8007d7c061ac8c38e8c6",
+    "contracts/upstream/SwapVM.patch": "d4943e40ad6128d3a6945f7efb8c3f4d723e8bf92891f9a25523a382ec796ce1",
+    "contracts/libraries/InventoryGuard.sol": "19607e39f69d9c2011510b9523a38e5516d84ddb25fb4684f9fb7636d770d865",
+    "contracts/libraries/QuoteMath.sol": "95a12ba6bd1fa28f38631d50597584a8a7ef894dc25e7a64cbfa9beb4d8a19bd",
+    "contracts/libraries/StrategyTypes.sol": "531efb03f3799f60c39e9b4b5800ea68bbe309d2b757d7726b55eb82827edef4",
+    "foundry.toml": "bb6150eb52a3ce913e597e8eeca991f0fa1fa93b3f74031d8b660486fa8b4502",
+    "package-lock.json": "f05c0edd0887386f2aade2d955fac4431e63e6269c0420d567a5e86d2168f1aa",
+    "scripts/proofs/f1.mjs": "3454f5e0475d83603a78130afdd8db13fba30a189827000a3aa523631d75c3b8",
+    "scripts/proofs/settlement.mjs": "3910f639556e2c37fb539beedb14579e8f1360d09592da9fcfec5004c625b962",
+    "planning/phase0/ACCOUNTING.md": "9f318f3fc5b42c79df49abffa4b2187785357cc42063238bb9bf55893ac28ae6",
+    "planning/phase0/INTEGRATIONS.md": "9f32b24132a5a97fe7295fc9d3b3f42003ac9528dd50537e887dc1aec16b79a3",
+    "planning/phase0/DATA.md": "dd3675784c061536073e632f88502e7b0655661e34e17c10c393f5279b5848f8",
+    "planning/phase0/OPERATIONS.md": "113f4a554d56a105af949c2bca93850e8604d3569f6ce0732171c8589c789077"
+  },
+  "environment": "local-mainnet-fork",
+  "chainId": 31337,
+  "forkBlock": "25917718",
+  "forkBlockHash": "0x5dcb9480fc701b19c587e6834118725afa28ef2ba1fca9fc9d14aa9a289c059e",
+  "maker": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+  "taker": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+  "deployer": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+  "fundingSource": "0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640",
+  "epochs": [
+    {
+      "config": {
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "owner": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        "epochId": "10",
+        "start": 1788835811,
+        "end": 1788837611,
+        "targetWethBps": 5000,
+        "minWethBps": 3000,
+        "maxWethBps": 7000,
+        "priceMicroUsdc": "2000000000",
+        "maxInputValueMicroUsdc": "1000000000"
+      },
+      "controller": "0x95a88cd1f3807f31e5df20b2bbad16362b2ad127",
+      "router": "0x8480948e78add409f83617cde06421cacf2c065e",
+      "order": {
+        "maker": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "traits": "28948022309345504152553859025372987423956659195481894094225317213215909740544",
+        "data": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2d008000000000000000ad100"
+      },
+      "orderHash": "0xb99c1aafe9bd0330247c05e4ecbe3803d7c804e3ac7b82572fae4819e1f2bcb4",
+      "codeHashes": {
+        "aqua": "0xca8a7ad8684d35df59333c2b4dfb39cd447fe50f11c577e205ef5fc2c4f353ec",
+        "controller": "0xe1f2d6e66ebc293cb6d00030616779e1e1c2b6fa8830f08797133bdc9ac7cc1f",
+        "router": "0xdd08163a48b155925286f6979bb93553c56323b28b39569a743ce125c98be505",
+        "WETH": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23",
+        "USDC": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505"
+      }
+    },
+    {
+      "config": {
+        "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+        "usdc": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "owner": "0x70997970c51812dc3a010c7d01b50e0d17dc79c8",
+        "epochId": "11",
+        "start": 1788835811,
+        "end": 1788837611,
+        "targetWethBps": 5000,
+        "minWethBps": 3000,
+        "maxWethBps": 7000,
+        "priceMicroUsdc": "2000000000",
+        "maxInputValueMicroUsdc": "1000000000"
+      },
+      "controller": "0x95a88cd1f3807f31e5df20b2bbad16362b2ad127",
+      "router": "0x8480948e78add409f83617cde06421cacf2c065e",
+      "order": {
+        "maker": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "traits": "28948022309345504152553859025372987423956659195481894094225317213215909740544",
+        "data": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2d008000000000000000bd100"
+      },
+      "orderHash": "0x0c24b0a141b49507d61c6d1b91522957daf56e59b141407423b9908b42f351b1",
+      "codeHashes": {
+        "aqua": "0xca8a7ad8684d35df59333c2b4dfb39cd447fe50f11c577e205ef5fc2c4f353ec",
+        "controller": "0xc5084126f10e242a359a93e6df6daf03a23e301207500c99fa5a666903420ed5",
+        "router": "0xdd08163a48b155925286f6979bb93553c56323b28b39569a743ce125c98be505",
+        "WETH": "0xd0a06b12ac47863b5c7be4185c2deaad1c61557033f56c7d4ea74429cbb25e23",
+        "USDC": "0xd80d4b7c890cb9d6a4893e6b52bc34b56b25335cb13716e0d1d31383e6b41505"
+      }
+    }
+  ],
+  "assertions": 82,
+  "scenarios": 4,
+  "artifacts": [
+    "assertions.json",
+    "transactions.json",
+    "scenarios.json"
+  ],
+  "limitations": [
+    "Snapshot branches are isolated scenarios, not one uninterrupted chain history.",
+    "Live Graph with local maker substitute; no Privy policy proof or public deployment.",
+    "V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites."
+  ]
+}

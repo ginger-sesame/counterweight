@@ -1,0 +1,238 @@
+
+> counterweight@0.1.0 test
+> npm run test:strategy && npm run test:integration && npm run test:invariant && npm run test:e2e && npm run test:data
+
+
+> counterweight@0.1.0 test:strategy
+> forge test --match-path 'test/strategy/*.t.sol'
+
+Compiling 89 files with Solc 0.8.30
+Solc 0.8.30 finished in 6.14s
+Compiler run successful with warnings:
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:230:5:
+    |
+230 |     function test_SkewCapsAndRetainedSpread() public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:255:5:
+    |
+255 |     function testFuzz_PostGuardMatchesIndependentInterval(uint128 rawW, uint128 rawU) public {
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+Warning (2018): Function state mutability can be restricted to view
+   --> test/strategy/Strategy.t.sol:267:5:
+    |
+267 |     function testFuzz_AcceptedQuotePreservesInvariant(
+    |     ^ (Relevant source part starts here and spans across multiple lines).
+
+
+Ran 14 tests for test/strategy/Strategy.t.sol:StrategyTest
+[PASS] testFuzz_AcceptedQuotePreservesInvariant(uint64,uint64,uint64,bool,uint16,uint16) (runs: 1000, μ: 43522, ~: 43558)
+[PASS] testFuzz_PostGuardMatchesIndependentInterval(uint128,uint128) (runs: 1000, μ: 26750, ~: 26570)
+[PASS] testFuzz_RegimeIsolation(uint16,uint16,bool) (runs: 1000, μ: 76326, ~: 76247)
+[PASS] test_EpochBoundariesAndValuation() (gas: 165315)
+[PASS] test_ExactExposureBoundaries() (gas: 180037)
+[PASS] test_GoldenQuotes() (gas: 1210587)
+[PASS] test_ImmediatelyInsideSizeCapsAndPhysicalEnvelope() (gas: 97340)
+[PASS] test_InvalidConfiguration() (gas: 17586)
+[PASS] test_MaximumArithmeticEnvelope() (gas: 99179)
+[PASS] test_NoSafetyMutationSurface() (gas: 87641)
+[PASS] test_PhysicalBackingAndExternalChanges() (gas: 120162)
+[PASS] test_SkewCapsAndRetainedSpread() (gas: 66601)
+[PASS] test_UnsupportedAndInvalidInputs() (gas: 225257)
+[PASS] test_UsdcSizeBoundary() (gas: 50506)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 116.80ms (186.68ms CPU time)
+
+Ran 1 test suite in 117.56ms (116.80ms CPU time): 14 tests passed, 0 failed, 0 skipped (14 total tests)
+
+> counterweight@0.1.0 test:integration
+> forge test --match-path 'test/integration/*.t.sol'
+
+Compiling 2 files with Solc 0.8.30
+Solc 0.8.30 finished in 6.07s
+Compiler run successful!
+
+Ran 6 tests for test/integration/Settlement.t.sol:SettlementTest
+[PASS] test_ConsecutiveFillsRecomputeAndExternalPushChangesQuote() (gas: 952470)
+[PASS] test_MissingGuardAndCallbackCannotBypassEntryValidation() (gas: 211099)
+[PASS] test_OutputTransferFailureRollsBackFirstInputAndAllowances() (gas: 499034)
+[PASS] test_RealAquaPipelineBothDirections() (gas: 825644)
+[PASS] test_TuningVersionPauseAndFallback() (gas: 948806)
+[PASS] test_UnsafeDirectSwapRevertsWithoutStateChanges() (gas: 3000412)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 17.56ms (16.35ms CPU time)
+
+Ran 13 tests for test/integration/Validation.t.sol:ValidationTest
+[PASS] testFuzz_SettlementPreservesInvariantAndConservation(uint64,bool) (runs: 1000, μ: 289460, ~: 289594)
+[PASS] test_ActualPostBalanceMismatchRollsBackEverything() (gas: 563297)
+[PASS] test_AllUnsupportedFlagMutationsRejectedBeforeSettlement() (gas: 3672979)
+[PASS] test_CustomRecipientAndHookPayloadsAreRejected() (gas: 766083)
+[PASS] test_DeadlineBoundariesVersionAndMalformedEnvelope() (gas: 700409)
+[PASS] test_NewControllerStartsPausedWithFallbackAndCannotActivateUnshippedAllocation() (gas: 96571)
+[PASS] test_OrderHashBindsTokensMakerProgramAndAllTraits() (gas: 466723)
+[PASS] test_OwnerRolloverDocksOldOrderAndInvalidatesHash() (gas: 975889)
+[PASS] test_PhysicalPostBalanceEnvelopeIsAtomic() (gas: 1105541)
+[PASS] test_StaleInventoryQuoteCannotAuthorizeAnUnsafeFill() (gas: 928374)
+[PASS] test_ThresholdNativeAndZeroAreRejectedWithoutMovement() (gas: 756344)
+[PASS] test_TransferReentryHitsUpstreamOrderLock() (gas: 730391)
+[PASS] test_TuningConstraintsAndResumeRequireActualBackingAndBounds() (gas: 610485)
+Suite result: ok. 13 passed; 0 failed; 0 skipped; finished in 268.69ms (273.13ms CPU time)
+
+Ran 2 test suites in 271.17ms (286.24ms CPU time): 19 tests passed, 0 failed, 0 skipped (19 total tests)
+
+> counterweight@0.1.0 test:invariant
+> forge test --match-path 'test/invariant/*.t.sol'
+
+Compiling 1 files with Solc 0.8.30
+Solc 0.8.30 finished in 4.55s
+Compiler run successful!
+
+Ran 1 test for test/invariant/Sequences.t.sol:SequenceInvariantTest
+[PASS] invariant_ActionsCheckEveryAcceptedAndRejectedSettlement() (runs: 128, calls: 4096, reverts: 0)
+
+╭-----------------+----------+-------+---------+----------╮
+| Contract        | Selector | Calls | Reverts | Discards |
++=========================================================+
+| SequenceHandler | action   | 4096  | 0       | 0        |
+╰-----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.23s (1.22s CPU time)
+
+Ran 1 test suite in 1.23s (1.23s CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+
+> counterweight@0.1.0 test:e2e
+> node --test test/prototype/*.test.mjs
+
+TAP version 13
+# Subtest: public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+ok 1 - public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+  ---
+  duration_ms: 5311.886683
+  type: 'test'
+  ...
+# Subtest: invalid economic configuration is rejected by contract constructor
+ok 2 - invalid economic configuration is rejected by contract constructor
+  ---
+  duration_ms: 4704.124253
+  type: 'test'
+  ...
+# Subtest: configuration schema rejects forbidden fields and lossy or overflowing numbers
+ok 3 - configuration schema rejects forbidden fields and lossy or overflowing numbers
+  ---
+  duration_ms: 1563.701504
+  type: 'test'
+  ...
+# Subtest: wrong independent expectation cannot produce a passing artifact
+ok 4 - wrong independent expectation cannot produce a passing artifact
+  ---
+  duration_ms: 4679.22439
+  type: 'test'
+  ...
+# Subtest: missing assertions, unsupported flags and missing tools fail explicitly
+ok 5 - missing assertions, unsupported flags and missing tools fail explicitly
+  ---
+  duration_ms: 1104.446549
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17417.070248
+
+> counterweight@0.1.0 test:data
+> node --test test/data/*.test.mjs
+
+TAP version 13
+# Subtest: G-01 both source shapes normalize independently known values and token order
+ok 1 - G-01 both source shapes normalize independently known values and token order
+  ---
+  duration_ms: 1.905705
+  type: 'test'
+  ...
+# Subtest: G-02 decimal wire arithmetic and magnitude boundaries
+ok 2 - G-02 decimal wire arithmetic and magnitude boundaries
+  ---
+  duration_ms: 0.492348
+  type: 'test'
+  ...
+# Subtest: G-01/G-02 rejects incomplete and mismatched responses
+ok 3 - G-01/G-02 rejects incomplete and mismatched responses
+  ---
+  duration_ms: 0.618758
+  type: 'test'
+  ...
+# Subtest: G-03 exact source and fetch age, lag and RPC timestamp fallback
+ok 4 - G-03 exact source and fetch age, lag and RPC timestamp fallback
+  ---
+  duration_ms: 0.4097
+  type: 'test'
+  ...
+# Subtest: G-03 future timestamp, observed block, hour and RPC contradictions
+ok 5 - G-03 future timestamp, observed block, hour and RPC contradictions
+  ---
+  duration_ms: 0.541358
+  type: 'test'
+  ...
+# Subtest: G-02 token duplication, missing types, decimal cap and turnover saturation
+ok 6 - G-02 token duplication, missing types, decimal cap and turnover saturation
+  ---
+  duration_ms: 0.45171
+  type: 'test'
+  ...
+# Subtest: G-01/G-03/G-04 common consumer rejects single-source, CID change, mismatch and stale reuse
+ok 7 - G-01/G-03/G-04 common consumer rejects single-source, CID change, mismatch and stale reuse
+  ---
+  duration_ms: 2.802193
+  type: 'test'
+  ...
+# Subtest: G-06 collector sends identical queries, records RPC provenance and handles partial outage
+ok 8 - G-06 collector sends identical queries, records RPC provenance and handles partial outage
+  ---
+  duration_ms: 1.219527
+  type: 'test'
+  ...
+# Subtest: G-05 exhaustive mapping domain, independent caps and disagreement boundaries
+ok 9 - G-05 exhaustive mapping domain, independent caps and disagreement boundaries
+  ---
+  duration_ms: 9.240138
+  type: 'test'
+  ...
+# Subtest: G-02 protected update allowlist, version and validity boundaries
+ok 10 - G-02 protected update allowlist, version and validity boundaries
+  ---
+  duration_ms: 0.37706
+  type: 'test'
+  ...
+# Subtest: G-04 startup, accepted last good, exact TTL, expiration, pause and recovery
+ok 11 - G-04 startup, accepted last good, exact TTL, expiration, pause and recovery
+  ---
+  duration_ms: 0.294189
+  type: 'test'
+  ...
+# Subtest: G-04 retries 429/5xx at 1s/2s, terminal HTTP and sanitized transport failure
+ok 12 - G-04 retries 429/5xx at 1s/2s, terminal HTTP and sanitized transport failure
+  ---
+  duration_ms: 16.822758
+  type: 'test'
+  ...
+# Subtest: G-04 actual stalled HTTP request times out, cancellation and 5xx recovery
+ok 13 - G-04 actual stalled HTTP request times out, cancellation and 5xx recovery
+  ---
+  duration_ms: 44.35834
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 250.030977

@@ -1,0 +1,13 @@
+query CounterweightRegime($pool: String!, $hour: Int!) {
+  _meta { deployment hasIndexingErrors block { number hash timestamp } }
+  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }
+  liquidityPoolHourlySnapshots(
+    first: 2
+    orderBy: timestamp
+    orderDirection: desc
+    where: { pool: $pool, hour: $hour }
+  ) {
+    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD
+    pool { id inputTokens { id decimals } }
+  }
+}
