@@ -69,3 +69,7 @@ Also test valid calldata for pause/resume and ERC20 approve under updater creden
 | Restart after uncertain broadcast | receipt/nonce reconciliation; no duplicate signature; E-03 |
 
 All of these are reviewed design outcomes in P0. None is claimed as implemented or provider-enforced until its application test passes.
+
+## D09 development custody amendment — 2026-09-08
+
+The user explicitly authorized the agent to generate and hold all three owner authorization keys for the development demo. Phase 4 therefore proves an actual 2-of-3 authorization threshold with distinct keys, plus restricted signer policies, while all keys are controlled in one local environment. This does not establish independent administrator custody. The original independently controlled quorum remains the production-intent model; its custody claim is excluded from the development proof. Store keys in ignored `.secrets/privy-development.json` with owner-only permissions, separate from application credentials in `.env`; never overwrite keys that may own existing resources. Updater and emergency keys remain distinct from all owner keys.

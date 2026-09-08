@@ -9,3 +9,6 @@ cache/
 artifacts/
 .env
 .tools/
+
+# Local development authorization keys; never commit private material
+.secrets/
