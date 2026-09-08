@@ -10,7 +10,7 @@ let result;
 try{
  if(!process.env.PRIVY_APP_ID||!process.env.PRIVY_APP_SECRET)throw Error('missing credentials');
  const client=new PrivyClient({appId:process.env.PRIVY_APP_ID,appSecret:process.env.PRIVY_APP_SECRET,timeout:10000,maxRetries:0});
- const page=await client.wallets().list({limit:1});
+ const page=await client.wallets().list();
  result={result:'PASS',scope:'read-only app authentication; not F3',visibleWalletsInFirstPage:page.data.length};
 }catch(error){
  // SDK errors can retain request headers; emit only a status and classification.

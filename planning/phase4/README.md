@@ -24,3 +24,5 @@ Next steps:
 - [ ] Regress F1/F2 and deterministic suites; clean reproduction, docs/checklists and evidence commits.
 
 Primary docs checked 2026-09-08: [programmable controls](https://docs.privy.io/controls/authorization-keys/owners/configuration/programmable), [sign transaction API](https://docs.privy.io/api-reference/wallets/ethereum/eth-sign-transaction). They describe quorum threshold and per-signer override policies; actual enforcement must still be demonstrated for this app.
+
+Update: app authentication is now confirmed PASS in [read-only preflight](evidence/app-preflight.json), with no existing wallets in the first page. Requests with `?limit=1` repeatedly timed out while default-page requests succeeded, including through the pinned SDK; preflight now uses default pagination. This is an observed endpoint behavior, not evidence of invalid credentials. Proceed with remote provisioning.
