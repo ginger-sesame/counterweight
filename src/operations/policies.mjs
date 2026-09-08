@@ -25,6 +25,7 @@ export async function configureSigners(client,bundle,path,controller){
   const additional_signers=['updater','emergency'].map(role=>({signer_id:journal.resources[role].id,override_policy_ids:[journal.resources[role+'Policy'].id]}));
   await client.wallets().update(journal.resources.wallet.id,{additional_signers,authorization_context:authorization(bundle)});
   const wallet=await client.wallets().get(journal.resources.wallet.id);
-  assert.equal(wallet.owner_id,ownerId);assert.deepEqual(wallet.additional_signers.map(s=>({signer_id:s.signer_id,override_policy_ids:s.override_policy_ids})),additional_signers);
+  assert.equal(wallet.owner_id,ownerId);const canonical=items=>items.map(s=>({signer_id:s.signer_id,override_policy_ids:[...s.override_policy_ids].sort()})).sort((a,b)=>a.signer_id.localeCompare(b.signer_id));
+  assert.deepEqual(canonical(wallet.additional_signers),canonical(additional_signers));
   journal.resources.wallet=wallet;await saveJournal(path,journal);return journal;
 }

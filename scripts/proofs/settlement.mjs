@@ -16,7 +16,7 @@ const funding='0x88e6A0c2dDD26FEEb64F039a2c41296FcB3f5640';
 const blockNumber=25917718n, blockHash='0x5dcb9480fc701b19c587e6834118725afa28ef2ba1fca9fc9d14aa9a289c059e';
 const stringify=x=>JSON.stringify(x,(_,v)=>typeof v==='bigint'?v.toString():v,2);
 const erc20=parseAbi(['function balanceOf(address) view returns(uint256)','function allowance(address,address) view returns(uint256)','function approve(address,uint256) returns(bool)','function transfer(address,uint256) returns(bool)','function decimals() view returns(uint8)','function deposit() payable']);
-export async function runSettlement(extension) {
+export async function runSettlement(extension, operations) {
 const options={out:`${root}artifacts/f1-${Date.now()}`};
 let child,childExit,outputCreated=false;
 let branch='funding'; const epochs=[];
@@ -55,9 +55,10 @@ try {
  check('fresh fork state',await client.getBlockNumber()===blockNumber);
  const block=await client.getBlock({blockNumber});check('pinned Ethereum block hash',block.hash===blockHash);
  for(const [address,decimals] of [[W,18],[U,6]])check(`canonical token decimals ${address}`,await client.readContract({address,abi:erc20,functionName:'decimals'})===decimals);
- const accounts=await client.request({method:'eth_accounts'});const [deployer,maker,taker]=accounts;
+ const accounts=await client.request({method:'eth_accounts'});const [localDeployer,localMaker,taker]=accounts;
+ const deployer=operations?.account.address??localDeployer,maker=operations?.account.address??localMaker;
  assert(deployer&&maker&&taker);
- const wallet=account=>createWalletClient({account,chain:foundry,transport});
+ const wallet=account=>createWalletClient({account:operations&&account.toLowerCase()===maker.toLowerCase()?operations.account:account,chain:foundry,transport});
  async function receipt(hash,label,expected='success'){
   const r=await client.waitForTransactionReceipt({hash,timeout:30000});
   transactions.push({branch,label,hash,status:r.status,blockNumber:r.blockNumber,gasUsed:r.gasUsed,contractAddress:r.contractAddress,logs:r.logs});
@@ -167,12 +168,12 @@ try {
  const lock=JSON.parse(await readFile(root+'package-lock.json','utf8')).packages;
  const dependencyVersions={};for(const name of ['@1inch/swap-vm','@1inch/aqua','@1inch/solidity-utils','@openzeppelin/contracts','viem']){const entry=lock['node_modules/'+name];dependencyVersions[name]={version:entry.version,resolved:entry.resolved};}
  const toolVersions={node:process.version,forge:forgeVersion.stdout.trim(),anvil:clientVersion,solidity:(await artifact('CounterweightSwapVM')).metadata.compiler.version};
- const manifest={...extra,toolVersions,dependencyVersions,schemaVersion:1,gate:extension?'F2':'F1',result:'PASS',testIds:extension?['G-05','G-06','G-07']:['V-01','V-02','V-05','V-07'],runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
+ const manifest={...extra,toolVersions,dependencyVersions,schemaVersion:1,gate:operations?'F3':extension?'F2':'F1',result:'PASS',testIds:operations?['O-01','O-02','O-03','O-04','O-05','O-06','O-07']:extension?['G-05','G-06','G-07']:['V-01','V-02','V-05','V-07'],runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
   environment:'local-mainnet-fork',chainId:31337,forkBlock:blockNumber,forkBlockHash:blockHash,maker,taker,deployer,fundingSource:funding,epochs,
   assertions:assertions.length,scenarios:scenarios.length,artifacts:['assertions.json','transactions.json','scenarios.json'],
   limitations:['Snapshot branches are isolated scenarios, not one uninterrupted chain history.',extension?'Live Graph with local maker substitute; no Privy policy proof or public deployment.':'Local mainnet fork with canonical tokens; no public-network deployment or Graph/Privy proof.','V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites.']};
  for(const [name,value] of Object.entries({'manifest.json':manifest,'assertions.json':assertions,'transactions.json':transactions,'scenarios.json':scenarios}))await writeFile(`${options.out}/${name}`,stringify(value)+'\n');
- process.stdout.write(stringify({result:'PASS',gate:extension?'F2':'F1',out:options.out,assertions:assertions.length,scenarios:scenarios.length})+'\n');
+ process.stdout.write(stringify({result:'PASS',gate:operations?'F3':extension?'F2':'F1',out:options.out,assertions:assertions.length,scenarios:scenarios.length})+'\n');
 }catch(error){
  // Network errors may contain credential-bearing URLs. Persist only the public assertion message.
  const message=error instanceof assert.AssertionError?error.message:(error.message?.startsWith('fork ')?error.message:(error.shortMessage||error.message||'F1 execution failed').replace(/https?:[^\s]+/g,'[RPC URL redacted]'));
