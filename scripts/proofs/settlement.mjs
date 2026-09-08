@@ -176,9 +176,10 @@ try {
 }catch(error){
  // Network errors may contain credential-bearing URLs. Persist only the public assertion message.
  const message=error instanceof assert.AssertionError?error.message:(error.message?.startsWith('fork ')?error.message:(error.shortMessage||error.message||'F1 execution failed').replace(/https?:[^\s]+/g,'[RPC URL redacted]'));
- const failure={result:'FAIL',error:message,assertions,transactions,scenarios};
+ const result=error.name==='DataUnavailable'||error.constructor?.name==='DataUnavailable'?'BLOCKED':'FAIL';
+ const failure={result,error:message,assertions,transactions,scenarios};
  try{if(outputCreated)await writeFile(`${options.out}/failure.json`,stringify(failure)+'\n');}catch{}
- process.stderr.write(stringify({result:'FAIL',error:message,out:options.out})+'\n');process.exitCode=1;
+ process.stderr.write(stringify({result,error:message,out:options.out})+'\n');process.exitCode=1;
 }finally{
  if(child&&child.exitCode===null){child.kill('SIGTERM');const timer=setTimeout(()=>child.kill('SIGKILL'),2000);await childExit;clearTimeout(timer);}
 }

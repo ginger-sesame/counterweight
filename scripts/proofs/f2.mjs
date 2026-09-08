@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { runSettlement } from './settlement.mjs';
-import { collectPair } from '../../src/data/fetch.mjs';
+import { collectPair, DataUnavailable } from '../../src/data/fetch.mjs';
 import { evaluatePair, updateArgs, validateTuning } from '../../src/data/regime.mjs';
 const root=new URL('../../',import.meta.url);
 await runSettlement(async ({client,read,send,setup,state,attempt,check,maker,W,erc20,controllerAbi,routerAbi,normalSnapshot,options})=>{
@@ -14,7 +14,7 @@ await runSettlement(async ({client,read,send,setup,state,attempt,check,maker,W,e
  async function collect(label){
   const collection=await collectPair({sources,query,apiKey:process.env.GRAPH_API_KEY,rpcUrl:process.env.ETHEREUM_RPC_URL||undefined});
   records.push({label,collection});await save();
-  assert.equal(collection.result,'COLLECTED');
+  if(collection.result!=='COLLECTED') throw new DataUnavailable('two-source collection unavailable');
   const evaluated=evaluatePair(collection.envelopes,sources,collection.context);
   records.at(-1).evaluated=evaluated;await save();return {collection,evaluated};
  }

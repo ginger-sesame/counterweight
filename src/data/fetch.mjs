@@ -1,10 +1,11 @@
 import { setTimeout as sleep } from 'node:timers/promises';
 import { requireThat } from './normalize.mjs';
 // Never propagate transport exception messages: they can contain URLs/headers with credentials.
+export class DataUnavailable extends Error {}
 export async function requestJson(url, payload, { fetchImpl = fetch, sleepImpl = sleep, timeoutMs = 10000, attempts = 3, signal } = {}) {
   requireThat(Number.isInteger(attempts) && attempts >= 1 && attempts <= 3 && timeoutMs > 0 && timeoutMs <= 10000, 'request bounds');
   for (let attempt = 0; attempt < attempts; attempt++) {
-    if (signal?.aborted) throw new Error('cycle deadline');
+    if (signal?.aborted) throw new DataUnavailable('cycle deadline');
     let retry = false;
     try {
       const response = await fetchImpl(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': 'Counterweight/0.1' }, body: JSON.stringify(payload), signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)]) : AbortSignal.timeout(timeoutMs) });
@@ -21,10 +22,10 @@ export async function requestJson(url, payload, { fetchImpl = fetch, sleepImpl =
     }
     if (retry && attempt + 1 < attempts) await sleepImpl(1000 * (attempt + 1));
   }
-  throw new Error('provider unavailable after bounded retries');
+  throw new DataUnavailable('provider unavailable after bounded retries');
 }
 export async function collectPair({ sources, query, apiKey, rpcUrl = 'https://eth-mainnet.public.blastapi.io', now = () => Math.floor(Date.now() / 1000), request = requestJson }) {
-  requireThat(typeof apiKey === 'string' && /^[a-zA-Z0-9_-]+$/.test(apiKey), 'GRAPH_API_KEY required');
+  if (typeof apiKey !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(apiKey)) throw new DataUnavailable('GRAPH_API_KEY required');
   const signal = AbortSignal.timeout(35000);
   const start = now(), hour = Math.floor(start / 3600) - 1;
   const rpc = async (method, params = []) => {
