@@ -30,3 +30,12 @@ test('G-04 retries 429/5xx at 1s/2s, terminal HTTP and sanitized transport failu
  calls=0;await assert.rejects(requestJson('secret-url',{},{sleepImpl:async()=>{},fetchImpl:async()=>{calls++;throw new Error('secret-key');}}),/^Error: provider unavailable after bounded retries$/);assert.equal(calls,3);
  await assert.rejects(requestJson('http://local',{},{fetchImpl:async()=>new Response('invalid')}),/provider JSON/);
 });
+test('G-04 actual stalled HTTP request times out, cancellation and 5xx recovery',async()=>{
+ const {createServer}=await import('node:http');
+ const server=createServer(()=>{});await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ try{
+  await assert.rejects(requestJson(`http://127.0.0.1:${server.address().port}`,{},{attempts:1,timeoutMs:30}),/bounded retries/);
+ }finally{server.closeAllConnections();await new Promise(r=>server.close(r));}
+ await assert.rejects(requestJson('http://unused',{},{signal:AbortSignal.abort()}),/cycle deadline/);
+ let calls=0;assert.deepEqual(await requestJson('http://local',{},{sleepImpl:async()=>{},fetchImpl:async()=>++calls===1?new Response('',{status:503}):new Response('{}')}),{});assert.equal(calls,2);
+});

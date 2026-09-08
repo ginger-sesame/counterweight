@@ -8,6 +8,10 @@ on:
         description: Run the canonical-token mainnet fork proof
         type: boolean
         default: false
+      run_graph:
+        description: Run the credentialed live Graph and canonical-token F2 proof
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -72,5 +76,37 @@ jobs:
         if: always()
         with:
           name: fork-settlement-evidence
+          path: artifacts/ci/
+          if-no-files-found: error
+
+  graph:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_graph
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.22.1
+          cache: npm
+      - name: Install locked dependencies and verified Foundry
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          bash scripts/setup/install-foundry.sh
+          echo "$PWD/.tools/foundry" >> "$GITHUB_PATH"
+      - name: Run live Graph preflight and settlement E2E
+        env:
+          GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+        run: |
+          mkdir -p artifacts/ci
+          set -o pipefail
+          node scripts/proofs/graph-preflight.mjs --out artifacts/ci/graph-preflight
+          npm run test:live | tee artifacts/ci/live-tests.txt
+          node scripts/proofs/f2.mjs --out artifacts/ci/f2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: graph-settlement-evidence
           path: artifacts/ci/
           if-no-files-found: error

@@ -37,3 +37,30 @@ test('G-03 exact source and fetch age, lag and RPC timestamp fallback',()=>{
  const absent=sample();delete absent.envelope.response.data._meta.block.timestamp;assert.equal(run(absent).indexedAt,absent.context.indexedBlock.timestamp);
  absent.context.indexedBlock.hash='0x'+'b'.repeat(64);assert.throws(()=>run(absent));
 });
+test('G-03 future timestamp, observed block, hour and RPC contradictions',()=>{
+ const cases=[
+  s=>s.context.head.timestamp=s.context.now+31,
+  s=>s.context.head.chainId=31337,
+  s=>s.context.head.number=s.context.indexedBlock.number-1,
+  s=>s.context.indexedBlock.timestamp++,
+  s=>s.envelope.fetchedAt=s.context.now+1,
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].timestamp=String(s.context.now+31),
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].timestamp=String(Math.floor(s.context.now/3600)*3600-3601),
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].blockNumber=String(s.context.indexedBlock.number+1),
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].hour++,
+ ];
+ for(const mutate of cases){const s=sample();mutate(s);assert.throws(()=>run(s));}
+ const boundary=sample();const m=boundary.envelope.response.data._meta;
+ m.block.timestamp=boundary.context.now+30;boundary.context.indexedBlock.timestamp=m.block.timestamp;boundary.context.head.timestamp=m.block.timestamp;
+ assert.doesNotThrow(()=>run(boundary));m.block.timestamp++;boundary.context.indexedBlock.timestamp++;boundary.context.head.timestamp++;assert.throws(()=>run(boundary));
+});
+test('G-02 token duplication, missing types, decimal cap and turnover saturation',()=>{
+ for(const mutate of [
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].pool.inputTokens[1]=s.envelope.response.data.liquidityPoolHourlySnapshots[0].pool.inputTokens[0],
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].timestamp=123,
+  s=>s.envelope.response.data.liquidityPoolHourlySnapshots[0].hourlyVolumeUSD=null,
+  s=>s.envelope.response.data.dexAmmProtocols[0].methodologyVersion='2.0.0',
+  s=>s.envelope.response.data._meta.block.number=Number.MAX_SAFE_INTEGER+1,
+ ]){const s=sample();mutate(s);assert.throws(()=>run(s));}
+ const s=sample();s.envelope.response.data.liquidityPoolHourlySnapshots[0].hourlyVolumeUSD='1000000000000000000';assert.equal(run(s).turnoverBps,10000);
+});
