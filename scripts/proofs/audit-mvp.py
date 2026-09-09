@@ -58,13 +58,8 @@ for previous, current in zip(scenarios, scenarios[1:]):
 for scenario in scenarios:
     before, after = scenario['before'], scenario['after']
     assert before['safetyDigest'] == after['safetyDigest'] == load('checkpoint.json')['safetyDigest']
-    if 'error' in scenario:
-        assert before == after
-        if scenario['error'] == 'SafeTransferFromFailed':
-            assert scenario['settlementTrace']['error']
-        continue
     w, u = map(int, before['allocations'])
-    amount, out = int(scenario['amountIn']), int(scenario['amountOut'])
+    amount = int(scenario['amountIn'])
     tuning = scenario['effectiveTuning']
     weight = w*2_000_000_000*10000//(w*2_000_000_000+u*10**18)
     signed = (weight-5000)*int(tuning['intensityBps'])
@@ -76,6 +71,20 @@ for scenario in scenarios:
     else:
         numerator, denominator = amount*10**18*10000**2, 2_000_000_000*(10000-skew)*(10000+spread)
         i, o = 1, 0
+    if 'error' in scenario:
+        assert before == after
+        projected_out = numerator // denominator
+        post_w, post_u = (w+amount, u-projected_out) if scenario['wethIn'] else (w-projected_out, u+amount)
+        exposure = Fraction(post_w*2_000_000_000, post_w*2_000_000_000+post_u*10**18)
+        if scenario['error'] == 'ExposureOutOfBounds':
+            assert not Fraction(3, 10) <= exposure <= Fraction(7, 10)
+        elif scenario['error'] == 'SafeTransferFromFailed':
+            assert Fraction(3, 10) <= exposure <= Fraction(7, 10)
+            assert scenario['settlementTrace']['error']
+        elif scenario['error'] == 'Paused':
+            assert before['paused']
+        continue
+    out = int(scenario['amountOut'])
     # Verify the defining floor interval, independently of the runner's calculation.
     assert out*denominator <= numerator < (out+1)*denominator
     for balances in [('allocations', None), ('physical', 'maker')]:
@@ -104,6 +113,6 @@ assert operations[1]['kind'] == 'authorization'
 assert all(x['before'] == x['after'] and x['failure']['correlationId'] for x in operations)
 files = ['manifest.json'] + m['artifacts']
 assert len(files) == len(set(files))
-report = {'result': 'PASS', 'gitRevision': m['gitRevision'], 'runId': m['runId'], 'sourceFilesVerified': len(source_hashes), 'livePairsIndependentlyRecomputed': len(pairs), 'continuousSettlementScenarios': len(scenarios), 'artifactHashes': {name: hashlib.sha256((args.proof/name).read_bytes()).hexdigest() for name in files}, 'limitations': ['This audit checks retained public evidence; live runtime assertions and a separate credential-aware secret scan remain required.']}
+report = {'result': 'PASS', 'auditorSha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), 'gitRevision': m['gitRevision'], 'runId': m['runId'], 'sourceFilesVerified': len(source_hashes), 'livePairsIndependentlyRecomputed': len(pairs), 'continuousSettlementScenarios': len(scenarios), 'artifactHashes': {name: hashlib.sha256((args.proof/name).read_bytes()).hexdigest() for name in files}, 'limitations': ['This audit checks retained public evidence; live runtime assertions and a separate credential-aware secret scan remain required.']}
 args.out.write_text(json.dumps(report, indent=2)+'\n')
 print(json.dumps({k: v for k, v in report.items() if k not in ['artifactHashes', 'limitations']}))
