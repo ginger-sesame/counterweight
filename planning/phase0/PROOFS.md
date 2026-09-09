@@ -90,9 +90,9 @@ Implemented and validated 2026-09-08: [Phase 3 handoff and evidence](../phase3/R
 
 ## F3 procedure — Phase 4
 
-Planned commands:
+Implemented commands (inject .env via Node or approved environment; see [Phase 4 handoff](../phase4/README.md)):
 
-- `node scripts/proofs/privy-preflight.mjs --rpc http://127.0.0.1:8545 --out artifacts/<run-id>/privy-preflight`
+- `node scripts/proofs/privy-preflight.mjs --out artifacts/<run-id>/privy-preflight`
 - `node scripts/proofs/f3.mjs --rpc http://127.0.0.1:8545 --out artifacts/<run-id>/f3`
 
 1. With the account owner's authorization, create/read organization wallet and 2-of-3 owner quorum. Verify owner/member identities are distinct, policy ownership belongs to quorum, and updater/emergency entries have the intended self-contained override policies. Snapshot sanitized wallet/policy definitions and API/SDK versions.
@@ -118,3 +118,5 @@ CI (Phase 1 deliverable): pinned tool install, npm ci, offline specification che
 Each run writes manifest.json, assertions.json, sanitized logs, setup identities/configuration, raw/normalized Graph evidence, policy snapshots, transaction/denial IDs, state before/after, and reproduction command. Manifest fields: runId, UTC time, Git revision, specification digest, dependency/tool versions, environment kind, chain/fork block/hash, contract/token addresses and code hashes, maker/taker/role identities, active order/epoch/tuning/policy versions, test IDs, result, evidence paths, limitations. Chain transaction hashes and Privy request IDs are different fields.
 
 Result enum: NOT RUN, IN PROGRESS, BLOCKED, FAIL, PASS. Preserve failed evidence and distinguish negative-test PASS from failed execution. Redact authorization headers, app secrets, key-bearing URLs and signed raw transaction material that is still executable. Retain decoded transaction fields/hash and raw transaction hash instead. Check process exit statuses AND semantic assertions. Zero skipped required assertions.
+
+Phase 4 credential implementation: app credentials and GRAPH_API_KEY are environment inputs; existing wallet/quorum/policy IDs are read from the owner-only resource journal, not duplicated across individual required environment variables. Key material is loaded from the separate owner-only development bundle under the explicit D09 custody amendment. F3 supports absolute PRIVY_KEYS_FILE and PRIVY_RESOURCES_FILE for clean reproduction; never copy credentials into artifacts. Batch-method negative proof additionally requires read access to Sepolia RPC and zero wallet balance on that testnet.

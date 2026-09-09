@@ -1,0 +1,8 @@
+query CounterweightRegime($snapshot: ID!) {
+  _meta { deployment hasIndexingErrors block { number hash timestamp } }
+  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }
+  liquidityPoolHourlySnapshot(id: $snapshot) {
+    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD
+    pool { id }
+  }
+}

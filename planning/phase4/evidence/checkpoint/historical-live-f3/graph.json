@@ -1,0 +1,682 @@
+[
+  {
+    "label": "live Graph through Privy updater",
+    "sources": [
+      {
+        "key": "uniswap-v3-ethereum",
+        "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+        "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+        "registryStatus": "prod",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.0",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY"
+      },
+      {
+        "key": "sushiswap-v3-ethereum",
+        "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+        "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+        "registryStatus": "dev",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.1",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG"
+      }
+    ],
+    "query": "query CounterweightRegime($snapshot: ID!) {\n  _meta { deployment hasIndexingErrors block { number hash timestamp } }\n  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }\n  liquidityPoolHourlySnapshot(id: $snapshot) {\n    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD\n    pool { id }\n  }\n}\n",
+    "collection": {
+      "result": "COLLECTED",
+      "envelopes": [
+        {
+          "sourceKey": "uniswap-v3-ethereum",
+          "variables": {
+            "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "hour": 496909,
+            "snapshot": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700"
+          },
+          "fetchedAt": 1788876885,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.6.2",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700",
+                "hour": 496909,
+                "timestamp": "1788875963",
+                "blockNumber": "25933097",
+                "hourlyVolumeUSD": "5271356.7872670829404765782176",
+                "totalValueLockedUSD": "108899157.2968153087846293028773615",
+                "pool": {
+                  "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                }
+              },
+              "_meta": {
+                "deployment": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933173,
+                  "hash": "0xa47725ad0bb80bf582e80e85597575a0b3092cdac9fc9b4d1a15ad6ae0563e33",
+                  "timestamp": 1788876875
+                }
+              }
+            }
+          }
+        },
+        {
+          "sourceKey": "sushiswap-v3-ethereum",
+          "variables": {
+            "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+            "hour": 496909,
+            "snapshot": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700"
+          },
+          "fetchedAt": 1788876885,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.1.3",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700",
+                "hour": 496909,
+                "timestamp": "1788875867",
+                "blockNumber": "25933089",
+                "hourlyVolumeUSD": "28260.0627138168439523618458048",
+                "totalValueLockedUSD": "2251125.891852723074047722562696253",
+                "pool": {
+                  "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638"
+                }
+              },
+              "_meta": {
+                "deployment": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933173,
+                  "hash": "0xa47725ad0bb80bf582e80e85597575a0b3092cdac9fc9b4d1a15ad6ae0563e33",
+                  "timestamp": 1788876875
+                }
+              }
+            }
+          }
+        }
+      ],
+      "context": {
+        "now": 1788876886,
+        "head": {
+          "number": 25933173,
+          "timestamp": 1788876875,
+          "hash": "0xa47725ad0bb80bf582e80e85597575a0b3092cdac9fc9b4d1a15ad6ae0563e33",
+          "chainId": 1
+        },
+        "blocks": {
+          "25933173": {
+            "number": 25933173,
+            "timestamp": 1788876875,
+            "hash": "0xa47725ad0bb80bf582e80e85597575a0b3092cdac9fc9b4d1a15ad6ae0563e33"
+          }
+        },
+        "poolTokens": {
+          "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ],
+          "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ]
+        },
+        "tokenIdentityBlock": 25933173
+      },
+      "startedAt": 1788876885,
+      "finishedAt": 1788876886
+    },
+    "evaluated": {
+      "observations": [
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "uniswap-v3-ethereum",
+          "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+          "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933173,
+          "indexedAt": 1788876875,
+          "fetchedAt": 1788876885,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875963,
+          "volumeUsdMicro": "5271356787267",
+          "tvlUsdMicro": "108899157296815",
+          "turnoverBps": 484
+        },
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "sushiswap-v3-ethereum",
+          "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+          "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933173,
+          "indexedAt": 1788876875,
+          "fetchedAt": 1788876885,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875867,
+          "volumeUsdMicro": "28260062713",
+          "tvlUsdMicro": "2251125891852",
+          "turnoverBps": 125
+        }
+      ],
+      "tuning": {
+        "intensityBps": 976,
+        "spreadBps": 14
+      },
+      "sourceDigest": "0x37016166c75347f9a013a5b20d88b620176d05ba76916dfb3a2700446d29454a"
+    }
+  },
+  {
+    "label": "fresh update after revocation recovery",
+    "sources": [
+      {
+        "key": "uniswap-v3-ethereum",
+        "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+        "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+        "registryStatus": "prod",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.0",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY"
+      },
+      {
+        "key": "sushiswap-v3-ethereum",
+        "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+        "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+        "registryStatus": "dev",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.1",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG"
+      }
+    ],
+    "query": "query CounterweightRegime($snapshot: ID!) {\n  _meta { deployment hasIndexingErrors block { number hash timestamp } }\n  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }\n  liquidityPoolHourlySnapshot(id: $snapshot) {\n    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD\n    pool { id }\n  }\n}\n",
+    "collection": {
+      "result": "COLLECTED",
+      "envelopes": [
+        {
+          "sourceKey": "uniswap-v3-ethereum",
+          "variables": {
+            "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "hour": 496909,
+            "snapshot": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700"
+          },
+          "fetchedAt": 1788876909,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.6.2",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700",
+                "hour": 496909,
+                "timestamp": "1788875963",
+                "blockNumber": "25933097",
+                "hourlyVolumeUSD": "5271356.7872670829404765782176",
+                "totalValueLockedUSD": "108899157.2968153087846293028773615",
+                "pool": {
+                  "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                }
+              },
+              "_meta": {
+                "deployment": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933174,
+                  "hash": "0xb5bbfcbc3b9960efa5bdd40bf700c5a97080d97cdfbd9396fd1ebe0f4db7d8b9",
+                  "timestamp": 1788876887
+                }
+              }
+            }
+          }
+        },
+        {
+          "sourceKey": "sushiswap-v3-ethereum",
+          "variables": {
+            "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+            "hour": 496909,
+            "snapshot": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700"
+          },
+          "fetchedAt": 1788876909,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.1.3",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700",
+                "hour": 496909,
+                "timestamp": "1788875867",
+                "blockNumber": "25933089",
+                "hourlyVolumeUSD": "28260.0627138168439523618458048",
+                "totalValueLockedUSD": "2251125.891852723074047722562696253",
+                "pool": {
+                  "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638"
+                }
+              },
+              "_meta": {
+                "deployment": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933175,
+                  "hash": "0x89fad0aa3b9bf19472111bf91627e5fbb9b8b4f6c79746053ab208819f2a5d93",
+                  "timestamp": 1788876899
+                }
+              }
+            }
+          }
+        }
+      ],
+      "context": {
+        "now": 1788876910,
+        "head": {
+          "number": 25933175,
+          "timestamp": 1788876899,
+          "hash": "0x89fad0aa3b9bf19472111bf91627e5fbb9b8b4f6c79746053ab208819f2a5d93",
+          "chainId": 1
+        },
+        "blocks": {
+          "25933174": {
+            "number": 25933174,
+            "timestamp": 1788876887,
+            "hash": "0xb5bbfcbc3b9960efa5bdd40bf700c5a97080d97cdfbd9396fd1ebe0f4db7d8b9"
+          },
+          "25933175": {
+            "number": 25933175,
+            "timestamp": 1788876899,
+            "hash": "0x89fad0aa3b9bf19472111bf91627e5fbb9b8b4f6c79746053ab208819f2a5d93"
+          }
+        },
+        "poolTokens": {
+          "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ],
+          "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ]
+        },
+        "tokenIdentityBlock": 25933175
+      },
+      "startedAt": 1788876909,
+      "finishedAt": 1788876910
+    },
+    "evaluated": {
+      "observations": [
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "uniswap-v3-ethereum",
+          "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+          "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933174,
+          "indexedAt": 1788876887,
+          "fetchedAt": 1788876909,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875963,
+          "volumeUsdMicro": "5271356787267",
+          "tvlUsdMicro": "108899157296815",
+          "turnoverBps": 484
+        },
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "sushiswap-v3-ethereum",
+          "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+          "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933175,
+          "indexedAt": 1788876899,
+          "fetchedAt": 1788876909,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875867,
+          "volumeUsdMicro": "28260062713",
+          "tvlUsdMicro": "2251125891852",
+          "turnoverBps": 125
+        }
+      ],
+      "tuning": {
+        "intensityBps": 976,
+        "spreadBps": 14
+      },
+      "sourceDigest": "0x28d5fc1f0b5bbb7bc07ebf8d77c1c65e5e2e19225bbdc35a02460b83fd9dd7be"
+    }
+  },
+  {
+    "label": "live upper-bound update",
+    "sources": [
+      {
+        "key": "uniswap-v3-ethereum",
+        "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+        "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+        "registryStatus": "prod",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.0",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY"
+      },
+      {
+        "key": "sushiswap-v3-ethereum",
+        "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+        "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+        "registryStatus": "dev",
+        "chainId": 1,
+        "schemaVersion": "4.0.0",
+        "sourceCommit": "2711ac91ef119f321f65b339e10a57f9aa74f9d8",
+        "liveVerified": false,
+        "registrySchemaVersion": "4.0.1",
+        "methodologyVersion": "1.0.0",
+        "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG"
+      }
+    ],
+    "query": "query CounterweightRegime($snapshot: ID!) {\n  _meta { deployment hasIndexingErrors block { number hash timestamp } }\n  dexAmmProtocols(first: 1) { id schemaVersion subgraphVersion methodologyVersion network }\n  liquidityPoolHourlySnapshot(id: $snapshot) {\n    id hour timestamp blockNumber hourlyVolumeUSD totalValueLockedUSD\n    pool { id }\n  }\n}\n",
+    "collection": {
+      "result": "COLLECTED",
+      "envelopes": [
+        {
+          "sourceKey": "uniswap-v3-ethereum",
+          "variables": {
+            "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+            "hour": 496909,
+            "snapshot": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700"
+          },
+          "fetchedAt": 1788876920,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.6.2",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f56400d950700",
+                "hour": 496909,
+                "timestamp": "1788875963",
+                "blockNumber": "25933097",
+                "hourlyVolumeUSD": "5271356.7872670829404765782176",
+                "totalValueLockedUSD": "108899157.2968153087846293028773615",
+                "pool": {
+                  "id": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+                }
+              },
+              "_meta": {
+                "deployment": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933176,
+                  "hash": "0x23b9bc43f611b43074228821829a01274b7137da02a361675813711350c5b4c6",
+                  "timestamp": 1788876911
+                }
+              }
+            }
+          }
+        },
+        {
+          "sourceKey": "sushiswap-v3-ethereum",
+          "variables": {
+            "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+            "hour": 496909,
+            "snapshot": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700"
+          },
+          "fetchedAt": 1788876920,
+          "response": {
+            "data": {
+              "dexAmmProtocols": [
+                {
+                  "id": "0xbaceb8ec6b9355dfc0269c18bac9d6e2bdc29c4f",
+                  "schemaVersion": "4.0.0",
+                  "subgraphVersion": "1.1.3",
+                  "methodologyVersion": "1.0.0",
+                  "network": "MAINNET"
+                }
+              ],
+              "liquidityPoolHourlySnapshot": {
+                "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b36380d950700",
+                "hour": 496909,
+                "timestamp": "1788875867",
+                "blockNumber": "25933089",
+                "hourlyVolumeUSD": "28260.0627138168439523618458048",
+                "totalValueLockedUSD": "2251125.891852723074047722562696253",
+                "pool": {
+                  "id": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638"
+                }
+              },
+              "_meta": {
+                "deployment": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+                "hasIndexingErrors": false,
+                "block": {
+                  "number": 25933176,
+                  "hash": "0x23b9bc43f611b43074228821829a01274b7137da02a361675813711350c5b4c6",
+                  "timestamp": 1788876911
+                }
+              }
+            }
+          }
+        }
+      ],
+      "context": {
+        "now": 1788876921,
+        "head": {
+          "number": 25933176,
+          "timestamp": 1788876911,
+          "hash": "0x23b9bc43f611b43074228821829a01274b7137da02a361675813711350c5b4c6",
+          "chainId": 1
+        },
+        "blocks": {
+          "25933176": {
+            "number": 25933176,
+            "timestamp": 1788876911,
+            "hash": "0x23b9bc43f611b43074228821829a01274b7137da02a361675813711350c5b4c6"
+          }
+        },
+        "poolTokens": {
+          "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ],
+          "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638": [
+            {
+              "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+              "decimals": 6
+            },
+            {
+              "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+              "decimals": 18
+            }
+          ]
+        },
+        "tokenIdentityBlock": 25933176
+      },
+      "startedAt": 1788876920,
+      "finishedAt": 1788876921
+    },
+    "evaluated": {
+      "observations": [
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "uniswap-v3-ethereum",
+          "subgraphId": "4cKy6QQMc5tpfdx8yxfYeb9TLZmgLQe44ddW1G7NwkA6",
+          "deploymentCid": "Qmc9TiHtLDgsbgqvyfXKiyndZDnjWdrfdvETgarZbg3StY",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933176,
+          "indexedAt": 1788876911,
+          "fetchedAt": 1788876920,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875963,
+          "volumeUsdMicro": "5271356787267",
+          "tvlUsdMicro": "108899157296815",
+          "turnoverBps": 484
+        },
+        {
+          "schemaVersion": "counterweight.regime.v1",
+          "sourceKey": "sushiswap-v3-ethereum",
+          "subgraphId": "2tGWMrDha4164KkFAfkU3rDCtuxGb4q1emXmFdLLzJ8x",
+          "deploymentCid": "QmZ8GrfP8hsJxiQnD6LyBuVWUQCeJgaCboc5BKpHcsNjXG",
+          "sourceSchemaVersion": "4.0.0",
+          "methodologyVersion": "1.0.0",
+          "chainId": 1,
+          "pool": "0x763d3b7296e7c9718ad5b058ac2692a19e5b3638",
+          "weth": {
+            "id": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "decimals": 18
+          },
+          "usdc": {
+            "id": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+            "decimals": 6
+          },
+          "indexedBlock": 25933176,
+          "indexedAt": 1788876911,
+          "fetchedAt": 1788876920,
+          "hourStart": 1788872400,
+          "hourEnd": 1788876000,
+          "observedAt": 1788875867,
+          "volumeUsdMicro": "28260062713",
+          "tvlUsdMicro": "2251125891852",
+          "turnoverBps": 125
+        }
+      ],
+      "tuning": {
+        "intensityBps": 976,
+        "spreadBps": 14
+      },
+      "sourceDigest": "0xef08bf0770e6846d106032b91130a77ea882fc3eaf1fdb3c1aed0cd2174b5fb0"
+    }
+  }
+]

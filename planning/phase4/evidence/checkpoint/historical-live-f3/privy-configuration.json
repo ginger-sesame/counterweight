@@ -1,0 +1,360 @@
+{
+  "custody": "single-environment-development",
+  "wallet": {
+    "id": "xj5rtgu3gfq6s2izhjbaqsfd",
+    "address": "0xA66001D39eE7c88B62898e721F619A77A52E4ea8",
+    "display_name": "Counterweight development 6ef5f818",
+    "chain_type": "ethereum",
+    "policy_ids": [
+      "xs33yq459nuqg30jzj3bye52"
+    ],
+    "additional_signers": [
+      {
+        "signer_id": "q4k3o6a60gn8t6eejnfm5jys",
+        "override_policy_ids": [
+          "lq4plb5xqrqztd3vls3vmlxo"
+        ]
+      },
+      {
+        "signer_id": "redk1vah6k99lhgt25lyn50p",
+        "override_policy_ids": [
+          "dastadpyijmqkpww62hed7xy"
+        ]
+      }
+    ],
+    "exported_at": null,
+    "imported_at": null,
+    "archived_at": null,
+    "created_at": 1788847855397,
+    "owner_id": "ntx1mhqckpn78uzpue8f0069",
+    "entity": null
+  },
+  "quorums": [
+    {
+      "id": "ntx1mhqckpn78uzpue8f0069",
+      "display_name": "Counterweight owner",
+      "authorization_threshold": 2,
+      "authorization_keys": [
+        {
+          "public_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfx1HPNhe593xwlG5P0iJ1aoWYWNCxknKYD7+OEkunoTaMBW3CHVd4Jf77zgu1uzGnMKElUU/Uf2E4ooXdascNA==",
+          "display_name": null
+        },
+        {
+          "public_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEq8P4unPv/74W483r74vPWhS7RzaHOcA3DHCCjAu7slLAcJXIqdg93O9CFlzFzheBV/yUv9SmPyts+djhCw2FSA==",
+          "display_name": null
+        },
+        {
+          "public_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEkrd2Pa5zIFLoP+g0qHMy9BbPCeS8TdJ22/tm94c1KOSrWovHloOFzVfFAT10OQlNwtHoe1/hlBRTfm7POqE3QA==",
+          "display_name": null
+        }
+      ],
+      "user_ids": [],
+      "key_quorum_ids": []
+    },
+    {
+      "id": "redk1vah6k99lhgt25lyn50p",
+      "display_name": "Counterweight updater 6ef5f818",
+      "authorization_threshold": 1,
+      "authorization_keys": [
+        {
+          "public_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEWQuxvRHD4hIgGnc0U470KEam3UQ+9vgLqHMqULVP7uA3K6BJ8l9Wv/o1cjBeDGl0eTFGAILQxwH5rHejlchQVA==",
+          "display_name": null
+        }
+      ],
+      "user_ids": [],
+      "key_quorum_ids": []
+    },
+    {
+      "id": "q4k3o6a60gn8t6eejnfm5jys",
+      "display_name": "Counterweight emergency 6ef5f818",
+      "authorization_threshold": 1,
+      "authorization_keys": [
+        {
+          "public_key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEAMmR8hxZ1WjAOkrhIzw/YnGlpMTmsDPBHv7DsjE8TG7qsO994xLSiYeqC98qyD59LjbfWg1rYEAKrqObt1IIQg==",
+          "display_name": null
+        }
+      ],
+      "user_ids": [],
+      "key_quorum_ids": []
+    }
+  ],
+  "policies": [
+    {
+      "id": "xs33yq459nuqg30jzj3bye52",
+      "name": "counterweight-owner-6ef5f818",
+      "chain_type": "ethereum",
+      "rules": [
+        {
+          "id": "elqa30pup6rixm2zinxxn5wa",
+          "name": "owner-commissioning-local-fork",
+          "method": "eth_signTransaction",
+          "conditions": [
+            {
+              "field_source": "ethereum_transaction",
+              "field": "chain_id",
+              "operator": "eq",
+              "value": "31337"
+            },
+            {
+              "field_source": "ethereum_transaction",
+              "field": "value",
+              "operator": "lte",
+              "value": "20000000000000000000"
+            }
+          ],
+          "action": "ALLOW"
+        }
+      ],
+      "version": "1.0",
+      "created_at": 1788847854980,
+      "owner_id": "ntx1mhqckpn78uzpue8f0069"
+    },
+    {
+      "id": "dastadpyijmqkpww62hed7xy",
+      "name": "counterweight-updater-v1",
+      "chain_type": "ethereum",
+      "rules": [
+        {
+          "id": "g4dxgb11iyl81nl3m1dn75ub",
+          "name": "bounded-tuning-local-fork",
+          "method": "eth_signTransaction",
+          "conditions": [
+            {
+              "field_source": "ethereum_transaction",
+              "field": "chain_id",
+              "operator": "eq",
+              "value": "31337"
+            },
+            {
+              "field_source": "ethereum_transaction",
+              "field": "to",
+              "operator": "eq",
+              "value": "0xb1C13A05012Ca5bEf193E7C066D8eE187Fa7917E"
+            },
+            {
+              "field_source": "ethereum_transaction",
+              "field": "value",
+              "operator": "eq",
+              "value": "0"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "function_name",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "setTuning",
+                  "inputs": [
+                    {
+                      "name": "intensityBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "spreadBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "expectedVersion",
+                      "type": "uint64"
+                    },
+                    {
+                      "name": "validUntil",
+                      "type": "uint40"
+                    }
+                  ],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "eq",
+              "value": "setTuning"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "setTuning.intensityBps",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "setTuning",
+                  "inputs": [
+                    {
+                      "name": "intensityBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "spreadBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "expectedVersion",
+                      "type": "uint64"
+                    },
+                    {
+                      "name": "validUntil",
+                      "type": "uint40"
+                    }
+                  ],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "gte",
+              "value": "0"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "setTuning.intensityBps",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "setTuning",
+                  "inputs": [
+                    {
+                      "name": "intensityBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "spreadBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "expectedVersion",
+                      "type": "uint64"
+                    },
+                    {
+                      "name": "validUntil",
+                      "type": "uint40"
+                    }
+                  ],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "lte",
+              "value": "1000"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "setTuning.spreadBps",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "setTuning",
+                  "inputs": [
+                    {
+                      "name": "intensityBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "spreadBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "expectedVersion",
+                      "type": "uint64"
+                    },
+                    {
+                      "name": "validUntil",
+                      "type": "uint40"
+                    }
+                  ],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "gte",
+              "value": "10"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "setTuning.spreadBps",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "setTuning",
+                  "inputs": [
+                    {
+                      "name": "intensityBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "spreadBps",
+                      "type": "uint256"
+                    },
+                    {
+                      "name": "expectedVersion",
+                      "type": "uint64"
+                    },
+                    {
+                      "name": "validUntil",
+                      "type": "uint40"
+                    }
+                  ],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "lte",
+              "value": "100"
+            }
+          ],
+          "action": "ALLOW"
+        }
+      ],
+      "version": "1.0",
+      "created_at": 1788848190294,
+      "owner_id": "ntx1mhqckpn78uzpue8f0069"
+    },
+    {
+      "id": "lq4plb5xqrqztd3vls3vmlxo",
+      "name": "counterweight-emergency-v1",
+      "chain_type": "ethereum",
+      "rules": [
+        {
+          "id": "ifxzps769ku5aokj2u7frsrl",
+          "name": "pause-local-epoch",
+          "method": "eth_signTransaction",
+          "conditions": [
+            {
+              "field_source": "ethereum_transaction",
+              "field": "chain_id",
+              "operator": "eq",
+              "value": "31337"
+            },
+            {
+              "field_source": "ethereum_transaction",
+              "field": "to",
+              "operator": "eq",
+              "value": "0xb1C13A05012Ca5bEf193E7C066D8eE187Fa7917E"
+            },
+            {
+              "field_source": "ethereum_transaction",
+              "field": "value",
+              "operator": "eq",
+              "value": "0"
+            },
+            {
+              "field_source": "ethereum_calldata",
+              "field": "function_name",
+              "abi": [
+                {
+                  "type": "function",
+                  "name": "pause",
+                  "inputs": [],
+                  "outputs": [],
+                  "stateMutability": "nonpayable"
+                }
+              ],
+              "operator": "eq",
+              "value": "pause"
+            }
+          ],
+          "action": "ALLOW"
+        }
+      ],
+      "version": "1.0",
+      "created_at": 1788848192110,
+      "owner_id": "ntx1mhqckpn78uzpue8f0069"
+    }
+  ]
+}

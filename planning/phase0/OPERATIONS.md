@@ -2,7 +2,7 @@
 
 Decision: root agent, 2026-09-06. Use a Privy Ethereum organization wallet owned by a 2-of-3 authorization-key quorum controlled by treasury administrators. No single application server owns the wallet. Additional signer policies restrict a configuration updater and an emergency signer. The runtime process has no authorization key and can only read, request quotes, and broadcast already-authorized transactions. Takers are separate wallets; they trade against the guarded liquidity, not as treasury operators.
 
-Phase 0 specifies this ownership arrangement; no real organization, quorum, or wallet has been created. Administrator key custody must be independent in the live proof, not three copies of the same server secret. SDK/REST wallet ownership and per-signer policy support were verified from primary docs/declarations; actual acceptance and denial remain F3.
+Phase 4 has created and read back the actual wallet, quorums and policies, and verified O-01–O-06 against Privy and the local fork. See the [operations checkpoint](../phase4/evidence/validation.md). The user-authorized development custody amendment below permits all distinct owner keys in one environment; independent administrator custody is not claimed. Final latest-revision live/clean F3 remains pending.
 
 ## Authority and enforcement matrix
 
@@ -68,8 +68,12 @@ Also test valid calldata for pause/resume and ERC20 approve under updater creden
 | Signed update broadcast after revocation | on-chain pause/version/expiry rejects according to incident sequence; O-05/E-02 |
 | Restart after uncertain broadcast | receipt/nonce reconciliation; no duplicate signature; E-03 |
 
-All of these are reviewed design outcomes in P0. None is claimed as implemented or provider-enforced until its application test passes.
+These were design outcomes at P0. Current implementation/test status is recorded per requirement in TRACEABILITY and the [Phase 4 checkpoint](../phase4/evidence/validation.md); historical planning status is not the current execution result.
 
 ## D09 development custody amendment — 2026-09-08
 
 The user explicitly authorized the agent to generate and hold all three owner authorization keys for the development demo. Phase 4 therefore proves an actual 2-of-3 authorization threshold with distinct keys, plus restricted signer policies, while all keys are controlled in one local environment. This does not establish independent administrator custody. The original independently controlled quorum remains the production-intent model; its custody claim is excluded from the development proof. Store keys in ignored `.secrets/privy-development.json` with owner-only permissions, separate from application credentials in `.env`; never overwrite keys that may own existing resources. Updater and emergency keys remain distinct from all owner keys.
+
+## Phase 4 request compatibility — 2026-09-09
+
+User-operation calldata wraps the intended target call in the supported Alchemy account execute(address,uint256,bytes); direct setTuning calldata is not a valid account operation. eth_sendTransaction includes explicit nonce/type/gas/fees so policy can be evaluated without private-network transaction preparation. wallet_sendCalls needs a provider-supported RPC before policy evaluation; its actual denial tests use an empty Sepolia account, zero-value self-call, sponsor:false, and assert unchanged public balance/nonce. No successful public transaction is permitted. All successful signatures and canonical-token settlement remain on chain 31337. The full F3 runner requires these negative cases, with no exclusion flag.
