@@ -1,7 +1,0 @@
-{
-  "result": "PASS",
-  "gate": "F1",
-  "out": "artifacts/clean-f1",
-  "assertions": 80,
-  "scenarios": 5
-}

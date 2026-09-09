@@ -1,7 +1,0 @@
-{
-  "result": "PASS",
-  "pendingResourceCreation": false,
-  "allProvisioningResourcesAlreadyExist": true,
-  "failedBeforeForkSetup": true,
-  "reason": "The existing-resource provision path performs GET/readback only; no uncertain creation is retried."
-}

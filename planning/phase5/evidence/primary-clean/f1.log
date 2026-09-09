@@ -1,7 +1,0 @@
-{
-  "result": "PASS",
-  "gate": "F1",
-  "out": "artifacts/validation/f1",
-  "assertions": 80,
-  "scenarios": 5
-}

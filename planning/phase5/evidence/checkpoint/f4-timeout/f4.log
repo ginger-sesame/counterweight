@@ -1,5 +1,0 @@
-{
-  "result": "FAIL",
-  "error": "F4 setup failed; inspect approved credential and resource prerequisites",
-  "errorClass": "APIConnectionTimeoutError"
-}
