@@ -1,0 +1,192 @@
+[
+  {
+    "role": "updater",
+    "method": "pause",
+    "kind": "policy",
+    "transaction": {
+      "chain_id": 31337,
+      "nonce": 11,
+      "gas_limit": "0x7a1200",
+      "value": "0x0",
+      "data": "0x8456cb59",
+      "to": "0xfd6bc3d8f260fd09966845f12c8faa98cec05093",
+      "type": 0,
+      "gas_price": "0x3bd909de"
+    },
+    "failure": {
+      "status": 400,
+      "code": "policy_violation",
+      "reason": "RPC request denied due to policy violation",
+      "correlationId": "a387100b7a55b724-HEL"
+    },
+    "before": {
+      "allocations": [
+        "13898112675887578179",
+        "12200000000"
+      ],
+      "physical": {
+        "maker": [
+          "13898112675887578179",
+          "20200000000"
+        ],
+        "taker": [
+          "1101887324112421821",
+          "4800000000"
+        ],
+        "router": [
+          "0",
+          "0"
+        ],
+        "aqua": [
+          "0",
+          "0"
+        ]
+      },
+      "allowances": {
+        "maker": [
+          "19898112675887578179",
+          "40000000000"
+        ],
+        "taker": [
+          "1000000000000000000",
+          "4800000000"
+        ]
+      },
+      "safetyDigest": "0xcda95a69ede5cf1119aa618a1c8ff09cf7ef52de18608e336945233f37725a95",
+      "version": "4",
+      "paused": false
+    },
+    "after": {
+      "allocations": [
+        "13898112675887578179",
+        "12200000000"
+      ],
+      "physical": {
+        "maker": [
+          "13898112675887578179",
+          "20200000000"
+        ],
+        "taker": [
+          "1101887324112421821",
+          "4800000000"
+        ],
+        "router": [
+          "0",
+          "0"
+        ],
+        "aqua": [
+          "0",
+          "0"
+        ]
+      },
+      "allowances": {
+        "maker": [
+          "19898112675887578179",
+          "40000000000"
+        ],
+        "taker": [
+          "1000000000000000000",
+          "4800000000"
+        ]
+      },
+      "safetyDigest": "0xcda95a69ede5cf1119aa618a1c8ff09cf7ef52de18608e336945233f37725a95",
+      "version": "4",
+      "paused": false
+    }
+  },
+  {
+    "role": "updater",
+    "method": "setTuning",
+    "kind": "authorization",
+    "transaction": {
+      "chain_id": 31337,
+      "nonce": 16,
+      "gas_limit": "0x7a1200",
+      "value": "0x0",
+      "data": "0x3813ec9d00000000000000000000000000000000000000000000000000000000000003dd000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000007000000000000000000000000000000000000000000000000000000006aa176e2",
+      "to": "0xfd6bc3d8f260fd09966845f12c8faa98cec05093",
+      "type": 0,
+      "gas_price": "0x47983ad0"
+    },
+    "failure": {
+      "status": 401,
+      "code": null,
+      "reason": "No valid authorization signatures were provided. Your payload may be malformed or your signing keys may be incorrect or expired. Docs: https://docs.privy.io/api-reference/authorization-signatures",
+      "correlationId": "a38710350da9b724-HEL"
+    },
+    "before": {
+      "allocations": [
+        "13963211685788568279",
+        "12073056544"
+      ],
+      "physical": {
+        "maker": [
+          "13963211685788568279",
+          "20073056544"
+        ],
+        "taker": [
+          "1036788314211431721",
+          "4926943456"
+        ],
+        "router": [
+          "0",
+          "0"
+        ],
+        "aqua": [
+          "0",
+          "0"
+        ]
+      },
+      "allowances": {
+        "maker": [
+          "19888211685788568279",
+          "40000000000"
+        ],
+        "taker": [
+          "925000000000000000",
+          "4780000000"
+        ]
+      },
+      "safetyDigest": "0xcda95a69ede5cf1119aa618a1c8ff09cf7ef52de18608e336945233f37725a95",
+      "version": "7",
+      "paused": false
+    },
+    "after": {
+      "allocations": [
+        "13963211685788568279",
+        "12073056544"
+      ],
+      "physical": {
+        "maker": [
+          "13963211685788568279",
+          "20073056544"
+        ],
+        "taker": [
+          "1036788314211431721",
+          "4926943456"
+        ],
+        "router": [
+          "0",
+          "0"
+        ],
+        "aqua": [
+          "0",
+          "0"
+        ]
+      },
+      "allowances": {
+        "maker": [
+          "19888211685788568279",
+          "40000000000"
+        ],
+        "taker": [
+          "925000000000000000",
+          "4780000000"
+        ]
+      },
+      "safetyDigest": "0xcda95a69ede5cf1119aa618a1c8ff09cf7ef52de18608e336945233f37725a95",
+      "version": "7",
+      "paused": false
+    }
+  }
+]

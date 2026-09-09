@@ -1,0 +1,20 @@
+{
+  "result": "PASS",
+  "at": "2026-09-09T14:57:14.270Z",
+  "pendingResourceCreation": false,
+  "ownerThreshold": 2,
+  "originalOwnerKeysRestored": true,
+  "walletId": "xj5rtgu3gfq6s2izhjbaqsfd",
+  "policies": [
+    {
+      "role": "updater",
+      "id": "dastadpyijmqkpww62hed7xy",
+      "target": "0xb1C13A05012Ca5bEf193E7C066D8eE187Fa7917E"
+    },
+    {
+      "role": "emergency",
+      "id": "lq4plb5xqrqztd3vls3vmlxo",
+      "target": "0xb1C13A05012Ca5bEf193E7C066D8eE187Fa7917E"
+    }
+  ]
+}

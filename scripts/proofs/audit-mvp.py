@@ -106,7 +106,13 @@ restart = load('restart.json')
 assert restart['result']['status'] == 'CONFIRMED' and restart['result']['action'] == 'DO_NOT_REPEAT'
 assert restart['result']['transactionHash'] in hashes
 assert restart['nonceBefore'] == restart['nonceAfter'] and restart['signatureCountBefore'] == restart['signatureCountAfter']
-assert restart['runId'] == m['runId'] == load('checkpoint.json')['runId']
+checkpoint = load('checkpoint.json')
+assert restart['runId'] == m['runId'] == checkpoint['runId']
+assert checkpoint['transactionHash'] == restart['result']['transactionHash'] == pairs[0]['transactionHash']
+assert checkpoint['sourceDigest'] == pairs[0]['evaluated']['sourceDigest']
+assert checkpoint['controller'] == m['epochs'][0]['controller'] == pairs[0]['controller']
+assert checkpoint['codeHash'] == m['epochs'][0]['codeHashes']['controller']
+assert checkpoint['maker'].lower() == m['maker'].lower()
 operations = load('operations.json')
 assert len(operations) == 2 and operations[0]['failure']['code'] == 'policy_violation'
 assert operations[1]['kind'] == 'authorization'

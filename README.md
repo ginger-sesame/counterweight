@@ -2,7 +2,7 @@
 
 Inventory-seeking, self-custodial WETH/USDC liquidity strategy for Aqua/SwapVM.
 
-Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Phase 3 implements live Graph ingestion. Phase 4 adds actual restricted Privy operations, recovery and clean live proof; F1–F3 pass. Phase 5 adds the continuous integrated CLI and read-only process restart reconciliation. Its initial F4 run and CLI test pass; final integrated-revision regression and independent reproduction remain in progress.
+Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Phase 3 implements live Graph ingestion. Phase 4 adds actual restricted Privy operations, recovery and clean live proof; F1–F3 pass. Phase 5 adds the continuous integrated CLI and read-only process restart reconciliation. Its clean F4 run passes 97 assertions, with all earlier regression gates passing at the integrated runtime revision. Independent-agent reproduction remains pending; Phase 5 is not yet complete.
 
 See the [Phase 4 handoff](planning/phase4/README.md) and [final validation](planning/phase4/evidence/validation.md). The current regime signal uses two live standardized daily observations, converted to average hourly activity; hard inventory limits remain independent.
 

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "runId": "b4a90fc6-333f-4cb8-84d4-7263c8dd93ef",
+  "chainId": 31337,
+  "anchor": {
+    "number": "25917734",
+    "hash": "0x6f95491f628cf7f726728b49303608bb92926c332fcb5f01697ed51bc879ca3f"
+  },
+  "controller": "0xfd6bc3d8f260fd09966845f12c8faa98cec05093",
+  "maker": "0xA66001D39eE7c88B62898e721F619A77A52E4ea8",
+  "codeHash": "0xe7c451a0f4e03cb570d9ecf11d7aafd9b91341f82dd81d3a4e3a559f6304c67c",
+  "safetyDigest": "0xcda95a69ede5cf1119aa618a1c8ff09cf7ef52de18608e336945233f37725a95",
+  "transactionHash": "0x17c6b75ab9a8ccc5837b1d77281d01ebeb3c18e89c4caf10a737d4c60014aa36",
+  "observationFetchedAt": 1788966025,
+  "sourceDigest": "0xaa15a3ffa1257dc13033cb3814a0e775a5b2d566153b202907ed41e8812232a3"
+}

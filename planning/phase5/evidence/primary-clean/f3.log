@@ -1,0 +1,7 @@
+{
+  "result": "PASS",
+  "gate": "F3",
+  "out": "artifacts/validation/f3",
+  "assertions": 157,
+  "scenarios": 3
+}
