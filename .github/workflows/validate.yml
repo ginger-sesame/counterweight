@@ -16,6 +16,10 @@ on:
         description: Run the credentialed Privy permission and live Graph settlement proof
         type: boolean
         default: false
+      run_mvp:
+        description: Run the complete credentialed F4 scenario and restart proof
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
@@ -116,7 +120,7 @@ jobs:
           if-no-files-found: error
 
   privy:
-    if: github.event_name == 'workflow_dispatch' && inputs.run_privy
+    if: github.event_name == 'workflow_dispatch' && (inputs.run_privy || inputs.run_mvp)
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     concurrency:
@@ -146,6 +150,7 @@ jobs:
           await writeFile('.secrets/privy-resources.json',process.env.PRIVY_RESOURCES_JSON,{mode:0o600});
           JS
       - name: Run credentialed Privy preflight, CLI E2E and retained proof
+        if: inputs.run_privy
         env:
           GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
           PRIVY_APP_ID: ${{ secrets.PRIVY_APP_ID }}
@@ -157,6 +162,18 @@ jobs:
           node scripts/proofs/privy-preflight.mjs --out artifacts/ci/privy-preflight
           npm run test:privy | tee artifacts/ci/privy-tests.txt
           node scripts/proofs/f3.mjs --out artifacts/ci/f3
+      - name: Run integrated MVP CLI E2E and retained proof
+        if: inputs.run_mvp
+        env:
+          GRAPH_API_KEY: ${{ secrets.GRAPH_API_KEY }}
+          PRIVY_APP_ID: ${{ secrets.PRIVY_APP_ID }}
+          PRIVY_APP_SECRET: ${{ secrets.PRIVY_APP_SECRET }}
+          ETHEREUM_RPC_URL: ${{ secrets.ETHEREUM_RPC_URL }}
+        run: |
+          mkdir -p artifacts/ci
+          set -o pipefail
+          npm run test:mvp | tee artifacts/ci/mvp-tests.txt
+          node scripts/proofs/mvp.mjs --out artifacts/ci/f4
       - uses: actions/upload-artifact@v4
         if: always()
         with:

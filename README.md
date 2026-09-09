@@ -2,7 +2,7 @@
 
 Inventory-seeking, self-custodial WETH/USDC liquidity strategy for Aqua/SwapVM.
 
-Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Phase 3 implements live Graph ingestion. Phase 4 adds actual restricted Privy operations, recovery and clean live proof; F1–F3 pass. Phase 5/F4 remains next.
+Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Phase 3 implements live Graph ingestion. Phase 4 adds actual restricted Privy operations, recovery and clean live proof; F1–F3 pass. Phase 5 adds the continuous integrated CLI and read-only process restart reconciliation. Its initial F4 run and CLI test pass; final integrated-revision regression and independent reproduction remain in progress.
 
 See the [Phase 4 handoff](planning/phase4/README.md) and [final validation](planning/phase4/evidence/validation.md). The current regime signal uses two live standardized daily observations, converted to average hourly activity; hard inventory limits remain independent.
 
@@ -46,3 +46,11 @@ python3 scripts/planning/probe_rpc.py
 These checks require public network access. See [proof procedures](planning/phase0/PROOFS.md) for F1–F4 environments, commands, and account prerequisites.
 
 For live Graph/Privy E2E commands, approved credential/journal setup, and serialized wallet access, follow the [Phase 4 reproduction instructions](planning/phase4/README.md#credentials-and-repeatable-commands). Daily-source availability and exact policy enforcement are required; mocked diagnostics cannot pass F3.
+
+For Phase 5 setup, complete gate reproduction, failure recovery and artifact interpretation, follow the [integrated MVP handoff](planning/phase5/README.md). The public entry point is:
+
+```sh
+node --env-file=/absolute/path/to/approved.env scripts/proofs/mvp.mjs --out artifacts/my-f4-run
+```
+
+It uses one epoch throughout live tuning, real fills, guard and settlement failures, pause/resume, revocation and recovery. A separate credential-free process verifies the persisted transaction checkpoint without repeating an operation. F4 does not establish production readiness.

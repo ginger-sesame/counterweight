@@ -104,10 +104,10 @@ try {
   const allowances={};for(const [name,account,spender] of [['maker',maker,aqua],['taker',taker,s.router]])allowances[name]=[await read(W,erc20,'allowance',[account,spender]),await read(U,erc20,'allowance',[account,spender])];
   return{allocations,physical,allowances,safetyDigest:await read(s.controller,controllerAbi,'safetyDigest'),version:await read(s.controller,controllerAbi,'tuningVersion'),paused:await read(s.controller,controllerAbi,'paused')};
  }
- async function attempt(s,label,wethIn,amount,expectedOut,errorName){
+ async function attempt(s,label,wethIn,amount,expectedOut,errorName,preparedData){
   const deadline=Number((await client.getBlock()).timestamp)+60;
-  const data=await read(s.router,routerAbi,'takerData',[wethIn,expectedOut??1n,deadline]);
-  const before=await state(s);
+  const data=preparedData??await read(s.router,routerAbi,'takerData',[wethIn,expectedOut??1n,deadline]);
+  const before=await state(s),effectiveTuning=await read(s.controller,controllerAbi,'effectiveTuning');
   const call={account:taker,address:s.router,abi:routerAbi,functionName:'swap',args:[s.order,amount,data]};
   if(!errorName){
    const quote=await client.simulateContract({...call,functionName:'quote'});check(`${label}: independent quote`,quote.result[1]===expectedOut);
@@ -128,7 +128,7 @@ try {
     const failedOutput=calls.find(call=>call.to?.toLowerCase()===U.toLowerCase()&&call.input?.startsWith('0x23b872dd')&&call.error);
     check(`${label}: input transfers succeeded before output failed`,inputTransfers.length===2&&!!failedOutput&&calls.indexOf(inputTransfers[1])<calls.indexOf(failedOutput));
    }
-   scenarios.push({label,branch:s.config.epochId,transaction:tx,error:errorName,revertData:trace.returnValue,settlementTrace,before,after});
+   scenarios.push({label,branch:s.config.epochId,transaction:tx,wethIn,amountIn:amount,takerData:data,effectiveTuning,error:errorName,revertData:trace.returnValue,settlementTrace,before,after});
   }else{
    const events=r.logs.filter(log=>log.address.toLowerCase()===s.router.toLowerCase()).map(log=>decodeEventLog({abi:routerAbi,data:log.data,topics:log.topics}));
    const swapped=events.find(event=>event.eventName==='Swapped');
@@ -140,11 +140,11 @@ try {
    check(`${label}: no router/Aqua retention`,after.physical.router.every((v,n)=>v===before.physical.router[n])&&after.physical.aqua.every((v,n)=>v===before.physical.aqua[n]));
    const [w,u]=after.allocations;check(`${label}: independent invariant`,w>=(3000n*u*10n**18n+7000n*2000000000n-1n)/(7000n*2000000000n)&&w<=7000n*u*10n**18n/(3000n*2000000000n));
    check(`${label}: safety config unchanged`,before.safetyDigest===after.safetyDigest);
-   scenarios.push({label,branch:s.config.epochId,transaction:tx,amountIn:amount,amountOut:expectedOut,before,after});
+   scenarios.push({label,branch:s.config.epochId,transaction:tx,wethIn,takerData:data,effectiveTuning,amountIn:amount,amountOut:expectedOut,before,after});
   }
  }
  let extra={};
- if(extension) extra=await extension({client,read,send,setup,state,attempt,check,maker,taker,W,U,erc20,controllerAbi,routerAbi,normalSnapshot,options,transactions,scenarios,aqua,aquaAbi});
+ if(extension) extra=await extension({rpc,client,read,send,setup,state,attempt,check,maker,taker,W,U,erc20,controllerAbi,routerAbi,normalSnapshot,options,transactions,scenarios,aqua,aquaAbi});
  else {
  const normal=await setup(1,10n**19n,20000n*10n**6n);const safeSnapshot=await client.request({method:'evm_snapshot'});
  await attempt(normal,'safe WETH input',true,10n**17n,199400000n);
@@ -168,12 +168,12 @@ try {
  const lock=JSON.parse(await readFile(root+'package-lock.json','utf8')).packages;
  const dependencyVersions={};for(const name of ['@1inch/swap-vm','@1inch/aqua','@1inch/solidity-utils','@openzeppelin/contracts','viem','@privy-io/node']){const entry=lock['node_modules/'+name];dependencyVersions[name]={version:entry.version,resolved:entry.resolved};}
  const toolVersions={node:process.version,forge:forgeVersion.stdout.trim(),anvil:clientVersion,solidity:(await artifact('CounterweightSwapVM')).metadata.compiler.version};
- const manifest={...extra,toolVersions,dependencyVersions,schemaVersion:1,gate:operations?'F3':extension?'F2':'F1',result:'PASS',testIds:operations?['O-01','O-02','O-03','O-04','O-05','O-06','O-07']:extension?['G-05','G-06','G-07']:['V-01','V-02','V-05','V-07'],runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
+ const manifest={...extra,toolVersions,dependencyVersions,schemaVersion:1,gate:operations?.gate??(operations?'F3':extension?'F2':'F1'),result:'PASS',testIds:operations?.testIds??(operations?['O-01','O-02','O-03','O-04','O-05','O-06','O-07']:extension?['G-05','G-06','G-07']:['V-01','V-02','V-05','V-07']),runAt:new Date().toISOString(),gitRevision:revision.status===0?revision.stdout.trim():null,sourceHashes,
   environment:'local-mainnet-fork',chainId:31337,forkBlock:blockNumber,forkBlockHash:blockHash,maker,taker,deployer,fundingSource:funding,epochs,
   assertions:assertions.length,scenarios:scenarios.length,artifacts:['assertions.json','transactions.json','scenarios.json',...(extra.operationArtifacts??[]),...(extra.graphArtifact?[extra.graphArtifact]:[])],
-  limitations:['Snapshot branches are isolated scenarios, not one uninterrupted chain history.',operations?'Actual Privy signing and policies, but all development owner keys share one environment; no independent custody or public deployment claim.':extension?'Live Graph with local maker substitute; no Privy policy proof or public deployment.':'Local mainnet fork with canonical tokens; no public-network deployment or Graph/Privy proof.','V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites.']};
+  limitations:extra.limitations??['Snapshot branches are isolated scenarios, not one uninterrupted chain history.',operations?'Actual Privy signing and policies, but all development owner keys share one environment; no independent custody or public deployment claim.':extension?'Live Graph with local maker substitute; no Privy policy proof or public deployment.':'Local mainnet fork with canonical tokens; no public-network deployment or Graph/Privy proof.','V-03/V-04/V-06 coverage is recorded separately in deterministic integration and stateful suites.']};
  for(const [name,value] of Object.entries({'manifest.json':manifest,'assertions.json':assertions,'transactions.json':transactions,'scenarios.json':scenarios}))await writeFile(`${options.out}/${name}`,stringify(value)+'\n');
- process.stdout.write(stringify({result:'PASS',gate:operations?'F3':extension?'F2':'F1',out:options.out,assertions:assertions.length,scenarios:scenarios.length})+'\n');
+ process.stdout.write(stringify({result:'PASS',gate:operations?.gate??(operations?'F3':extension?'F2':'F1'),out:options.out,assertions:assertions.length,scenarios:scenarios.length})+'\n');
 }catch(error){
  // Network errors may contain credential-bearing URLs. Persist only the public assertion message.
  const message=error instanceof assert.AssertionError?error.message:(error.message?.startsWith('fork ')?error.message:(error.shortMessage||error.message||'F1 execution failed').replace(/https?:[^\s]+/g,'[RPC URL redacted]'));

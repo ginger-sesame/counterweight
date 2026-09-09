@@ -18,7 +18,8 @@
     "test:data": "node --test test/data/*.test.mjs",
     "test:live": "node --test test/live/*.test.mjs",
     "test:operations": "node --test test/operations/*.test.mjs",
-    "test:privy": "node --test test/privy/*.test.mjs"
+    "test:privy": "node --test test/privy/*.test.mjs",
+    "test:mvp": "node --test test/mvp/*.test.mjs"
   },
   "dependencies": {
     "@1inch/aqua": "github:1inch/aqua#098b4c5d8eec67677f7ca861ca991af56024d9c5",
