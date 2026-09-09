@@ -15,24 +15,25 @@ export async function reconcileCheckpoint(chain, checkpoint, {now=Math.floor(Dat
   assert(/^0x[0-9a-fA-F]{64}$/.test(checkpoint.transactionHash),'checkpoint transaction hash');
   assert(Number.isSafeInteger(checkpoint.observationFetchedAt)&&Number.isSafeInteger(now),'checkpoint freshness timestamps');
   const age=now-checkpoint.observationFetchedAt;
-  const observationFresh=age>=0&&age<=120;
+  const fetchAgeAcceptable=age>=0&&age<=120;
   let receipt;
   try { receipt=await chain.getTransactionReceipt({hash:checkpoint.transactionHash}); }
   catch(error) {
     if(error.name!=='TransactionReceiptNotFoundError')throw error;
     try {
       await chain.getTransaction({hash:checkpoint.transactionHash});
-      return {status:'PENDING',observationFresh,action:'WAIT',transactionHash:checkpoint.transactionHash};
+      return {status:'PENDING',fetchAgeAcceptable,action:'WAIT',newUpdateAction:'COLLECT_AND_VALIDATE_NEW_PAIR',transactionHash:checkpoint.transactionHash};
     } catch(pendingError) {
       if(pendingError.name!=='TransactionNotFoundError')throw pendingError;
-      return {status:'UNKNOWN',observationFresh,action:'MANUAL_RECONCILIATION',transactionHash:checkpoint.transactionHash};
+      return {status:'UNKNOWN',fetchAgeAcceptable,action:'MANUAL_RECONCILIATION',newUpdateAction:'COLLECT_AND_VALIDATE_NEW_PAIR',transactionHash:checkpoint.transactionHash};
     }
   }
+  assert(receipt.blockNumber>BigInt(checkpoint.anchor.number),'receipt must follow pre-broadcast checkpoint');
   assert.equal(receipt.transactionHash,checkpoint.transactionHash,'restart receipt identity');
   assert.equal(receipt.from.toLowerCase(),checkpoint.maker.toLowerCase(),'restart transaction sender');
   assert.equal(receipt.to?.toLowerCase(),checkpoint.controller.toLowerCase(),'restart transaction target');
   // Check canonical inclusion, including after a fork reversion/reorganization.
   const included=await chain.getBlock({blockNumber:receipt.blockNumber});
   assert.equal(included.hash,receipt.blockHash,'restart canonical receipt');
-  return {status:receipt.status==='success'?'CONFIRMED':'REVERTED',observationFresh,action:'DO_NOT_REPEAT',transactionHash:checkpoint.transactionHash,blockNumber:receipt.blockNumber.toString()};
+  return {status:receipt.status==='success'?'CONFIRMED':'REVERTED',fetchAgeAcceptable,action:'DO_NOT_REPEAT',newUpdateAction:'COLLECT_AND_VALIDATE_NEW_PAIR',transactionHash:checkpoint.transactionHash,blockNumber:receipt.blockNumber.toString()};
 }
