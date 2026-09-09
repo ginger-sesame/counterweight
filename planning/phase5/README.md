@@ -51,7 +51,7 @@ Each output directory must be new. CLI errors exit nonzero; missing live data is
 
 ## Architecture and observable recovery
 
-`mvp.mjs` joins the existing settlement harness, Graph collection/normalization/mapper and Privy provisioning/signing modules. The harness deploys one immutable epoch and canonical SwapVM order. Actual restricted signatures are decoded and checked before broadcasting only to chain 31337. The independent quote calculation consumes current Aqua allocations. All seven settlement attempts share epoch 30 and strictly increasing block numbers; there are no scenario reverts.
+`mvp.mjs` joins the existing settlement harness, Graph collection/normalization/mapper and Privy provisioning/signing modules. The harness deploys one immutable epoch and canonical SwapVM order. Actual restricted signatures are decoded and checked before broadcasting only to chain 31337. The independent quote calculation consumes current Aqua allocations. All eight settlement attempts share epoch 30 and strictly increasing block numbers; there are no scenario reverts.
 
 | Step | Expected observable result | Evidence |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ The CLI is the MVP interface. There is no scheduler, UI or unattended production
 - Aqua/SwapVM: F1 retained proof plus F4 scenarios, immutable epoch/code hashes and token deltas. Deterministic integration/invariant suites cover additional entry-point and stateful safety cases.
 - The Graph: F2 retained proof plus F4 graph.json, pinned queries/sources, source digests, normalized daily windows and actual restricted update receipts. Missing source records never become inferred zeros.
 - Privy: F3 complete permission matrix plus F4 configuration, decoded signature identities, real denials and restored wallet state. Single-environment development custody is explicit.
-- Integration: F4 manifest, assertions, continuous transactions, events, seven scenarios and restart checkpoint/result.
+- Integration: F4 manifest, assertions, continuous transactions, events, eight scenarios and restart checkpoint/result.
 
 These indexes identify intended deliverables, not completed sponsor submissions. Final validation must link concrete artifacts and audit results at the recorded runtime revision. E-04 remains pending until an authorized independent agent reproduces the instructions above.
 

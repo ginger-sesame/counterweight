@@ -47,7 +47,7 @@ with localcontext() as ctx:
         assert pair['evaluated']['tuning'] == {'intensityBps': 1000-500*regime//10000, 'spreadBps': 10+90*regime//10000}
 
 scenarios = load('scenarios.json')
-assert len(scenarios) == m['scenarios'] == 7
+assert len(scenarios) == m['scenarios'] == 8
 assert len({x['branch'] for x in scenarios}) == 1
 assert scenarios[0]['before']['allocations'] == ['14000000000000000000', '12000000000']
 assert scenarios[0]['amountIn'] == '200000000' and not scenarios[0]['wethIn']

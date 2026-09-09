@@ -126,6 +126,8 @@ try {
    await deny('updater','setTuning',args,'authorization');
   } finally {await privy.wallets().update(wallet.id,{additional_signers:enrolled,authorization_context:authorization(bundle)});}
   await liveUpdate('E-02 restored updater recovery');
+  check('E-02 resume restores active execution',!(await state(s)).paused);
+  await attempt(s,'E-02 post-recovery guarded fill',false,1000000n,await quote(false,1000000n));
   const finalWallet=await privy.wallets().get(wallet.id);
   const canonicalSigners=items=>items.map(({signer_id,override_policy_ids})=>({signer_id,override_policy_ids:[...override_policy_ids].sort()})).sort((a,b)=>a.signer_id.localeCompare(b.signer_id));
   assert.deepEqual(canonicalSigners(finalWallet.additional_signers),canonicalSigners(enrolled));

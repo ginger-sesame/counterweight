@@ -15,8 +15,8 @@ test('F4 CLI joins live providers, continuous settlement failures and process re
   const manifest=await load('manifest.json'),scenarios=await load('scenarios.json'),graph=await load('graph.json'),operations=await load('operations.json'),assertions=await load('assertions.json'),restart=await load('restart.json'),transactions=await load('transactions.json');
   assert.equal(manifest.result,'PASS');assert.deepEqual(manifest.testIds,['E-01','E-02','E-03']);assert.equal(manifest.epochs.length,1);assert.equal(manifest.epochs[0].config.epochId,'30');assert(manifest.runId);
   assert(assertions.length>=80&&assertions.every(x=>x.result==='PASS'));
-  assert.equal(scenarios.length,7);assert(scenarios.every(x=>x.branch==='30'));
-  for(const label of ['E-01 200 USDC inventory-seeking fill','E-02 intervening inventory fill','E-02 fallback recovery-direction fill'])assert(scenarios.some(x=>x.label===label&&!x.error));
+  assert.equal(scenarios.length,8);assert(scenarios.every(x=>x.branch==='30'));
+  for(const label of ['E-01 200 USDC inventory-seeking fill','E-02 intervening inventory fill','E-02 fallback recovery-direction fill','E-02 post-recovery guarded fill'])assert(scenarios.some(x=>x.label===label&&!x.error));
   assert.deepEqual(scenarios.filter(x=>x.error).map(x=>x.error),['ExposureOutOfBounds','ExposureOutOfBounds','SafeTransferFromFailed','Paused']);
   for(const scenario of scenarios.filter(x=>x.error))assert.deepEqual(scenario.before,scenario.after);
   const primary=scenarios[0];assert.equal(primary.amountIn,'200000000');assert.equal(primary.before.allocations[0],'14000000000000000000');assert.equal(primary.before.allocations[1],'12000000000');
