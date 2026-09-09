@@ -1,4 +1,4 @@
-# Phase 4 validation checkpoint — IN PROGRESS
+# Phase 4 validation checkpoint — BLOCKED on live data
 
 Recorded 2026-09-09 by root. Runtime checkpoint `bd1968b`; source digests are in [provenance](checkpoint/provenance.json). This record deliberately does not claim full Phase 4 or F4 completion.
 
@@ -14,7 +14,7 @@ The [full matrix diagnostic](checkpoint/matrix-diagnostic/failure.json) complete
 | O-04 identities/targets/methods/amounts | PASS: wrong chain/target, nonzero native value, deployment, approvals, transfer, pause/resume, dock and oversized tuning denied for applicable roles. Personal, typed, raw, 7702, provider-broadcast, user-operation, batch and export methods denied. Owner commissioning value above 20 ETH denied. Actual policy/authorization failures are distinguished. |
 | O-05 revocation/version/rotation | PASS: revoked updater cannot obtain a new signature; a previously signed update reverts at Paused; another reverts at VersionMismatch after resume. Rotation excludes old C, admits replacement with A, then restores A/B/C. Retargeted policy rejects old controller. Receipt reconciliation produces no duplicate broadcast/nonce increment. |
 | O-06 pause/resume/recovery | PASS: pause blocks quotes/fills, emergency resume is denied, owner resume and a new update succeed. Owner pause/dock/recovery transfer succeeds. Both raw Aqua allocations are zero with docked marker 255; the active-only balance API correctly rejects docked liquidity. |
-| O-07 / final F3 | IN PROGRESS: historical live F3 passed at the source hashes in its own manifest, but the latest full matrix still requires fresh live Graph and clean F3 CLI/retained proofs. Synthetic Graph cannot satisfy this row. |
+| O-07 / final F3 | BLOCKED on current live data: historical live F3 passed at the source hashes in its own manifest, but the latest full matrix still requires fresh live Graph and clean F3 CLI/retained proofs. Synthetic Graph cannot satisfy this row. |
 
 The matrix [operation records](checkpoint/matrix-diagnostic/privy-operations.json), [signature records](checkpoint/matrix-diagnostic/privy-signatures.json), [pending-operation traces](checkpoint/matrix-diagnostic/privy-recovery-traces.json), and initial/final Privy configuration snapshots identify the enforced controls. HTTP correlation IDs may be Cloudflare cf-ray values; they are not falsely labeled provider transaction IDs. Sign-only requests are identified by their signed transaction hash; raw signed bytes and private authorization material are not retained.
 
@@ -37,3 +37,5 @@ Fresh clone `/tmp/counterweight-p4-clean-tGCgWP` installed locked dependencies a
 The latest [Graph collection](checkpoint/latest-graph-unavailable/collection.json) lacks the required completed-hour Sushi entity. The [hour-history investigation](checkpoint/sushi-hours.json) shows event-driven gaps despite fresh indexing metadata. No older hour, inferred zero-volume record, backdated wall clock or alternative pool is accepted. Retry the documented Graph preflight; only when both current sources qualify run the latest live F2/F3 CLI tests and retain a standalone F3 proof from the clean checkout.
 
 After those pass, independently recompute live mapping, inspect receipts/state/denials and source hashes, rescan all final artifacts for secrets, verify restored remote ownership/signers, and synchronize O-07 and Phase 4 exit checkboxes. Hosted CI remains configured but not executed. F4 is separate work.
+
+Blocked audit, 2026-09-09 04:30 UTC: fresh preflight again found Uniswap hour 496923 present and Sushi hour 496923 absent. The same live-data prerequisite has persisted across three consecutive goal turns. Independent implementation, actual-provider matrix, clean diagnostic reproduction, artifact audit, documentation and commits are complete; remaining latest live F2/F3 acceptance and final evidence audit require an external data-state change. No missing user credential or additional permission is needed.

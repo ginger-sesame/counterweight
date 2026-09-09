@@ -1,6 +1,6 @@
 # Phase 4 agent handoff
 
-Status: IN PROGRESS. The main F3 path previously passed with actual Privy signing and live Graph data. All alternate-method request prerequisites are now resolved and required in normal F3 coverage. Final full-matrix live and clean F3 proof is still required; current Sushi completed-hour data is unavailable. Do not mark the phase exit complete from a synthetic permission diagnostic. F4 remains NOT RUN.
+Status: BLOCKED on a qualifying current two-source Graph pair. The main F3 path previously passed with actual Privy signing and live Graph data. All alternate-method request prerequisites are now resolved and required in normal F3 coverage. Final full-matrix live and clean F3 proof is still required; current Sushi completed-hour data is unavailable. Do not mark the phase exit complete from a synthetic permission diagnostic. F4 remains NOT RUN.
 
 ## Implemented boundary
 
