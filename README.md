@@ -2,7 +2,9 @@
 
 Inventory-seeking, self-custodial WETH/USDC liquidity strategy for Aqua/SwapVM.
 
-Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Graph ingestion and Privy enforcement remain subsequent phases.
+Phase 0 specifies the MVP. Phases 1 and 2 implement the deterministic quote/guard core and actual guarded Aqua/SwapVM settlement. The F1 proof uses canonical WETH/USDC on the accepted local mainnet fork. Phase 3 implements live Graph ingestion. Phase 4 adds actual restricted Privy operations, recovery and clean live proof; F1–F3 pass. Phase 5/F4 remains next.
+
+See the [Phase 4 handoff](planning/phase4/README.md) and [final validation](planning/phase4/evidence/validation.md). The current regime signal uses two live standardized daily observations, converted to average hourly activity; hard inventory limits remain independent.
 
 Start with the [implementation contract](planning/phase0/README.md), [Phase 2 handoff and test checklist](planning/phase2/README.md), and [settlement validation evidence](planning/phase2/evidence/validation.md).
 
@@ -41,4 +43,6 @@ node scripts/planning/validate_source_contracts.mjs
 python3 scripts/planning/probe_rpc.py
 ```
 
-These checks require public network access. See [future proof procedures](planning/phase0/PROOFS.md) for F1–F4 environments, commands, and account prerequisites.
+These checks require public network access. See [proof procedures](planning/phase0/PROOFS.md) for F1–F4 environments, commands, and account prerequisites.
+
+For live Graph/Privy E2E commands, approved credential/journal setup, and serialized wallet access, follow the [Phase 4 reproduction instructions](planning/phase4/README.md#credentials-and-repeatable-commands). Daily-source availability and exact policy enforcement are required; mocked diagnostics cannot pass F3.

@@ -1,6 +1,6 @@
 # Phase 4 agent handoff
 
-Status: BLOCKED on a qualifying current two-source Graph pair. The main F3 path previously passed with actual Privy signing and live Graph data. All alternate-method request prerequisites are now resolved and required in normal F3 coverage. Final full-matrix live and clean F3 proof is still required; current Sushi completed-hour data is unavailable. Do not mark the phase exit complete from a synthetic permission diagnostic. F4 remains NOT RUN.
+Status: PASS. P4-A/P4-B, O-01–O-07 and F3 completed 2026-09-09 with clean live validation at runtime revision 49cd68b. [Final validation and artifacts](evidence/validation.md). F4 remains NOT RUN.
 
 ## Implemented boundary
 
@@ -41,18 +41,16 @@ GitHub Actions has an explicit credentialed Privy job with serialized wallet acc
 1. Default Privy wallet-list pagination succeeds; `?limit=1` repeatedly timed out. Preflight uses the working default SDK pagination.
 2. Explicit transaction type and hex quantity strings are required for faithful wire encoding. Every returned signature is independently decoded and recovered.
 3. Live policy argument checks rejected valid uint16/uint32 tuning inputs and accepted uint64/uint256. The actual ABI uses uint256 for intensity/spread and checks the original bounds before narrowing storage. Oversized inputs cannot truncate into allowed values. This changes the selector, requiring fresh epoch deployments. See [width probe](evidence/argument-width-probe.json).
-4. The Graph nested token relation timed out. [DATA_COMPATIBILITY.md](DATA_COMPATIBILITY.md) records the exact snapshot-ID query and RPC token-identity replacement, preserving both sources, completed-hour requirements and freshness bounds. Missing completed-hour snapshots are unavailable data, never zero volume.
+4. Current data contract is [D08 v2 completed-day activity](DAILY_REGIME.md), using daily volume / 24 for average hourly activity. The Graph nested token relation previously timed out. [DATA_COMPATIBILITY.md](DATA_COMPATIBILITY.md) records the exact snapshot-ID query and RPC token-identity replacement, preserving both sources and RPC identity validation. The later daily-window amendment explicitly versions period semantics. Missing completed-hour snapshots are unavailable data, never zero volume.
 5. Alternate RPC request prerequisites were resolved against the actual provider. `eth_sendTransaction` needs explicit nonce/gas/fees/type to avoid private-network preparation before policy evaluation. User-operation calldata must wrap the target call in the supported Alchemy account's `execute(address,uint256,bytes)`; direct controller calldata returned invalid_data, which did not count as a denial. `wallet_sendCalls` requires a supported network for preparation; empty-account, zero-value, unsponsored Sepolia requests returned policy_violation for both restricted roles with unchanged balance/nonce. The [method probe](../../scripts/proofs/privy-method-probe.mjs) reproduces these public request shapes, and F3 requires the actual denials. No policies were weakened. Prior malformed/network failures remain historical diagnostics, never passing policy evidence.
-6. Sushi's hourly snapshots are event-driven and some hours have no entity. A fresh indexed head does not establish that the completed-hour observation exists. Historical pool review confirms gaps; do not infer zero volume, use an older hour, backdate the clock or substitute a different pool silently. Final live acceptance waits for a genuinely qualifying current pair.
+6. Sushi's hourly snapshots are event-driven and some hours have no entity. A fresh indexed head does not establish that the completed-hour observation exists. Historical pool review confirms gaps; do not infer zero volume, use an older hour, backdate the clock or substitute a different pool silently. The accepted daily-window amendment now handles sparse hourly activity without inventing missing hourly records; an absent daily entity still rejects.
 
-## Next agent deliverables
+## Completed deliverables and next phase
 
-- [x] Provision and read back actual wallet, three quorums and full policies.
-- [x] Verify adapter signatures and reconcile repeated broadcast by receipt/hash/nonce.
-- [x] Exercise pause, revocation, stale pending transactions before and after resume, and owner member rotation/restoration against actual Privy.
-- [x] Resolve alternate-method proof preconditions without weakening restrictions; retain actual policy denials and separate earlier malformed/network failures. Batch negative requests require an empty testnet account, no sponsorship and unchanged balance/nonce.
-- [ ] Run the complete permission matrix in normal F3, then clean credentialed CLI and retained F3 proofs.
-- [ ] Independently audit evidence hashes, live data math, signatures, token deltas and final remote state; update all O checkboxes only when their full cases pass.
-- [ ] Complete clean reproduction and evidence packaging, synchronize local docs/traceability, commit the final Phase 4 exit. F4 is a separate next phase.
+- [x] Provision/read back actual wallet, owner/updater/emergency quorums and exact policies.
+- [x] Verify returned signatures and reconcile receipt/hash/nonce without duplicate broadcast.
+- [x] Complete actual role/action and alternate-method matrix, pause/revocation/version invalidation, owner rotation/restoration, dock and recovery transfer.
+- [x] Live two-source Graph -> restricted update -> guarded settlement and intended denial; no synthetic Graph in final acceptance.
+- [x] Clean deterministic/F1/F2/F3 validation, independent numeric and artifact audit, secret scan, restored remote state, docs/checklists and evidence.
 
-See [RUNBOOKS.md](RUNBOOKS.md) for incident handling and restart requirements. Historical Phase 3 proof remains tied to its original source revision and query. The checkpoint evidence must distinguish successful core coverage from unresolved full-phase requirements.
+Next is Phase 5/F4: unified orchestration and its broader failure/restart/reproduction requirements. Do not treat Phase 4 snapshot branches as a single uninterrupted final MVP scenario. See [RUNBOOKS.md](RUNBOOKS.md) for incident handling and restart requirements.

@@ -1,0 +1,35 @@
+{
+  "result": "PASS",
+  "runtimeRevision": "49cd68bad293bccf092550eaf59d90373c1199f7",
+  "checks": [
+    {
+      "gate": "F2",
+      "assertions": 82,
+      "scenarios": 4,
+      "livePairs": 3,
+      "decimalMapping": "PASS",
+      "sourceHashes": "PASS against exact runtime revision",
+      "tokenDeltaAndQuoteAudit": "PASS"
+    },
+    {
+      "gate": "F3",
+      "assertions": 157,
+      "scenarios": 3,
+      "livePairs": 3,
+      "decimalMapping": "PASS",
+      "sourceHashes": "PASS against exact runtime revision",
+      "tokenDeltaAndQuoteAudit": "PASS"
+    }
+  ],
+  "operations": {
+    "result": "PASS",
+    "denials": 52,
+    "validatedSignatures": 38,
+    "pendingTraceSelectors": [
+      "Paused()",
+      "VersionMismatch()"
+    ],
+    "remoteOwnerQuorumAndPolicies": "PASS",
+    "batchTestnetStateUnchanged": true
+  }
+}

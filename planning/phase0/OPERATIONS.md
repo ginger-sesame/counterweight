@@ -2,7 +2,7 @@
 
 Decision: root agent, 2026-09-06. Use a Privy Ethereum organization wallet owned by a 2-of-3 authorization-key quorum controlled by treasury administrators. No single application server owns the wallet. Additional signer policies restrict a configuration updater and an emergency signer. The runtime process has no authorization key and can only read, request quotes, and broadcast already-authorized transactions. Takers are separate wallets; they trade against the guarded liquidity, not as treasury operators.
 
-Phase 4 has created and read back the actual wallet, quorums and policies, and verified O-01–O-06 against Privy and the local fork. See the [operations checkpoint](../phase4/evidence/validation.md). The user-authorized development custody amendment below permits all distinct owner keys in one environment; independent administrator custody is not claimed. Final latest-revision live/clean F3 remains pending.
+Phase 4 has created and read back the actual wallet, quorums and policies, and verified O-01–O-06 against Privy and the local fork. See the [operations checkpoint](../phase4/evidence/validation.md). The user-authorized development custody amendment below permits all distinct owner keys in one environment; independent administrator custody is not claimed. Final live/clean F3 passed at runtime 49cd68b; see [final validation](../phase4/evidence/validation.md).
 
 ## Authority and enforcement matrix
 

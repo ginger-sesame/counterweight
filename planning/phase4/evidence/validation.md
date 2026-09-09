@@ -1,10 +1,31 @@
-# Phase 4 validation checkpoint — BLOCKED on live data
+# Phase 4 validation — PASS
 
-Recorded 2026-09-09 by root. Runtime checkpoint `bd1968b`; source digests are in [provenance](checkpoint/provenance.json). This record deliberately does not claim full Phase 4 or F4 completion.
+Completed 2026-09-09 by root. P4-A/P4-B, O-01–O-07 and F3 pass in the accepted environment. F4 remains NOT RUN; this is not a production deployment or independent administrator custody claim.
 
-## Proven operations coverage
+Validated runtime revision: `49cd68bad293bccf092550eaf59d90373c1199f7`. The clean checkout `/tmp/counterweight-p4-clean-tGCgWP` installed locked dependencies and verified Foundry, then advanced to this revision. No node_modules, build output, .env or key bundle was copied into that checkout. Approved credentials and the authoritative Privy journal were injected through explicit external paths. Final documentation/evidence commits do not change the validated runtime.
 
-The [full matrix diagnostic](checkpoint/matrix-diagnostic/failure.json) completed 151 named passing assertions and three settlement scenarios. It intentionally finishes FAIL with `Diagnostic completed; synthetic Graph input cannot pass F3`. Only Graph observations are substituted; actual Privy owner/updater/emergency requests, canonical-token fork settlement, policy/authorization denials and recovery are real. [Audit](checkpoint/audit.json) verifies 52 intended denials, 38 validated-signature records, state equality, named revert selectors, restored owner keys and restored restricted signer enrollment.
+## Accepted demo adjustment
+
+The user authorized adapting the demo while retaining its main goals. [D08 v2](../DAILY_REGIME.md) replaces the last completed hour with the last completed UTC day for both original Graph deployments. Daily volume divided by 24 gives average hourly turnover relative to recorded liquidity; this is explicitly a slower activity signal. Normalized schema is counterweight.regime.v2 with windowStart/windowEnd/windowSeconds. Indexing/fetch freshness, two-source qualification, RPC token identity, disagreement threshold, bounded mapping, 300-second tuning expiry, Privy restrictions and immutable inventory limits are preserved. Missing daily records still reject; no synthetic zeros or old-period fallback passes the live gate.
+
+## Clean validation and evidence
+
+All paths below are under [final/](final/).
+
+| Command / proof | Result / evidence |
+| --- | --- |
+| `npm ci --ignore-scripts --no-audit --no-fund`; verified Foundry install | PASS; setup.log. Exact dependency/tool versions also in F3 manifest. |
+| `npm test` | PASS; deterministic.log. 35 Solidity tests, 5,000 fuzz examples, 128 stateful sequences / 4,096 actions, five prototype CLI groups, 17 data groups, eight operations groups; no skips. |
+| `node --test test/fork/*.test.mjs test/live/*.test.mjs` | PASS; fork-live-tests.log. Two F1 groups and live F2 public CLI. |
+| `node scripts/proofs/f2.mjs --out <fresh>` | PASS; f2/manifest.json: 82 assertions, four settlement scenarios, three live source pairs, stale/malformed injections, fallback and recovery. |
+| `node --test test/privy/*.test.mjs` | PASS; privy-tests.log. Actual full F3 CLI and semantic artifact checks from clean checkout. |
+| `node scripts/proofs/f3.mjs --out <fresh>` | PASS; f3/manifest.json: **157 assertions, three settlement scenarios, 52 intended denials, 38 validated signatures and three live source pairs**. |
+| `forge fmt --check`; planning/upstream validators | PASS; format.log, planning.log, upstream.log. |
+| `npm ci --prefix scripts/planning`; pinned source/SDK validation | PASS; source-setup.log, source-validation.json. Daily GraphQL fields checked against pinned source schema; Privy SDK/ABI policies remain pinned. |
+
+Live commands used Node's external `--env-file` and PRIVY_KEYS_FILE/PRIVY_RESOURCES_FILE. Foundry was on PATH. Runs sharing the Privy wallet were serialized. [Handoff](../README.md) provides reproduction commands; exact source hashes, revisions, tool/dependency identities and chain/pool/controller IDs are retained in both manifests.
+
+## Requirement mapping
 
 | Coverage | Result and authoritative evidence |
 | --- | --- |
@@ -14,28 +35,21 @@ The [full matrix diagnostic](checkpoint/matrix-diagnostic/failure.json) complete
 | O-04 identities/targets/methods/amounts | PASS: wrong chain/target, nonzero native value, deployment, approvals, transfer, pause/resume, dock and oversized tuning denied for applicable roles. Personal, typed, raw, 7702, provider-broadcast, user-operation, batch and export methods denied. Owner commissioning value above 20 ETH denied. Actual policy/authorization failures are distinguished. |
 | O-05 revocation/version/rotation | PASS: revoked updater cannot obtain a new signature; a previously signed update reverts at Paused; another reverts at VersionMismatch after resume. Rotation excludes old C, admits replacement with A, then restores A/B/C. Retargeted policy rejects old controller. Receipt reconciliation produces no duplicate broadcast/nonce increment. |
 | O-06 pause/resume/recovery | PASS: pause blocks quotes/fills, emergency resume is denied, owner resume and a new update succeed. Owner pause/dock/recovery transfer succeeds. Both raw Aqua allocations are zero with docked marker 255; the active-only balance API correctly rejects docked liquidity. |
-| O-07 / final F3 | BLOCKED on current live data: historical live F3 passed at the source hashes in its own manifest, but the latest full matrix still requires fresh live Graph and clean F3 CLI/retained proofs. Synthetic Graph cannot satisfy this row. |
+| O-07 / final F3 | PASS: clean live daily Graph pair -> actual restricted Privy update -> guarded canonical-token fill -> policy denial and unchanged state. Full permission/recovery matrix, unsafe rejection and fresh recovery all pass in the same F3 invocation. |
 
-The matrix [operation records](checkpoint/matrix-diagnostic/privy-operations.json), [signature records](checkpoint/matrix-diagnostic/privy-signatures.json), [pending-operation traces](checkpoint/matrix-diagnostic/privy-recovery-traces.json), and initial/final Privy configuration snapshots identify the enforced controls. HTTP correlation IDs may be Cloudflare cf-ray values; they are not falsely labeled provider transaction IDs. Sign-only requests are identified by their signed transaction hash; raw signed bytes and private authorization material are not retained.
 
-All positive signing and token settlement uses the disposable canonical-token fork, chain 31337. Batched-call preparation requires a provider-supported network: its negative tests use chain 11155111 with zero native balance, zero-value self-calls and sponsor:false. Both roles receive policy_violation; public testnet balance and pending nonce are unchanged. No public-network transaction/deployment is claimed or required. All owner keys remain in one development environment, so independent administrator custody is not proved.
+## Independent artifact audit
 
-## Regression and reproduction
+[Audit](final/audit.json) recomputes all six live pairs using Python Decimal at precision 90: raw daily USD decimals -> exact floored micro-USD -> hourly-equivalent turnover -> mapper output. All match. Each pair has two distinct pinned CIDs and an explicit 86,400-second window. Every named assertion passes; source hashes match Git content at the exact runtime revision.
 
-Fresh clone `/tmp/counterweight-p4-clean-tGCgWP` installed locked dependencies and verified Foundry without copying node_modules/build output/secrets. This disposable path is not a prerequisite; use the [handoff commands](../README.md) with external approved credential files. Clean deterministic regression ran at de3ace0; subsequent commits changed only F3/method probes, their live semantic test and handoff docs, leaving the passing deterministic implementation unchanged.
+For all accepted F2/F3 scenarios, independently checked maker/taker token deltas and at-target quote amounts against the $2,000/WETH fixture reference and effective spread. All failed scenarios have unchanged full protected state and reverted receipts. Actual Privy denial records have intended policy/authorization codes and HTTP correlation identity; remote-resource mutations and Sepolia batch probes leave their recorded state unchanged. Pending signed updates have retained Paused()/VersionMismatch() selectors linked to reverted receipts. Initial/final owner membership and signer enrollment match; a separate [live remote readback](final/remote-readback.json) verifies the actual restored 2-of-3 quorum and exact restricted policies.
 
-- [Clean setup](checkpoint/clean-setup.log): npm ci and verified Foundry installation PASS.
-- [Clean deterministic](checkpoint/clean-deterministic.log): 35 Solidity tests, 5,000 fuzz examples, 128 stateful runs / 4,096 actions; five prototype CLI groups, 15 data groups including 10,001 mapper inputs, eight operations groups; all PASS, no skips.
-- [F1 regression](checkpoint/f1.log): two canonical-token fork CLI groups PASS, also PASS in the [clean combined run](checkpoint/clean-fork-live.log).
-- [F2 regression](checkpoint/f2.log): live public CLI PASS before the hourly source gap. The later clean F2 attempt correctly failed missing completed-hour data; it is not a clean live PASS.
-- [Planning checks](checkpoint/planning.log) and [pinned upstream check](checkpoint/upstream.log): PASS.
-- Clean actual-provider full matrix at bd1968b: [retained diagnostic](checkpoint/clean-matrix-diagnostic/failure.json) again completes 151 assertions and 52 expected denials, then intentionally fails the synthetic-Graph checkpoint. External approved env/key/journal paths were used; no credentials copied into the checkout.
-- Latest live F3/clean F3 CLI: still required. Do not count the older [historical live proof](checkpoint/historical-live-f3/manifest.json) as validation of the latest runtime revision. It had 123 passing assertions and three scenarios with three fresh two-source collections.
+The final validation manifest hashes retained files after scanning Graph/Privy secrets, encoded Basic authorization and all private P-256 keys. No raw signed transaction fields are retained. Sign-only requests use recovered wallet/request/hash records; HTTP cf-ray correlation is not mislabeled as a provider transaction ID.
 
-## Remaining external prerequisite and next action
+## Limits and handoff
 
-The latest [Graph collection](checkpoint/latest-graph-unavailable/collection.json) lacks the required completed-hour Sushi entity. The [hour-history investigation](checkpoint/sushi-hours.json) shows event-driven gaps despite fresh indexing metadata. No older hour, inferred zero-volume record, backdated wall clock or alternative pool is accepted. Retry the documented Graph preflight; only when both current sources qualify run the latest live F2/F3 CLI tests and retain a standalone F3 proof from the clean checkout.
+Positive token operations run on the accepted local canonical-token Ethereum fork (chain 31337), not mainnet. Actual Privy policies/signatures are live. Batch negatives use an empty Sepolia account, zero-value self-call, sponsor:false, and require policy denial plus unchanged balance/nonce; no public transaction succeeds. Snapshot branches are distinct scenarios, not one uninterrupted chain history. All development owner keys share one environment under user authorization. Hosted CI is configured but was not executed remotely.
 
-After those pass, independently recompute live mapping, inspect receipts/state/denials and source hashes, rescan all final artifacts for secrets, verify restored remote ownership/signers, and synchronize O-07 and Phase 4 exit checkboxes. Hosted CI remains configured but not executed. F4 is separate work.
+Daily observations can still be absent or unavailable; that must fail live qualification and leave the existing runtime fallback behavior intact. This heuristic is not a current-hour volatility oracle or backtested profitability strategy. F4's unified scenario, broader failure orchestration and final independent handoff remain the next phase.
 
-Blocked audit, 2026-09-09 04:30 UTC: fresh preflight again found Uniswap hour 496923 present and Sushi hour 496923 absent. The same live-data prerequisite has persisted across three consecutive goal turns. Independent implementation, actual-provider matrix, clean diagnostic reproduction, artifact audit, documentation and commits are complete; remaining latest live F2/F3 acceptance and final evidence audit require an external data-state change. No missing user credential or additional permission is needed.
+Historical hourly blockers and synthetic diagnostics remain in [checkpoint validation](checkpoint-validation.md) and checkpoint/. They are not the evidence used to pass this phase.

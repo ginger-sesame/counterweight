@@ -1,0 +1,301 @@
+
+> counterweight@0.1.0 test
+> npm run test:strategy && npm run test:integration && npm run test:invariant && npm run test:e2e && npm run test:data && npm run test:operations
+
+
+> counterweight@0.1.0 test:strategy
+> forge test --match-path 'test/strategy/*.t.sol'
+
+No files changed, compilation skipped
+
+Ran 14 tests for test/strategy/Strategy.t.sol:StrategyTest
+[PASS] testFuzz_AcceptedQuotePreservesInvariant(uint64,uint64,uint64,bool,uint16,uint16) (runs: 1000, μ: 43522, ~: 43558)
+[PASS] testFuzz_PostGuardMatchesIndependentInterval(uint128,uint128) (runs: 1000, μ: 26750, ~: 26570)
+[PASS] testFuzz_RegimeIsolation(uint16,uint16,bool) (runs: 1000, μ: 76326, ~: 76247)
+[PASS] test_EpochBoundariesAndValuation() (gas: 165315)
+[PASS] test_ExactExposureBoundaries() (gas: 180037)
+[PASS] test_GoldenQuotes() (gas: 1210587)
+[PASS] test_ImmediatelyInsideSizeCapsAndPhysicalEnvelope() (gas: 97340)
+[PASS] test_InvalidConfiguration() (gas: 17586)
+[PASS] test_MaximumArithmeticEnvelope() (gas: 99179)
+[PASS] test_NoSafetyMutationSurface() (gas: 87641)
+[PASS] test_PhysicalBackingAndExternalChanges() (gas: 120162)
+[PASS] test_SkewCapsAndRetainedSpread() (gas: 66601)
+[PASS] test_UnsupportedAndInvalidInputs() (gas: 225257)
+[PASS] test_UsdcSizeBoundary() (gas: 50506)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 112.66ms (178.36ms CPU time)
+
+Ran 1 test suite in 114.97ms (112.66ms CPU time): 14 tests passed, 0 failed, 0 skipped (14 total tests)
+
+> counterweight@0.1.0 test:integration
+> forge test --match-path 'test/integration/*.t.sol'
+
+No files changed, compilation skipped
+
+Ran 6 tests for test/integration/Settlement.t.sol:SettlementTest
+[PASS] test_ConsecutiveFillsRecomputeAndExternalPushChangesQuote() (gas: 952470)
+[PASS] test_MissingGuardAndCallbackCannotBypassEntryValidation() (gas: 211099)
+[PASS] test_OutputTransferFailureRollsBackFirstInputAndAllowances() (gas: 499034)
+[PASS] test_RealAquaPipelineBothDirections() (gas: 825644)
+[PASS] test_TuningVersionPauseAndFallback() (gas: 948759)
+[PASS] test_UnsafeDirectSwapRevertsWithoutStateChanges() (gas: 3000412)
+Suite result: ok. 6 passed; 0 failed; 0 skipped; finished in 10.16ms (8.64ms CPU time)
+
+Ran 14 tests for test/integration/Validation.t.sol:ValidationTest
+[PASS] testFuzz_SettlementPreservesInvariantAndConservation(uint64,bool) (runs: 1000, μ: 289486, ~: 289620)
+[PASS] testFuzz_WideTuningInputsCannotTruncateIntoAllowedValues(uint128) (runs: 1000, μ: 308549, ~: 308495)
+[PASS] test_ActualPostBalanceMismatchRollsBackEverything() (gas: 563297)
+[PASS] test_AllUnsupportedFlagMutationsRejectedBeforeSettlement() (gas: 3672979)
+[PASS] test_CustomRecipientAndHookPayloadsAreRejected() (gas: 766082)
+[PASS] test_DeadlineBoundariesVersionAndMalformedEnvelope() (gas: 700409)
+[PASS] test_NewControllerStartsPausedWithFallbackAndCannotActivateUnshippedAllocation() (gas: 96519)
+[PASS] test_OrderHashBindsTokensMakerProgramAndAllTraits() (gas: 466723)
+[PASS] test_OwnerRolloverDocksOldOrderAndInvalidatesHash() (gas: 975936)
+[PASS] test_PhysicalPostBalanceEnvelopeIsAtomic() (gas: 1105541)
+[PASS] test_StaleInventoryQuoteCannotAuthorizeAnUnsafeFill() (gas: 928374)
+[PASS] test_ThresholdNativeAndZeroAreRejectedWithoutMovement() (gas: 756344)
+[PASS] test_TransferReentryHitsUpstreamOrderLock() (gas: 730391)
+[PASS] test_TuningConstraintsAndResumeRequireActualBackingAndBounds() (gas: 609911)
+Suite result: ok. 14 passed; 0 failed; 0 skipped; finished in 365.14ms (371.58ms CPU time)
+
+Ran 2 test suites in 369.92ms (375.30ms CPU time): 20 tests passed, 0 failed, 0 skipped (20 total tests)
+
+> counterweight@0.1.0 test:invariant
+> forge test --match-path 'test/invariant/*.t.sol'
+
+No files changed, compilation skipped
+
+Ran 1 test for test/invariant/Sequences.t.sol:SequenceInvariantTest
+[PASS] invariant_ActionsCheckEveryAcceptedAndRejectedSettlement() (runs: 128, calls: 4096, reverts: 0)
+
+╭-----------------+----------+-------+---------+----------╮
+| Contract        | Selector | Calls | Reverts | Discards |
++=========================================================+
+| SequenceHandler | action   | 4096  | 0       | 0        |
+╰-----------------+----------+-------+---------+----------╯
+
+Suite result: ok. 1 passed; 0 failed; 0 skipped; finished in 1.15s (1.15s CPU time)
+
+Ran 1 test suite in 1.16s (1.15s CPU time): 1 tests passed, 0 failed, 0 skipped (1 total tests)
+
+> counterweight@0.1.0 test:e2e
+> node --test test/prototype/*.test.mjs
+
+TAP version 13
+# Subtest: public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+ok 1 - public CLI exercises compiled Solidity, both directions, safety rejection and bounded fallback
+  ---
+  duration_ms: 4738.842787
+  type: 'test'
+  ...
+# Subtest: invalid economic configuration is rejected by contract constructor
+ok 2 - invalid economic configuration is rejected by contract constructor
+  ---
+  duration_ms: 4790.522398
+  type: 'test'
+  ...
+# Subtest: configuration schema rejects forbidden fields and lossy or overflowing numbers
+ok 3 - configuration schema rejects forbidden fields and lossy or overflowing numbers
+  ---
+  duration_ms: 1503.219067
+  type: 'test'
+  ...
+# Subtest: wrong independent expectation cannot produce a passing artifact
+ok 4 - wrong independent expectation cannot produce a passing artifact
+  ---
+  duration_ms: 4720.034694
+  type: 'test'
+  ...
+# Subtest: missing assertions, unsupported flags and missing tools fail explicitly
+ok 5 - missing assertions, unsupported flags and missing tools fail explicitly
+  ---
+  duration_ms: 1313.51878
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17123.182169
+
+> counterweight@0.1.0 test:data
+> node --test test/data/*.test.mjs
+
+TAP version 13
+# Subtest: G-01 both source shapes normalize independently known values and token order
+ok 1 - G-01 both source shapes normalize independently known values and token order
+  ---
+  duration_ms: 2.805721
+  type: 'test'
+  ...
+# Subtest: G-02 decimal wire arithmetic and magnitude boundaries
+ok 2 - G-02 decimal wire arithmetic and magnitude boundaries
+  ---
+  duration_ms: 0.489469
+  type: 'test'
+  ...
+# Subtest: G-01/G-02 rejects incomplete and mismatched responses
+ok 3 - G-01/G-02 rejects incomplete and mismatched responses
+  ---
+  duration_ms: 0.688437
+  type: 'test'
+  ...
+# Subtest: G-03 exact source and fetch age, lag and RPC timestamp fallback
+ok 4 - G-03 exact source and fetch age, lag and RPC timestamp fallback
+  ---
+  duration_ms: 0.565418
+  type: 'test'
+  ...
+# Subtest: G-03 future timestamp, observed block, day and RPC contradictions
+ok 5 - G-03 future timestamp, observed block, day and RPC contradictions
+  ---
+  duration_ms: 0.504959
+  type: 'test'
+  ...
+# Subtest: G-02 token duplication, missing types, decimal cap and turnover saturation
+ok 6 - G-02 token duplication, missing types, decimal cap and turnover saturation
+  ---
+  duration_ms: 0.576159
+  type: 'test'
+  ...
+# Subtest: G-01/G-03 primary key binds pool/day and RPC token identity binds head
+ok 7 - G-01/G-03 primary key binds pool/day and RPC token identity binds head
+  ---
+  duration_ms: 0.505048
+  type: 'test'
+  ...
+# Subtest: G-01 v2 explicitly reports daily volume and independently scaled hourly activity
+ok 8 - G-01 v2 explicitly reports daily volume and independently scaled hourly activity
+  ---
+  duration_ms: 0.344449
+  type: 'test'
+  ...
+# Subtest: G-03 exact daily observation boundary and UTC rollover cannot reuse yesterday selection
+ok 9 - G-03 exact daily observation boundary and UTC rollover cannot reuse yesterday selection
+  ---
+  duration_ms: 0.463249
+  type: 'test'
+  ...
+# Subtest: G-01/G-03/G-04 common consumer rejects single-source, CID change, mismatch and stale reuse
+ok 10 - G-01/G-03/G-04 common consumer rejects single-source, CID change, mismatch and stale reuse
+  ---
+  duration_ms: 2.761621
+  type: 'test'
+  ...
+# Subtest: G-06 collector sends identical queries, records RPC provenance and handles partial outage
+ok 11 - G-06 collector sends identical queries, records RPC provenance and handles partial outage
+  ---
+  duration_ms: 6.2388
+  type: 'test'
+  ...
+# Subtest: G-05 exhaustive mapping domain, independent caps and disagreement boundaries
+ok 12 - G-05 exhaustive mapping domain, independent caps and disagreement boundaries
+  ---
+  duration_ms: 8.079116
+  type: 'test'
+  ...
+# Subtest: G-02 protected update allowlist, version and validity boundaries
+ok 13 - G-02 protected update allowlist, version and validity boundaries
+  ---
+  duration_ms: 0.371709
+  type: 'test'
+  ...
+# Subtest: G-04 startup, accepted last good, exact TTL, expiration, pause and recovery
+ok 14 - G-04 startup, accepted last good, exact TTL, expiration, pause and recovery
+  ---
+  duration_ms: 0.21406
+  type: 'test'
+  ...
+# Subtest: G-04 retries 429/5xx at 1s/2s, terminal HTTP and sanitized transport failure
+ok 15 - G-04 retries 429/5xx at 1s/2s, terminal HTTP and sanitized transport failure
+  ---
+  duration_ms: 15.318342
+  type: 'test'
+  ...
+# Subtest: G-04 actual stalled HTTP request times out, cancellation and 5xx recovery
+ok 16 - G-04 actual stalled HTTP request times out, cancellation and 5xx recovery
+  ---
+  duration_ms: 40.869534
+  type: 'test'
+  ...
+# Subtest: G-04 shared cycle deadline interrupts retry backoff
+ok 17 - G-04 shared cycle deadline interrupts retry backoff
+  ---
+  duration_ms: 31.092314
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 623.075504
+
+> counterweight@0.1.0 test:operations
+> node --test test/operations/*.test.mjs
+
+TAP version 13
+# Subtest: distinct valid P256 roles, exclusive persistence and owner-only permissions
+ok 1 - distinct valid P256 roles, exclusive persistence and owner-only permissions
+  ---
+  duration_ms: 31.539792
+  type: 'test'
+  ...
+# Subtest: O-01 policy materialization fixes owner, destination and self-contained restrictions
+ok 2 - O-01 policy materialization fixes owner, destination and self-contained restrictions
+  ---
+  duration_ms: 8.447554
+  type: 'test'
+  ...
+# Subtest: O-01 interrupted provisioning journals uncertainty and will not create duplicates
+ok 3 - O-01 interrupted provisioning journals uncertainty and will not create duplicates
+  ---
+  duration_ms: 5.807773
+  type: 'test'
+  ...
+# Subtest: O-01 readback rejects widened policy or different policy ownership
+ok 4 - O-01 readback rejects widened policy or different policy ownership
+  ---
+  duration_ms: 11.207926
+  type: 'test'
+  ...
+# Subtest: O-02 signer verifies recovered wallet and every unsigned transaction field
+ok 5 - O-02 signer verifies recovered wallet and every unsigned transaction field
+  ---
+  duration_ms: 52.387649
+  type: 'test'
+  ...
+# Subtest: O-04 only explicit local-fork transactions and named signer contexts
+ok 6 - O-04 only explicit local-fork transactions and named signer contexts
+  ---
+  duration_ms: 0.958817
+  type: 'test'
+  ...
+# Subtest: O-02 explicit legacy type is preserved and a returned type change is rejected
+ok 7 - O-02 explicit legacy type is preserved and a returned type change is rejected
+  ---
+  duration_ms: 6.315811
+  type: 'test'
+  ...
+# Subtest: reconciliation reuses confirmed receipts, rejects nonce drift and never hides network errors
+ok 8 - reconciliation reuses confirmed receipts, rejects nonce drift and never hides network errors
+  ---
+  duration_ms: 2.432243
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 928.583193

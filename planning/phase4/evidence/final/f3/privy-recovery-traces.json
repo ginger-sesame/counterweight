@@ -1,0 +1,14 @@
+[
+  {
+    "hash": "0x2914697e6d15e1614900d3810f3d3f49143db4fc0a42dca0a5d34838e7cdb279",
+    "expected": "Paused()",
+    "failed": true,
+    "returnValue": "0x9e87fac8"
+  },
+  {
+    "hash": "0x6c3e6290d1f7f494fa619d2341390843e4ecb67271df37fdc1cf31fe8f29f497",
+    "expected": "VersionMismatch()",
+    "failed": true,
+    "returnValue": "0x714f5513"
+  }
+]
