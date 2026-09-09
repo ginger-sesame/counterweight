@@ -6,7 +6,7 @@ const sources=JSON.parse(readFileSync(new URL('../../planning/phase0/fixtures/so
 const fixtures=JSON.parse(readFileSync(new URL('../../planning/phase0/fixtures/graph-responses.json',import.meta.url))).responses;
 function sample(index=0){
  const source=sources[index], envelope=structuredClone(fixtures[index]);
- const meta=envelope.response.data._meta, protocol=envelope.response.data.dexAmmProtocols[0], snapshot=envelope.response.data.liquidityPoolHourlySnapshot;
+ const meta=envelope.response.data._meta, protocol=envelope.response.data.dexAmmProtocols[0], snapshot=envelope.response.data.liquidityPoolDailySnapshot;
  meta.deployment=source.deploymentCid;meta.block.hash='0x'+'a'.repeat(64);
  protocol.schemaVersion=source.schemaVersion;snapshot.pool.id=source.pool;envelope.variables.pool=source.pool;
  envelope.fetchedAt=1788689100;
@@ -15,7 +15,7 @@ function sample(index=0){
 const run=s=>normalize(s.envelope,s.source,s.context);
 test('G-01 both source shapes normalize independently known values and token order',()=>{
  for(let i=0;i<2;i++){
-  const s=sample(i), output=run(s);assert.equal(output.turnoverBps,(i+1)*1000);assert.equal(output.volumeUsdMicro,String((i+1)*10000000000));
+  const s=sample(i), output=run(s);assert.equal(output.turnoverBps,(i+1)*1000);assert.equal(output.volumeUsdMicro,String((i+1)*240000000000));
   s.envelope.tokenMetadata.reverse();assert.deepEqual(run(s),output);
  }
 });
@@ -26,7 +26,7 @@ test('G-02 decimal wire arithmetic and magnitude boundaries',()=>{
  for(const v of [null,1,-1,'-1','NaN','Infinity','1e3',' 1','01','1.','0.'+'1'.repeat(35),'1000000000000000000.0000000000001'])assert.throws(()=>usdMicro(v));
 });
 test('G-01/G-02 rejects incomplete and mismatched responses',()=>{
- const mutations=[s=>s.envelope.response.errors=[],s=>s.envelope.response.data._meta.hasIndexingErrors=true,s=>s.envelope.response.data._meta.deployment='different',s=>s.envelope.response.data.dexAmmProtocols[0].schemaVersion='4.0.1',s=>s.envelope.response.data.dexAmmProtocols[0].network='ARBITRUM_ONE',s=>s.envelope.response.data.liquidityPoolHourlySnapshot=null,s=>s.envelope.response.data.liquidityPoolHourlySnapshot=[s.envelope.response.data.liquidityPoolHourlySnapshot],s=>s.envelope.tokenMetadata[0].decimals=8,s=>s.envelope.response.data.liquidityPoolHourlySnapshot.totalValueLockedUSD='0.999999',s=>s.envelope.variables.hour--];
+ const mutations=[s=>s.envelope.response.errors=[],s=>s.envelope.response.data._meta.hasIndexingErrors=true,s=>s.envelope.response.data._meta.deployment='different',s=>s.envelope.response.data.dexAmmProtocols[0].schemaVersion='4.0.1',s=>s.envelope.response.data.dexAmmProtocols[0].network='ARBITRUM_ONE',s=>s.envelope.response.data.liquidityPoolDailySnapshot=null,s=>s.envelope.response.data.liquidityPoolDailySnapshot=[s.envelope.response.data.liquidityPoolDailySnapshot],s=>s.envelope.tokenMetadata[0].decimals=8,s=>s.envelope.response.data.liquidityPoolDailySnapshot.totalValueLockedUSD='0.999999',s=>s.envelope.variables.day--];
  for(const change of mutations){const s=sample();change(s);assert.throws(()=>run(s));}
 });
 test('G-03 exact source and fetch age, lag and RPC timestamp fallback',()=>{
@@ -37,17 +37,17 @@ test('G-03 exact source and fetch age, lag and RPC timestamp fallback',()=>{
  const absent=sample();delete absent.envelope.response.data._meta.block.timestamp;assert.equal(run(absent).indexedAt,absent.context.indexedBlock.timestamp);
  absent.context.indexedBlock.hash='0x'+'b'.repeat(64);assert.throws(()=>run(absent));
 });
-test('G-03 future timestamp, observed block, hour and RPC contradictions',()=>{
+test('G-03 future timestamp, observed block, day and RPC contradictions',()=>{
  const cases=[
   s=>s.context.head.timestamp=s.context.now+31,
   s=>s.context.head.chainId=31337,
   s=>s.context.head.number=s.context.indexedBlock.number-1,
   s=>s.context.indexedBlock.timestamp++,
   s=>s.envelope.fetchedAt=s.context.now+1,
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.timestamp=String(s.context.now+31),
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.timestamp=String(Math.floor(s.context.now/3600)*3600-3601),
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.blockNumber=String(s.context.indexedBlock.number+1),
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.hour++,
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=String(s.context.now+31),
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=String(Math.floor(s.context.now/86400)*86400-86401),
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.blockNumber=String(s.context.indexedBlock.number+1),
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.day++,
  ];
  for(const mutate of cases){const s=sample();mutate(s);assert.throws(()=>run(s));}
  const boundary=sample();const m=boundary.envelope.response.data._meta;
@@ -57,16 +57,32 @@ test('G-03 future timestamp, observed block, hour and RPC contradictions',()=>{
 test('G-02 token duplication, missing types, decimal cap and turnover saturation',()=>{
  for(const mutate of [
   s=>s.envelope.tokenMetadata[1]=s.envelope.tokenMetadata[0],
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.timestamp=123,
-  s=>s.envelope.response.data.liquidityPoolHourlySnapshot.hourlyVolumeUSD=null,
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=123,
+  s=>s.envelope.response.data.liquidityPoolDailySnapshot.dailyVolumeUSD=null,
   s=>s.envelope.response.data.dexAmmProtocols[0].methodologyVersion='2.0.0',
   s=>s.envelope.response.data._meta.block.number=Number.MAX_SAFE_INTEGER+1,
  ]){const s=sample();mutate(s);assert.throws(()=>run(s));}
- const s=sample();s.envelope.response.data.liquidityPoolHourlySnapshot.hourlyVolumeUSD='1000000000000000000';assert.equal(run(s).turnoverBps,10000);
+ const s=sample();s.envelope.response.data.liquidityPoolDailySnapshot.dailyVolumeUSD='1000000000000000000';assert.equal(run(s).turnoverBps,10000);
 });
-test('G-01/G-03 primary key binds pool/hour and RPC token identity binds head',()=>{
+test('G-01/G-03 primary key binds pool/day and RPC token identity binds head',()=>{
  const s=sample();s.envelope.variables.snapshot='0x'+'0'.repeat(48);assert.throws(()=>run(s),/variables/);
- const p=sample();p.envelope.response.data.liquidityPoolHourlySnapshot.id='0x'+'0'.repeat(48);assert.throws(()=>run(p),/primary key/);
+ const p=sample();p.envelope.response.data.liquidityPoolDailySnapshot.id='0x'+'0'.repeat(48);assert.throws(()=>run(p),/primary key/);
  const t=sample();t.context.tokenIdentityBlock--;assert.throws(()=>run(t),/token identity block/);
  const missing=sample();delete missing.context.poolTokens;assert.throws(()=>run(missing),/token identity/);
+});
+test('G-01 v2 explicitly reports daily volume and independently scaled hourly activity',()=>{
+ const s=sample();s.envelope.response.data.liquidityPoolDailySnapshot.dailyVolumeUSD='2400';s.envelope.response.data.liquidityPoolDailySnapshot.totalValueLockedUSD='10000';
+ const result=run(s);assert.equal(result.schemaVersion,'counterweight.regime.v2');assert.equal(result.windowSeconds,86400);assert.equal(result.windowEnd-result.windowStart,86400);assert.equal(result.volumeUsdMicro,'2400000000');assert.equal(result.turnoverBps,100); // $100/hour divided by $10,000 liquidity = 1%.
+ assert(!('hourStart' in result));
+ s.envelope.response.data.liquidityPoolDailySnapshot.dailyVolumeUSD='23.999999';assert.equal(run(s).turnoverBps,0); // Less than $1/hour at $10,000 TVL.
+ s.envelope.response.data.liquidityPoolDailySnapshot.dailyVolumeUSD='24';assert.equal(run(s).turnoverBps,1);
+ const old=sample();old.envelope.response.data.liquidityPoolHourlySnapshot=old.envelope.response.data.liquidityPoolDailySnapshot;delete old.envelope.response.data.liquidityPoolDailySnapshot;assert.throws(()=>run(old),/completed-day/);
+});
+test('G-03 exact daily observation boundary and UTC rollover cannot reuse yesterday selection',()=>{
+ const s=sample(),end=Math.floor(s.context.now/86400)*86400,start=end-86400;
+ s.context.now=end+86399;s.envelope.fetchedAt=s.context.now;s.context.head.timestamp=s.context.now;s.context.indexedBlock.timestamp=s.context.now;s.envelope.response.data._meta.block.timestamp=s.context.now;
+ s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=String(start);assert.doesNotThrow(()=>run(s));
+ s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=String(start-1);assert.throws(()=>run(s),/freshness/);
+ s.envelope.response.data.liquidityPoolDailySnapshot.timestamp=String(start);s.context.now++;assert.throws(()=>run(s),/query variables/);
+ const current=sample();current.envelope.variables.day++;assert.throws(()=>run(current),/query variables/);
 });

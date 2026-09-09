@@ -13,7 +13,7 @@ export function evaluatePair(envelopes, sources, context) {
   requireThat(Array.isArray(sources) && sources.length === 2 && new Set(sources.map(s => s.key)).size === 2 && new Set(sources.map(s => s.deploymentCid)).size === 2 && new Set(sources.map(s => s.subgraphId)).size === 2, 'distinct sources required');
   requireThat(Array.isArray(envelopes) && envelopes.length === 2, 'two responses required');
   const observations = sources.map((source, index) => normalize(envelopes[index], source, { ...context, indexedBlock: context.blocks[envelopes[index]?.response?.data?._meta?.block?.number] }));
-  requireThat(observations[0].hourStart === observations[1].hourStart && observations[0].hourEnd === observations[1].hourEnd, 'matching observation hours');
+  requireThat(observations[0].windowStart === observations[1].windowStart && observations[0].windowEnd === observations[1].windowEnd, 'matching observation windows');
   const tuning = mapTurnovers(observations.map(o => o.turnoverBps));
   const sourceDigest = '0x' + createHash('sha256').update(JSON.stringify(observations)).digest('hex');
   return { observations, tuning, sourceDigest };

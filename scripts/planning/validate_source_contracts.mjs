@@ -45,22 +45,22 @@ visit(ast,{NamedType(n){if(!definitions.has(n.name.value)&&!['String','ID','Int'
 const api=`
 ${[...unknown].map(x=>`scalar ${x}`).join('\n')}
 type Query {
-  liquidityPoolHourlySnapshot(id: ID!): LiquidityPoolHourlySnapshot
+  liquidityPoolDailySnapshot(id: ID!): LiquidityPoolDailySnapshot
   _meta: _Meta_
   dexAmmProtocols(first: Int): [DexAmmProtocol!]!
-  liquidityPoolHourlySnapshots(first: Int, orderBy: CWOrderBy, orderDirection: CWDirection, where: CWFilter): [LiquidityPoolHourlySnapshot!]!
+  liquidityPoolDailySnapshots(first: Int, orderBy: CWOrderBy, orderDirection: CWDirection, where: CWFilter): [LiquidityPoolDailySnapshot!]!
 }
 type _Meta_ { deployment: String!, hasIndexingErrors: Boolean!, block: _Block_! }
 type _Block_ { number: Int!, hash: Bytes, timestamp: Int }
 enum CWOrderBy { timestamp }
 enum CWDirection { asc desc }
-input CWFilter { pool: String, hour: Int }
+input CWFilter { pool: String, day: Int }
 `;
 const schema=buildASTSchema(parse(schemaText+'\n'+api),{assumeValidSDL:true,assumeValid:true});
 const query=readFileSync(resolve(base,'fixtures/regime.graphql'),'utf8');
 assert.deepEqual(validate(schema,parse(query)).map(e=>e.message),[]);
 assert(validate(schema,parse(query.replace('$snapshot: ID!','$snapshot: Bytes!'))).length>0, 'Must reject wrong primary-key variable type');
-assert(validate(schema,parse(query.replace('hourlyVolumeUSD','nonexistentVolume'))).length>0, 'Must reject unknown entity fields');
+assert(validate(schema,parse(query.replace('dailyVolumeUSD','nonexistentVolume'))).length>0, 'Must reject unknown entity fields');
 const policy=JSON.parse(readFileSync(resolve(base,'fixtures/updater-policy.json'),'utf8'));
 const abi=policy.rules[0].conditions.find(c=>c.field_source==='ethereum_calldata').abi;
 const program = id => encodePacked(['uint8','uint8','uint64','uint8','uint8'], [208,8,id,209,0]);

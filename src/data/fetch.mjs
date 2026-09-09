@@ -32,7 +32,7 @@ export async function requestJson(url, payload, { fetchImpl = fetch, sleepImpl =
 export async function collectPair({ sources, query, apiKey, rpcUrl = 'https://eth-mainnet.public.blastapi.io', now = () => Math.floor(Date.now() / 1000), request = requestJson }) {
   if (typeof apiKey !== 'string' || !/^[a-zA-Z0-9_-]+$/.test(apiKey)) throw new DataUnavailable('GRAPH_API_KEY required');
   const signal = AbortSignal.timeout(35000);
-  const start = now(), hour = Math.floor(start / 3600) - 1;
+  const start = now(), day = Math.floor(start / 86400) - 1;
   const rpc = async (method, params = []) => {
     const response = await request(rpcUrl, { jsonrpc: '2.0', id: 1, method, params }, { signal });
     requireThat(response && !response.error && response.result != null, 'RPC response');
@@ -43,7 +43,7 @@ export async function collectPair({ sources, query, apiKey, rpcUrl = 'https://et
     return { number: Number(BigInt(value.number)), timestamp: Number(BigInt(value.timestamp)), hash: value.hash };
   };
   const outcomes = await Promise.allSettled(sources.map(async source => {
-    const variables = { pool: source.pool, hour, snapshot: snapshotId(source.pool, hour) };
+    const variables = { pool: source.pool, day, snapshot: snapshotId(source.pool, day) };
     const response = await request(`https://gateway.thegraph.com/api/${apiKey}/subgraphs/id/${source.subgraphId}`, { query, variables }, { signal });
     return { sourceKey: source.key, variables, fetchedAt: now(), response };
   }));

@@ -1,3 +1,5 @@
+Historical hourly query compatibility record. Current D08 v2 uses the same primary-key construction with day index and daily entity, as specified in [DAILY_REGIME.md](DAILY_REGIME.md).
+
 # Live data compatibility revalidation — 2026-09-08
 
 Same query IDs, deployment CIDs, pools, schema/methodology pins, freshness limits and USD mapping as Phase 3. No source replacement or safety change.

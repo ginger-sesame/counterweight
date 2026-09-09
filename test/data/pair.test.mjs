@@ -17,7 +17,7 @@ test('G-01/G-03/G-04 common consumer rejects single-source, CID change, mismatch
  assert.throws(()=>evaluatePair(p.envelopes,[sources[0],sources[0]],p.context));
  const changed=structuredClone(p);changed.envelopes[1].response.data._meta.deployment='changed';assert.throws(()=>evaluatePair(changed.envelopes,sources,changed.context));
  assert.throws(()=>evaluatePair(p.envelopes,sources,{...p.context,now:p.context.now+121}));
- const disagreement=structuredClone(p);disagreement.envelopes[1].response.data.liquidityPoolHourlySnapshot.hourlyVolumeUSD='90000';assert.throws(()=>evaluatePair(disagreement.envelopes,sources,disagreement.context),/disagreement/);
+ const disagreement=structuredClone(p);disagreement.envelopes[1].response.data.liquidityPoolDailySnapshot.dailyVolumeUSD='2160000';assert.throws(()=>evaluatePair(disagreement.envelopes,sources,disagreement.context),/disagreement/);
 });
 test('G-06 collector sends identical queries, records RPC provenance and handles partial outage',async()=>{
  const p=pair(),requests=[];

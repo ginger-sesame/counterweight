@@ -80,8 +80,8 @@ Implemented and validated 2026-09-08: [Phase 3 handoff and evidence](../phase3/R
 - `node scripts/proofs/graph-preflight.mjs --out artifacts/<run-id>/graph-preflight`
 - `node scripts/proofs/f2.mjs --rpc http://127.0.0.1:8545 --out artifacts/<run-id>/f2`
 
-1. Confirm key availability without printing it. Load registry, shared query, and completed-hour variables using current UTC. Verify endpoint schema accepts query; fetch metadata and pin actual deployment CID/schema/methodology for each source. Query-ID and CID must not be conflated.
-2. Run the exact same query text for both sources, changing only pool variable/endpoint. Retain sanitized responses, variables, query hash, fetch/source timestamps and source identity. Reject GraphQL errors, stale indexing, duplicate CID, mismatched token/pool/network/version, and missing completed-hour snapshot. No keyless/static fallback qualifies.
+1. Confirm key availability without printing it. Load registry, shared query, and completed-day variables using current UTC. Verify endpoint schema accepts query; fetch metadata and pin actual deployment CID/schema/methodology for each source. Query-ID and CID must not be conflated.
+2. Run the exact same query text for both sources, changing only pool variable/endpoint. Retain sanitized responses, variables, query hash, fetch/source timestamps and source identity. Reject GraphQL errors, stale indexing, duplicate CID, mismatched token/pool/network/version, and missing completed-day snapshot. No keyless/static fallback qualifies.
 3. Normalize as DATA specifies. Compute both turnovers and bounded mapping. For a valid pair, show the same consumer works across both sources; no source-specific mapping branches.
 4. Record protected safety digest, perform authorized controller setTuning, then quote and perform a safe fill on F1 path. Compare with independently calculated old/new tuning outputs; if mapping is unchanged, assert the expected no-change and include separate deterministic fixture demonstrating sensitivity.
 5. Attempt the unsafe upper-bound fill and verify guard rejection regardless of tuning. Compare protected safety digest before/after.

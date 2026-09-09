@@ -1,30 +1,31 @@
-# D08: normalized Graph contract — version 1
+# D08: normalized Graph contract — version 2
 
-Decision: root agent, 2026-09-06. Consume the shared fields of Messari DEX-AMM Extended 4.0.x (Uniswap registry 4.0.0, Sushi registry 4.0.1) hourly pool observations. One GraphQL operation is reused for both selected deployments. Never treat pool reserve ratios as the WETH reference price: concentrated-liquidity balances do not provide that price.
+Decision: root agent, 2026-09-06. Consume the shared fields of Messari DEX-AMM Extended 4.0.x (Uniswap registry 4.0.0, Sushi registry 4.0.1) completed-day pool observations. One GraphQL operation is reused for both selected deployments. Never treat pool reserve ratios as the WETH reference price: concentrated-liquidity balances do not provide that price.
 
 ## Query and source identity
 
-Use `fixtures/regime.graphql` and the source registry in `fixtures/sources.json`. Metadata + protocol + the hourly snapshot are required; GraphQL errors, null required fields, indexing errors, mismatched network/schema/pool/tokens, or changed deployment CID reject the source. `_meta.block.timestamp` is preferred; if absent, resolve `_meta.block.number` to timestamp using Ethereum RPC and record this provenance. No substitution with HTTP retrieval time.
+Use `fixtures/regime.graphql` and the source registry in `fixtures/sources.json`. Metadata + protocol + the daily snapshot are required; GraphQL errors, null required fields, indexing errors, mismatched network/schema/pool/tokens, or changed deployment CID reject the source. `_meta.block.timestamp` is preferred; if absent, resolve `_meta.block.number` to timestamp using Ethereum RPC and record this provenance. No substitution with HTTP retrieval time.
 
-Let `hourEnd = floor(now/3600)*3600`, `hourStart=hourEnd-3600`. Fetch the last completed UTC hour by its exact Messari primary key: selected pool address concatenated with the nonnegative hour number encoded as little-endian i32. The shared query takes `$snapshot: ID!`; transport evidence also records pool/hour variables. Require a non-null single snapshot whose ID, pool and hour match. Null is missing data, never zero volume.
+Let `windowEnd = floor(now/86400)*3600`, `windowStart=windowEnd-86400`. Fetch the last completed UTC day by its exact Messari primary key: selected pool address concatenated with the nonnegative day number encoded as little-endian i32. The shared query takes `$snapshot: ID!`; transport evidence also records pool/day variables. Require a non-null single snapshot whose ID, pool and day match. Null is missing data, never zero volume.
 
-D08 amendment (2026-09-08): the live Uniswap `inputTokens` relation timed out. Read each pool's token0/token1 and their decimals through Ethereum RPC at the recorded head block; require canonical WETH/18 and USDC/6. Preserve source metadata and block corroboration separately. See [source investigation and compatibility contract](../phase4/DATA_COMPATIBILITY.md). Raw Graph and RPC token metadata remain distinct in evidence; the normalized schema is unchanged.
+D08 amendment (2026-09-08): the live Uniswap `inputTokens` relation timed out. Read each pool's token0/token1 and their decimals through Ethereum RPC at the recorded head block; require canonical WETH/18 and USDC/6. Preserve source metadata and block corroboration separately. See [source investigation and compatibility contract](../phase4/DATA_COMPATIBILITY.md). Raw Graph and RPC token metadata remain distinct in evidence; the RPC identity handling is unchanged; the daily observation amendment below versions the normalized schema.
 
 ## Normalized output
 
-Object `RegimeObservationV1` (additional fields forbidden):
+Object `RegimeObservationV2` (additional fields forbidden):
 
 | Field | Type / rule |
 | --- | --- |
-| schemaVersion | literal `counterweight.regime.v1` |
+| schemaVersion | literal `counterweight.regime.v2` |
 | sourceKey / subgraphId / deploymentCid | registry key, expected query ID, live `_meta.deployment` |
 | sourceSchemaVersion / methodologyVersion | live-pinned `4.0.0` for both selected deployments / recorded nonempty version; methodology changes require revalidation |
 | chainId / pool | 1 / registry pool address, lowercase canonical |
 | weth / usdc | exact selected addresses and decimals 18/6; match IDs, never symbols |
 | indexedBlock / indexedAt / fetchedAt | nonnegative integers, seconds for times |
-| hourStart / hourEnd / observedAt | integer UTC seconds; snapshot ID and hour match selected completed hour; observation timestamp follows rules below |
+| windowStart / windowEnd / observedAt | integer UTC seconds; snapshot ID and day match selected completed day; observation timestamp follows rules below |
+| windowSeconds | literal 86400; the completed UTC day |
 | volumeUsdMicro / tvlUsdMicro | decimal integer strings derived by flooring source decimal USD values *10^6 |
-| turnoverBps | min(10,000, floor(10,000*volumeUsdMicro/tvlUsdMicro)) |
+| turnoverBps | min(10,000, floor(10,000*volumeUsdMicro/(24*tvlUsdMicro))) |
 
 Parse BigDecimal as decimal text without binary floats. Reject negative values, NaN/Infinity, scientific notation (not part of accepted wire format), >34 fractional digits or >64 total characters, >10^18 USD, TVL <1 USD, and missing/duplicate/wrong token IDs. Flooring USD stats at micro precision is acceptable for tuning only. Source responses remain distinct from normalized output and carry source metadata in evidence.
 
@@ -34,8 +35,8 @@ Parse BigDecimal as decimal text without binary floats. Reject negative values, 
 
 - Fetch every 60 seconds; per-request timeout 10 seconds; at most two retries after 1 and 2 seconds (total cycle budget 35 seconds). Never retry mutating transactions through this path.
 - Indexed source timestamp age <=300 seconds; source block lag <=25 relative to current Ethereum RPC head. Metadata more than 30 seconds in the future is invalid.
-- Fetched response age <=120 seconds before mapping. Require both observations describe the same hourStart/hourEnd and use the expected pool.
-- Observed timestamp must be >= hourStart, <= indexedAt+30, <= now+30, and no more than 7,200 seconds old. The standardized snapshot timestamp may be updated after its hour ends, so filter by the explicit `hour` field, not timestamp range. An inactive pool with no hourly snapshot is unavailable.
+- Fetched response age <=120 seconds before mapping. Require both observations describe the same windowStart/windowEnd and use the expected pool.
+- Observed timestamp must be >= windowStart, <= indexedAt+30, <= now+30, and no more than 172,800 seconds old. The standardized snapshot timestamp may be updated after its day ends, so filter by the explicit `day` field, not timestamp range. An inactive pool with no daily snapshot is unavailable.
 - Require both valid sources for fresh tuning. No one-source mode in MVP. Compute `r=max(turnoverBps_A, turnoverBps_B)` as the conservative activity signal. If the two turnover values differ by more than 5,000 bps, enter fallback rather than averaging away the discrepancy. Equality at thresholds is accepted.
 - These are regime observations, not authenticated price-oracle claims. All derived outputs remain within the immutable tuning envelope even under malicious but schema-valid data.
 
@@ -71,3 +72,5 @@ The Graph worker constructs data and unsigned requests; the restricted Privy upd
 G-01–G-07 implement these as application tests in Phase 3; P0 only validates fixture arithmetic, common source fields, and procedure completeness.
 
 2026-09-08 D08 amendment: accept up to 34 fractional digits in bounded decimal text, then floor exactly to micro-USD. Actual Graph decimal128 responses exceed the initial 18-place assumption. See [Phase 3 source review](../phase3/SOURCE_REVIEW.md). USD magnitude, minimum TVL, freshness, mapping and all safety limits are unchanged. RPC corroborates the indexed block hash and timestamp, including the timestamp-absent fallback.
+
+2026-09-09 D08 v2 amendment: user authorized a slightly different demo that preserves the main goals. Both original standardized deployments remain live inputs; use explicit completed-day observations and average hourly turnover = daily volume / (24 * snapshot TVL). This is a slower activity signal, not current-hour volatility. Exact source period and a 172,800-second maximum observation age replace hourly selection/7,200 seconds; indexing freshness, fetch age, both-source requirement, mapper caps, 300-second on-chain expiry, permissions and inventory safety are unchanged. Missing daily records still reject. See [daily-regime decision and tests](../phase4/DAILY_REGIME.md). Prior hourly evidence remains historical.
